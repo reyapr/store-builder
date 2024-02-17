@@ -1,17 +1,15 @@
 'use client'
-import { supabase } from "@/app/config/auth-config";
-import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
 const LoginPage = () => {
-  
-  const router = useRouter()
+  const supabase = createClient()
   
   const handleGoogleLogin = async () => {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: 'http://localhost:3000/'
+          redirectTo: `${location.origin}/auth/callback`
         }
       })
       if (error) {

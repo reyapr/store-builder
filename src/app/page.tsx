@@ -1,23 +1,19 @@
 'use client';
-import { supabase } from "@/app/config/auth-config";
-import { useEffect } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  useEffect(() => {
-    supabase.auth.getUser()
-      .then(user => {
-        console.log(user, '<=================== user ==================');
-      })
-      
-  }, [])
+  const supabase = createClient();
+  const router = useRouter();
   
   const handleLogout = async () => {
     try {
-      console.log( '<=================== handle logout ==================');
       const { error } = await supabase.auth.signOut({ scope: 'local'})
+      document.cookie = 'sb-qviqbtgkunhmasnzbmoh-auth-token-code-verifier=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
       if (error) {
         console.error('Error logging out:', error)
       }
+      router.push('/login')
     } catch (error) {
       console.log(error, 'error');
     }

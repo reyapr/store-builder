@@ -3,9 +3,7 @@ import { NextResponse } from 'next/server'
 import { type CookieOptions, createServerClient } from '@supabase/ssr'
 
 export async function GET(request: Request) {
-  console.log( '<=================== masuk ==================');
   const url = new URL(request.url)
-  console.log(url, '<=================== url ==================');
   const { searchParams, origin } = url 
   const code = searchParams.get('code')
 

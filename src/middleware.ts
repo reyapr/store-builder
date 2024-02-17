@@ -1,14 +1,8 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  })
-
-  const supabase = createServerClient(
+const initSupabase = (request: NextRequest, response: NextResponse) => {
+  return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -53,9 +47,30 @@ export async function middleware(request: NextRequest) {
       },
     }
   )
+}
+
+export async function middleware(request: NextRequest) {
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  })
+
+  const supabase = initSupabase(request, response)
+  
+  const path = new URL(request.url).pathname
 
   // refresh the session
-  await supabase.auth.getSession()
+  const { data } = await supabase.auth.getSession()
+  
+  // protected route
+  if (!data.session && path !== '/login') {
+    response = NextResponse.redirect(new URL('/login', request.url))
+  }
+  
+  if(data.session && path === '/login') {
+    response = NextResponse.redirect(new URL('/', request.url))
+  }
 
   return response
 }
@@ -67,8 +82,10 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - error (error handling)
+     * - auth/callback (auth callback)
      * Feel free to modify this pattern to include more paths.
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|error|auth/callback|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }

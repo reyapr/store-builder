@@ -54,8 +54,8 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const cookie = request.cookies.get('sb-qviqbtgkunhmasnzbmoh-auth-token-code-verifier')
-  console.log(cookie, '<=================== cookie session ==================');
+  // refresh the session
+  await supabase.auth.getSession()
 
   return response
 }

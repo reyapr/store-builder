@@ -27,8 +27,27 @@ export async function GET(request: Request) {
       }
     )
     const { error } = await supabase.auth.exchangeCodeForSession(code)
-    if (!error) {
-      return NextResponse.redirect(`${origin}`)
+    const { data } = await supabase.auth.getSession()
+    const createUserRequest =  {
+      name: data.session?.user?.user_metadata?.full_name,
+      email: data.session?.user?.email,
+      role: 'admin',
+      phoneNumber: data.session?.user?.user_metadata?.phone_number,
+      lastSignInAt: data.session?.user?.last_sign_in_at,
+    }
+    
+    try {
+      await fetch(`${origin}/api/user`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(createUserRequest),
+      })
+    } finally {
+      if (!error) {
+        return NextResponse.redirect(`${origin}`)
+      }
     }
   }
 

@@ -1,5 +1,11 @@
 'use client';
+import CreateNewStoreModal from "@/components/CreateStoreModal";
 import Layout from "@/components/Layout";
+import { IStoreDTO } from "@/interfaces/store";
+import { createClient } from "@/utils/supabase/client";
+import { useDisclosure, useToast } from "@chakra-ui/react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const mockData = [
   {
@@ -15,9 +21,57 @@ const mockData = [
 
 const tdStandardStyle = { border: '1px solid', padding: '5px'}
 
-export default function Home() {
+export default function Store() {
+  const supabase = createClient();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [stores, setStores] = useState([] as any[]);
+  const toast = useToast();
+  
+  const fetchStores = async () => {
+    try {
+      const response = await axios.get('/api/store');
+      
+      setStores(response.data.stores);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as Error).message,
+        status: "error",
+        duration: 2500,
+        isClosable: true,
+      })
+    }
+  }
+  
+  const onSubmit = (name: string) => async () => {
+    console.log('onSubmitCreateNewStore', name);
+    const { data } = await supabase.auth.getSession();
+    const user = data?.session?.user;
+    const request = { name, email: user?.email } as IStoreDTO;
+    
+    try {
+      await axios.post('/api/store', request);
+      fetchStores();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as Error).message,
+        status: "error",
+        duration: 2500,
+        isClosable: true,
+      })
+      
+    }
+    onClose();
+  }
+  
+  useEffect(() => {
+    fetchStores();
+  }, []);
+  
   return (
     <Layout>
+      <CreateNewStoreModal isOpen={isOpen} onClose={onClose} onSubmit={onSubmit} />
       <div 
         style={{ 
           display: 'flex', 
@@ -32,7 +86,12 @@ export default function Home() {
         </div>
         <div>
           <div>
-            <button  style={{backgroundColor: '#6a78a6', color: 'white'}}>Create Store</button>
+            <button 
+              onClick={onOpen}  
+              style={{backgroundColor: '#6a78a6', color: 'white'}}
+            >
+              Create Store
+            </button>
           </div>
           <div>
             <table>
@@ -44,7 +103,7 @@ export default function Home() {
               </thead>
               <tbody>
                 {
-                  mockData.map((item, index) => {
+                  stores.map((item, index) => {
                     return (
                       <tr key={index}>
                         <td  style={tdStandardStyle}>{item.name}</td>

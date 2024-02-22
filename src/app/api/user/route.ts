@@ -5,7 +5,6 @@ import { NextResponse } from "next/server"
 export async function POST(request: Request) {
   const user: User = await request.json()
   
-  
   const existingUser = await prisma.user.findUnique({
     where: {
       email: user.email

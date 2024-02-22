@@ -1,5 +1,5 @@
 'use client';
-import CreateNewStoreModal from "@/components/CreateStoreModal";
+import StoreFormModal from "@/components/CreateStoreModal";
 import Layout from "@/components/Layout";
 import { IStoreDTO } from "@/interfaces/store";
 import { createClient } from "@/utils/supabase/client";
@@ -23,7 +23,8 @@ const tdStandardStyle = { border: '1px solid', padding: '5px'}
 
 export default function Store() {
   const supabase = createClient();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const newFormModal = useDisclosure();
+  
   const [stores, setStores] = useState([] as any[]);
   const toast = useToast();
   
@@ -43,8 +44,7 @@ export default function Store() {
     }
   }
   
-  const onSubmit = (name: string) => async () => {
-    console.log('onSubmitCreateNewStore', name);
+  const submitNewStore = (name: string) => async () => {
     const { data } = await supabase.auth.getSession();
     const user = data?.session?.user;
     const request = { name, email: user?.email } as IStoreDTO;
@@ -62,7 +62,7 @@ export default function Store() {
       })
       
     }
-    onClose();
+    newFormModal.onClose();
   }
   
   useEffect(() => {
@@ -71,7 +71,8 @@ export default function Store() {
   
   return (
     <Layout>
-      <CreateNewStoreModal isOpen={isOpen} onClose={onClose} onSubmit={onSubmit} />
+      <StoreFormModal title="Create new store" isOpen={newFormModal.isOpen} onClose={newFormModal.onClose} onSubmit={submitNewStore} />
+      
       <div 
         style={{ 
           display: 'flex', 
@@ -87,7 +88,7 @@ export default function Store() {
         <div>
           <div>
             <button 
-              onClick={onOpen}  
+              onClick={newFormModal.onOpen}  
               style={{backgroundColor: '#6a78a6', color: 'white'}}
             >
               Create Store

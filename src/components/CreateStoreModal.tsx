@@ -17,12 +17,16 @@ export interface MyModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (name: string) => () => void;
+  input?: {
+    name: string;
+  },
+  title: string;
 }
 
-export default function CreateNewStoreModal(props: MyModalProps) {
-  const { isOpen, onClose, onSubmit } = props;
+export default function StoreFormModal(props: MyModalProps) {
+  const { isOpen, onClose, onSubmit, input } = props;
   
-  const [name, setName] = useState('');
+  const [name, setName] = useState(input?.name || '');
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   }
@@ -35,7 +39,7 @@ export default function CreateNewStoreModal(props: MyModalProps) {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create new store</ModalHeader>
+          <ModalHeader>{props.title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>

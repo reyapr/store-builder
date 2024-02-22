@@ -7,18 +7,6 @@ import { useDisclosure, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const mockData = [
-  {
-    name: 'Store 1',
-  },
-  {
-    name: 'Store 2',
-  },
-  {
-    name: 'Store 3',
-  }
-];
-
 const tdStandardStyle = { border: '1px solid', padding: '5px'}
 
 export default function Store() {

@@ -12,7 +12,7 @@ datasource db {
 }
  
 model User {
-  uuid          String    @id @default(uuid())
+  id            String    @id @default(uuid())
   name          String
   email         String    @unique
   role          String
@@ -25,11 +25,11 @@ model User {
 
 model Store {
   id            String    @id @default(uuid())
-  name          String
+  name          String    @unique
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  owner         User      @relation(fields: [ownerId], references: [uuid])
-  ownerId       String
+  user          User      @relation(fields: [userId], references: [id])
+  userId        String
   products      Product[]
   orders        Order[]
   categories    Category[]

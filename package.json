@@ -10,9 +10,14 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
     "@prisma/client": "^5.9.1",
     "@supabase/ssr": "^0.1.0",
     "@vercel/postgres": "^0.7.2",
+    "axios": "^1.6.7",
+    "framer-motion": "^11.0.5",
     "next": "14.1.0",
     "prisma": "^5.9.1",
     "react": "^18",

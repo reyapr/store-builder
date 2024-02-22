@@ -35,7 +35,7 @@ export default function Store() {
   const submitNewStore = (name: string) => async () => {
     const { data } = await supabase.auth.getSession();
     const user = data?.session?.user;
-    const request = { name, email: user?.email } as IStoreDTO;
+    const request = { name, email: user?.email } as ICreateStoreRequest;
     
     try {
       await axios.post('/api/store', request);

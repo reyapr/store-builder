@@ -1,5 +1,5 @@
 
-export interface IStoreDTO {
+export interface ICreateStoreRequest {
   name: string;
   email: string;
 }

@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { type CookieOptions, createServerClient } from '@supabase/ssr'
+import axios from 'axios'
 
 export async function GET(request: Request) {
   const url = new URL(request.url)
@@ -37,13 +38,7 @@ export async function GET(request: Request) {
     }
     
     try {
-      await fetch(`${origin}/api/user`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(createUserRequest),
-      })
+      await axios.post(`${origin}/api/user`, createUserRequest)
     } finally {
       if (!error) {
         return NextResponse.redirect(`${origin}`)

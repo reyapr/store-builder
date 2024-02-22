@@ -1,3 +1,4 @@
+import { ISubmitStoreFormRequest } from "@/interfaces/store";
 import {
   Button,
   FormControl,
@@ -11,12 +12,12 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export interface MyModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (name: string) => () => void;
+  onSubmit: (request: ISubmitStoreFormRequest) => () => void;
   data?: {
     name: string;
     id: string;
@@ -28,6 +29,11 @@ export default function StoreFormModal(props: MyModalProps) {
   const { isOpen, onClose, onSubmit, data } = props;
   
   const [name, setName] = useState(data?.name || '');
+  
+  useEffect(() => {
+    setName(data?.name || '');
+  }, [data?.name]);
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   }
@@ -50,7 +56,7 @@ export default function StoreFormModal(props: MyModalProps) {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onSubmit(name)}>
+            <Button colorScheme="blue" mr={3} onClick={onSubmit({ name, id: data?.id })}>
               Save
             </Button>
             <Button onClick={onClose}>Cancel</Button>

@@ -1,5 +1,5 @@
 import { prisma } from "@/app/api/config";
-import { ICreateStoreRequest, IUpdateStoreRequest } from "@/interfaces/store";
+import { ICreateStoreRequest } from "@/interfaces/store";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {

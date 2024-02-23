@@ -30,7 +30,11 @@ export async function POST(request: Request) {
       status: 201,
     });
   } catch (error) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 400 });
+    let status = 500
+    if ((error as Error).message.includes('Unique constraint')) {
+      status = 400
+    } 
+    return NextResponse.json({ error: (error as Error).message }, { status });
   }
 }
 

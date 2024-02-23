@@ -40,7 +40,11 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   try {
-    const stores = await prisma.store.findMany();
+    const stores = await prisma.store.findMany({
+      where: {
+        isDeleted: false
+      }
+    });
     return NextResponse.json({ stores }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: (error as Error).message }, { status: 500 });

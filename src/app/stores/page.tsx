@@ -63,7 +63,7 @@ export default function Store() {
   
   const submitUpdateStore = (request: ISubmitStoreFormRequest) => async () => {
     try {
-      await axios.patch('/api/store', request);
+      await axios.patch(`/api/store/${request.id}`, request);
       fetchStores();
     } catch (error) {
       toast({

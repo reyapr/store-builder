@@ -50,21 +50,3 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: (error as Error).message }, { status: 500 });
   }
 }
-
-export async function PATCH(request: Request) {
-  const updateStoreRequest: IUpdateStoreRequest = await request.json();
-  try {
-    const store = await prisma.store.update({
-      where: {
-        id: updateStoreRequest.id
-      },
-      data: {
-        name: updateStoreRequest.name
-      }
-    });
-    return NextResponse.json({ store }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 400 });
-  }
-}
-

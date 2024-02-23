@@ -33,6 +33,9 @@ model Store {
   products      Product[]
   orders        Order[]
   categories    Category[]
+  isDeleted     Boolean   @default(false) 
+  
+  @@unique([name, isDeleted],name: "unique_name_isDeleted")
 }
 
 model Product {

@@ -6,6 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useDisclosure, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { DeleteAlert } from "@/components/DeleteAlert";
 
 const tdStandardStyle = { border: '1px solid', padding: '5px'}
 
@@ -13,10 +14,12 @@ export default function Store() {
   const supabase = createClient();
   const newFormModal = useDisclosure();
   const updateFormModal = useDisclosure();
+  const deleteModal = useDisclosure();
   const [currentEditForm, setCurrentEditForm] = useState({
     id: '',
     name: '',
   } as IUpdateStoreRequest);
+  const [targetDeleteStoreId, setTargetDeleteStoreId] = useState('' as string);
   
   const [stores, setStores] = useState([] as any[]);
   const toast = useToast();
@@ -80,9 +83,35 @@ export default function Store() {
     updateFormModal.onOpen();
   }
   
+  const handleOpenDeleteModal = (id: string) => {
+    setTargetDeleteStoreId(id);
+    deleteModal.onOpen();
+  }
+  
   const handleEditClose = () => {
     setCurrentEditForm({ id: '', name: ''})
     updateFormModal.onClose();
+  }
+  
+  const handleDeleteClose = () => {
+    setTargetDeleteStoreId('');
+    deleteModal.onClose();
+  }
+  
+  const submitDeleteStore = (id: string) => async () => {
+    try {
+      await axios.delete(`/api/store/${id}`);
+      fetchStores();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as Error).message,
+        status: "error",
+        duration: 2500,
+        isClosable: true,
+      })
+    }
+    handleDeleteClose();
   }
   
   useEffect(() => {
@@ -103,6 +132,13 @@ export default function Store() {
         onClose={handleEditClose} 
         onSubmit={submitUpdateStore} 
         data={currentEditForm} 
+      />
+      <DeleteAlert
+        isOpen={deleteModal.isOpen}
+        onClose={handleDeleteClose}
+        onSubmit={submitDeleteStore}
+        title="Delete Store"
+        id={targetDeleteStoreId}
       />
       <div 
         style={{ 
@@ -144,7 +180,7 @@ export default function Store() {
                         <td  style={tdStandardStyle}>
                           <button onClick={() => handleEdit({ id: item.id, name: item.name})} style={{backgroundColor: '#6a78a6', color: 'white'}}>Edit</button>
                           |
-                          <button style={{backgroundColor: '#6a78a6', color: 'white'}}>Delete</button>
+                          <button onClick={() => handleOpenDeleteModal(item.id)} style={{backgroundColor: '#6a78a6', color: 'white'}}>Delete</button>
                         </td>
                       </tr>
                     );

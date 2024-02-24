@@ -10,7 +10,12 @@ export async function PATCH(request: Request, context: { params: any }) {
         id
       },
       data: {
-        name: categoryRequest.name
+        name: categoryRequest.name,
+        store: {
+          connect: {
+            id: categoryRequest.storeId
+          }
+        }
       }
     });
     return NextResponse.json({ store }, { status: 200 });

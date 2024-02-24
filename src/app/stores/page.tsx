@@ -1,9 +1,8 @@
 'use client';
 import StoreFormModal from "@/components/StoreModal";
 import Layout from "@/components/Layout";
-import { ICreateStoreRequest, ISubmitStoreFormRequest, IUpdateStoreRequest } from "@/interfaces/store";
 import { createClient } from "@/utils/supabase/client";
-import { useDisclosure, useToast } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { DeleteAlert } from "@/components/DeleteAlert";

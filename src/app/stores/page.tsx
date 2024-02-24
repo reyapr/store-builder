@@ -18,9 +18,9 @@ export default function Store() {
   const toast = useToast();
  
   const { stores, fetchStores } = useGetStore(toast);
-  const createStore = useCreateStore(toast, fetchStores, supabase);
-  const updateStore = useUpdateStore(toast, fetchStores, supabase);
-  const deleteStore = useDeleteStore(toast, fetchStores, supabase);
+  const createStoreHook = useCreateStore(toast, fetchStores, supabase);
+  const updateStoreHook = useUpdateStore(toast, fetchStores, supabase);
+  const deleteStoreHook = useDeleteStore(toast, fetchStores, supabase);
 
   useEffect(() => {
     fetchStores();
@@ -30,23 +30,23 @@ export default function Store() {
     <Layout>
       <StoreFormModal 
         title="Create new store" 
-        isOpen={createStore.isOpen} 
-        onClose={createStore.onClose} 
-        onSubmit={createStore.submitNewStore} 
+        isOpen={createStoreHook.isOpen} 
+        onClose={createStoreHook.onClose} 
+        onSubmit={createStoreHook.submitNewStore} 
       />
       <StoreFormModal 
         title="Update store" 
-        isOpen={updateStore.isOpen} 
-        onClose={updateStore.handleEditClose} 
-        onSubmit={updateStore.submitUpdateStore} 
-        data={updateStore.currentEditForm} 
+        isOpen={updateStoreHook.isOpen} 
+        onClose={updateStoreHook.handleEditClose} 
+        onSubmit={updateStoreHook.submitUpdateStore} 
+        data={updateStoreHook.currentEditForm} 
       />
       <DeleteAlert
-        isOpen={deleteStore.isOpen}
-        onClose={deleteStore.handleDeleteClose}
-        onSubmit={deleteStore.submitDeleteStore}
+        isOpen={deleteStoreHook.isOpen}
+        onClose={deleteStoreHook.handleDeleteClose}
+        onSubmit={deleteStoreHook.submitDeleteStore}
         title="Delete Store"
-        id={deleteStore.targetDeleteStoreId}
+        id={deleteStoreHook.targetDeleteStoreId}
       />
       <div 
         style={{ 
@@ -63,7 +63,7 @@ export default function Store() {
         <div>
           <div>
             <button 
-              onClick={createStore.onOpen}  
+              onClick={createStoreHook.onOpen}  
               style={{backgroundColor: '#6a78a6', color: 'white'}}
             >
               Create Store
@@ -87,14 +87,14 @@ export default function Store() {
                         <td style={tdStandardStyle}>{item.name}</td>
                         <td style={tdStandardStyle}>
                           <button 
-                            onClick={() => updateStore.handleEdit({ id: item.id, name: item.name})} 
+                            onClick={() => updateStoreHook.handleEdit({ id: item.id, name: item.name})} 
                             style={{backgroundColor: '#6a78a6', color: 'white'}}
                           >
                             Edit
                           </button>
                           |
                           <button 
-                            onClick={() => deleteStore.handleOpenDeleteModal(item.id)} 
+                            onClick={() => deleteStoreHook.handleOpenDeleteModal(item.id)} 
                             style={{backgroundColor: '#6a78a6', color: 'white'}}
                           >
                             Delete

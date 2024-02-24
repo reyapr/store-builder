@@ -9,30 +9,15 @@ import { DeleteAlert } from "@/components/DeleteAlert";
 import { useCreateStore } from "@/app/stores/use-create-store";
 import { useUpdateStore } from "@/app/stores/use-update-store";
 import { useDeleteStore } from "@/app/stores/use-delete-store";
+import { useGetStore } from "@/app/stores/use-get-store";
 
 const tdStandardStyle = { border: '1px solid', padding: '5px'}
 
 export default function Store() {
   const supabase = createClient();
   const toast = useToast();
-  const [stores, setStores] = useState([] as any[]);
-  
-  const fetchStores = async () => {
-    try {
-      const response = await axios.get('/api/stores');
-      
-      setStores(response.data.stores);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: (error as Error).message,
-        status: "error",
-        duration: 2500,
-        isClosable: true,
-      })
-    }
-  }
-  
+ 
+  const { stores, fetchStores } = useGetStore(toast);
   const createStore = useCreateStore(toast, fetchStores, supabase);
   const updateStore = useUpdateStore(toast, fetchStores, supabase);
   const deleteStore = useDeleteStore(toast, fetchStores, supabase);

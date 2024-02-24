@@ -12,7 +12,7 @@ export function useCreateStore(toast: CreateToastFnReturn, fetchStores: () => vo
     const storRequest = { name: request.name, email: user?.email } as ICreateStoreRequest;
     
     try {
-      await axios.post('/api/store', storRequest);
+      await axios.post('/api/stores', storRequest);
       await fetchStores();
     } catch (error) {
       toast({

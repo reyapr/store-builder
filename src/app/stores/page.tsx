@@ -19,7 +19,7 @@ export default function Store() {
   
   const fetchStores = async () => {
     try {
-      const response = await axios.get('/api/store');
+      const response = await axios.get('/api/stores');
       
       setStores(response.data.stores);
     } catch (error) {

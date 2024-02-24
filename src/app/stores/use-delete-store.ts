@@ -20,7 +20,7 @@ export function useDeleteStore(toast: CreateToastFnReturn, fetchStores: () => vo
   
   const submitDeleteStore = (id: string) => async () => {
     try {
-      await axios.delete(`/api/store/${id}`);
+      await axios.delete(`/api/stores/${id}`);
       fetchStores();
     } catch (error) {
       toast({

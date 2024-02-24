@@ -1,8 +1,8 @@
 "use client";
+import { useCreateCategory } from "@/app/categories/use-create-category";
 import { useGetStore } from "@/app/stores/use-get-store";
 import CategoryFormModal from "@/components/CategoryModal";
 import Layout from "@/components/Layout";
-import { ICreateCategoryRequest } from "@/interfaces/category";
 import {
   Button,
   ButtonGroup,
@@ -35,22 +35,7 @@ export default function Categories() {
     }
   }
   
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const handleCreateNewCategory = (request: ICreateCategoryRequest) => async () => {
-    try {
-      await axios.post('/api/categories', request);
-      fetchCategories();
-      onClose();
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: (error as Error).message,
-        status: "error",
-        duration: 2500,
-        isClosable: true,
-      })
-    }
-  }
+  const createCategoryHook = useCreateCategory(toast, fetchCategories);  
   
   useEffect(() => {
     fetchCategories();
@@ -61,14 +46,14 @@ export default function Categories() {
     <Layout>
       <CategoryFormModal
         title="Create new category"
-        isOpen={isOpen}
-        onClose={onClose}
-        onSubmit={handleCreateNewCategory}
+        isOpen={createCategoryHook.isOpen}
+        onClose={createCategoryHook.onClose}
+        onSubmit={createCategoryHook.handleCreateNewCategory}
         stores={stores}
       />
       <Grid>
         <GridItem justifySelf='end' colEnd={13} paddingTop={3} paddingRight={3}>
-          <Button colorScheme="blue" onClick={onOpen}>Create Category</Button>
+          <Button colorScheme="blue" onClick={createCategoryHook.onOpen}>Create Category</Button>
         </GridItem>
       </Grid>
       <TableContainer>

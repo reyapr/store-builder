@@ -1,8 +1,10 @@
 "use client";
 import { useCreateCategory } from "@/app/categories/use-create-category";
+import { useDeleteCategory } from "@/app/categories/use-delete-category";
 import { useUpdateCategory } from "@/app/categories/use-update-category";
 import { useGetStore } from "@/app/stores/use-get-store";
 import CategoryFormModal from "@/components/CategoryModal";
+import { DeleteAlert } from "@/components/DeleteAlert";
 import Layout from "@/components/Layout";
 import { ICategory } from "@/interfaces/category";
 import {
@@ -41,6 +43,7 @@ export default function Categories() {
   
   const createCategoryHook = useCreateCategory(toast, fetchCategories);  
   const editCategoryHook = useUpdateCategory(toast, fetchCategories);
+  const deleteCategoryHook = useDeleteCategory(toast, fetchCategories);
   
   useEffect(() => {
     fetchCategories();
@@ -63,6 +66,13 @@ export default function Categories() {
         onSubmit={editCategoryHook.handleSubmit}
         stores={stores}
         data={editCategoryHook.currentEditForm}
+      />
+      <DeleteAlert
+        isOpen={deleteCategoryHook.isOpen}
+        onClose={deleteCategoryHook.onClose}
+        onSubmit={deleteCategoryHook.handleDeleteCategory}
+        title="Delete Category"
+        id={deleteCategoryHook.targetDeleteCategoryId}
       />
       <Grid>
         <GridItem justifySelf='end' colEnd={13} paddingTop={3} paddingRight={3}>
@@ -91,7 +101,7 @@ export default function Categories() {
                     <Th>
                       <ButtonGroup gap={2}>
                         <Button colorScheme="blue" onClick={() => editCategoryHook.onOpen(category)}>Edit</Button>
-                        <Button colorScheme="red">Delete</Button>
+                        <Button colorScheme="red" onClick={() => deleteCategoryHook.onOpen(category.id)}>Delete</Button>
                       </ButtonGroup>
                     </Th>
                   </Tr>

@@ -13,3 +13,11 @@ export interface ISubmitStoreFormRequest {
   name: string;
   id?: string;
 }
+
+export interface IStore {
+  id: string;
+  name: string;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+}

@@ -1,8 +1,10 @@
 "use client";
 import { useCreateCategory } from "@/app/categories/use-create-category";
+import { useUpdateCategory } from "@/app/categories/use-update-category";
 import { useGetStore } from "@/app/stores/use-get-store";
 import CategoryFormModal from "@/components/CategoryModal";
 import Layout from "@/components/Layout";
+import { ICategory } from "@/interfaces/category";
 import {
   Button,
   ButtonGroup,
@@ -35,7 +37,10 @@ export default function Categories() {
     }
   }
   
+  const sortCategories = (a: ICategory, b: ICategory) => new Date(a.createdAt) > new Date(b.createdAt)? 1 : -1;
+  
   const createCategoryHook = useCreateCategory(toast, fetchCategories);  
+  const editCategoryHook = useUpdateCategory(toast, fetchCategories);
   
   useEffect(() => {
     fetchCategories();
@@ -50,6 +55,14 @@ export default function Categories() {
         onClose={createCategoryHook.onClose}
         onSubmit={createCategoryHook.handleCreateNewCategory}
         stores={stores}
+      />
+      <CategoryFormModal
+        title="Update category"
+        isOpen={editCategoryHook.isOpen}
+        onClose={editCategoryHook.onClose}
+        onSubmit={editCategoryHook.handleSubmit}
+        stores={stores}
+        data={editCategoryHook.currentEditForm}
       />
       <Grid>
         <GridItem justifySelf='end' colEnd={13} paddingTop={3} paddingRight={3}>
@@ -69,7 +82,7 @@ export default function Categories() {
           </Thead>
           <Tbody>
             {
-              categories.map((category, index) => {
+              categories.sort(sortCategories).map((category) => {
                 return (
                   <Tr key={category.id}>
                     <Th>{category.id}</Th>
@@ -77,7 +90,7 @@ export default function Categories() {
                     <Th>{category.store.name}</Th>
                     <Th>
                       <ButtonGroup gap={2}>
-                        <Button colorScheme="blue">Edit</Button>
+                        <Button colorScheme="blue" onClick={() => editCategoryHook.onOpen(category)}>Edit</Button>
                         <Button colorScheme="red">Delete</Button>
                       </ButtonGroup>
                     </Th>

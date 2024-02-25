@@ -65,17 +65,11 @@ export default function ProductFormModal(props: MyModalProps) {
     });
   }, [data?.name]);
   
-  useEffect(() => {
-    setInput({
-      ...input,
-      categories: []
-    });
-  }, [input.storeId])
-  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
     setInput({
       ...input,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
+      categories: e.target.name === 'storeId' ? [] : input.categories
     });
   }
   
@@ -94,7 +88,6 @@ export default function ProductFormModal(props: MyModalProps) {
       quantity
     });
   }
-  console.log(input, '<=================== input ==================');
   
   const categoryOptions = props.categories
     .filter(category => category.storeId === input.storeId)

@@ -5,7 +5,12 @@ export async function GET(request: Request) {
   try {
     const categories = await prisma.category.findMany({
       include: {
-        store: true
+        store: true,
+      },
+      where: {
+        store: {
+          isDeleted: false
+        }
       }
     });
     return NextResponse.json({ categories }, { status: 200 });

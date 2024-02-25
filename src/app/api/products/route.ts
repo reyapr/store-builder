@@ -7,6 +7,11 @@ export async function GET(request: Request) {
       include: {
         categories: true,
         store: true
+      },
+      where: {
+        store: {
+          isDeleted: false
+        }
       }
     });
     return NextResponse.json({ products }, { status: 200 });

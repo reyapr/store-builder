@@ -13,7 +13,7 @@ export function useUpdateStore(toast: CreateToastFnReturn, fetchStores: () => vo
   
   const submitUpdateStore = (request: ISubmitStoreFormRequest) => async () => {
     try {
-      await axios.patch(`/apis/${request.id}`, request);
+      await axios.patch(`/api/stores/${request.id}`, request);
       fetchStores();
     } catch (error) {
       toast({

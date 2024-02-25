@@ -1,5 +1,10 @@
 "use client";
+import { useGetCateogries } from "@/app/categories/use-get-category";
+import { useCreateProduct } from "@/app/products/use-create-product";
+import { useGetStore } from "@/app/stores/use-get-store";
 import Layout from "@/components/Layout";
+import ProductFormModal from "@/components/ProductModal";
+import { IProduct } from "@/interfaces/product";
 import {
   Button,
   ButtonGroup,
@@ -8,6 +13,7 @@ import {
   Table,
   TableCaption,
   TableContainer,
+  Tag,
   Tbody,
   Th,
   Thead,
@@ -19,7 +25,9 @@ import { useEffect, useState } from "react";
 
 export default function ProductPage() {
   const toast = useToast();
-  const [products, setProducts] = useState([] as any[]);
+  const [products, setProducts] = useState([] as IProduct[]);
+  const {stores, fetchStores} = useGetStore(toast);
+  const {categories, fetchCategories} = useGetCateogries(toast);
 
   const fetchProducts = async () => {
     try {
@@ -36,17 +44,33 @@ export default function ProductPage() {
     }
   };
   
+  const toIDRFormat = (price: number) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+  }
+  
+  const createProductHook = useCreateProduct(toast, fetchProducts);
+  
   useEffect(() => {
     fetchProducts();
+    fetchStores();
+    fetchCategories();
   }, []);
 
   const sortProducts = (a: any, b: any) =>
     new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1;
   return (
     <Layout>
+      <ProductFormModal
+        title="Create new product"
+        isOpen={createProductHook.isOpen}
+        onClose={createProductHook.onClose}
+        onSubmit={createProductHook.handleCreateProduct}
+        stores={stores}
+        categories={categories}
+      />
       <Grid>
         <GridItem justifySelf="end" colEnd={13} paddingTop={3} paddingRight={3}>
-          <Button colorScheme="blue" onClick={() => {}}>
+          <Button colorScheme="blue" onClick={createProductHook.onOpen}>
             Create Product
           </Button>
         </GridItem>
@@ -61,7 +85,7 @@ export default function ProductPage() {
               <Th>Price</Th>
               <Th>Quantity</Th>
               <Th>Store</Th>
-              <Th>Category</Th>
+              <Th>Categories</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
@@ -71,10 +95,16 @@ export default function ProductPage() {
                 <Tr key={product.id}>
                   <Th>{product.id}</Th>
                   <Th>{product.name}</Th>
-                  <Th>{product.price}</Th>
+                  <Th>{toIDRFormat(product.price)}</Th>
                   <Th>{product.quantity}</Th>
                   <Th>{product.store.name}</Th>
-                  <Th>{product.category.name}</Th>
+                  <Th>{product.categories.map(category => {
+                    return (
+                      <Tag key={category.id} colorScheme="blue" marginRight={1}>
+                        {category.name}
+                      </Tag>
+                    )
+                  })}</Th>
                   <Th>
                     <ButtonGroup gap={2}>
                       <Button colorScheme="blue" onClick={() => {}}>

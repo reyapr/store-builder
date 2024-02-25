@@ -21,7 +21,9 @@ export async function POST(request: Request) {
     
     const product = await prisma.product.create({
       data: { 
-        ...productRequest,
+        name: productRequest.name,
+        price: productRequest.price,
+        quantity: productRequest.quantity,
         store: {
           connect: {
             id: productRequest.storeId

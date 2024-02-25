@@ -10,14 +10,16 @@ export async function PATCH(request: Request, context: { params: any }) {
         id
       },
       data: {
-        ...productRequest,
+        name: productRequest.name,
+        price: productRequest.price,
+        quantity: productRequest.quantity,
         store: {
           connect: {
             id: productRequest.storeId
           }
         },
         categories: {
-          connect: productRequest.categoryIds.map((id: number) => ({ id }))
+          set: productRequest.categoryIds.map((id: number) => ({ id }))
         }
       }
     });

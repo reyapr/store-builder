@@ -1,6 +1,7 @@
 "use client";
 import { useGetCateogries } from "@/app/categories/use-get-category";
 import { useCreateProduct } from "@/app/products/use-create-product";
+import { useUpdateProduct } from "@/app/products/use-update-product";
 import { useGetStore } from "@/app/stores/use-get-store";
 import Layout from "@/components/Layout";
 import ProductFormModal from "@/components/ProductModal";
@@ -28,7 +29,7 @@ export default function ProductPage() {
   const [products, setProducts] = useState([] as IProduct[]);
   const {stores, fetchStores} = useGetStore(toast);
   const {categories, fetchCategories} = useGetCateogries(toast);
-
+  
   const fetchProducts = async () => {
     try {
       const { data } = await axios.get('/api/products');
@@ -49,6 +50,7 @@ export default function ProductPage() {
   }
   
   const createProductHook = useCreateProduct(toast, fetchProducts);
+  const updateProductHook = useUpdateProduct(toast, fetchProducts);
   
   useEffect(() => {
     fetchProducts();
@@ -67,6 +69,15 @@ export default function ProductPage() {
         onSubmit={createProductHook.handleCreateProduct}
         stores={stores}
         categories={categories}
+      />
+      <ProductFormModal
+        title="Update product"
+        isOpen={updateProductHook.isOpen}
+        onClose={updateProductHook.onClose}
+        onSubmit={updateProductHook.handleUpdateProduct}
+        stores={stores}
+        categories={categories}
+        data={updateProductHook.currentEditForm}
       />
       <Grid>
         <GridItem justifySelf="end" colEnd={13} paddingTop={3} paddingRight={3}>
@@ -107,7 +118,7 @@ export default function ProductPage() {
                   })}</Th>
                   <Th>
                     <ButtonGroup gap={2}>
-                      <Button colorScheme="blue" onClick={() => {}}>
+                      <Button colorScheme="blue" onClick={() => updateProductHook.onOpen(product)}>
                         Edit
                       </Button>
                       <Button colorScheme="red" onClick={() => {}}>

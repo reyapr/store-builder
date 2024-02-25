@@ -30,3 +30,12 @@ export interface IProduct {
   store: IStore;
   categories: ICategory[];
 }
+
+export interface IEditProductRequest {
+  id: string;
+  name: string;
+  price: string;
+  quantity: number;
+  storeId: string;
+  categories: ICategoryInput[];
+}

@@ -1,8 +1,10 @@
 "use client";
 import { useGetCateogries } from "@/app/categories/use-get-category";
 import { useCreateProduct } from "@/app/products/use-create-product";
+import { useDeleteProduct } from "@/app/products/use-delete-product";
 import { useUpdateProduct } from "@/app/products/use-update-product";
 import { useGetStore } from "@/app/stores/use-get-store";
+import { DeleteAlert } from "@/components/DeleteAlert";
 import Layout from "@/components/Layout";
 import ProductFormModal from "@/components/ProductModal";
 import { IProduct } from "@/interfaces/product";
@@ -51,6 +53,7 @@ export default function ProductPage() {
   
   const createProductHook = useCreateProduct(toast, fetchProducts);
   const updateProductHook = useUpdateProduct(toast, fetchProducts);
+  const deleteProductHook = useDeleteProduct(toast, fetchProducts);
   
   useEffect(() => {
     fetchProducts();
@@ -78,6 +81,13 @@ export default function ProductPage() {
         stores={stores}
         categories={categories}
         data={updateProductHook.currentEditForm}
+      />
+      <DeleteAlert
+        isOpen={deleteProductHook.isOpen}
+        onClose={deleteProductHook.onClose}
+        onSubmit={deleteProductHook.handleDeleteProduct}
+        title="Delete Porudct"
+        id={deleteProductHook.targetDeleteProductId}
       />
       <Grid>
         <GridItem justifySelf="end" colEnd={13} paddingTop={3} paddingRight={3}>
@@ -121,7 +131,7 @@ export default function ProductPage() {
                       <Button colorScheme="blue" onClick={() => updateProductHook.onOpen(product)}>
                         Edit
                       </Button>
-                      <Button colorScheme="red" onClick={() => {}}>
+                      <Button colorScheme="red" onClick={() => deleteProductHook.onOpen(product.id)}>
                         Delete
                       </Button>
                     </ButtonGroup>

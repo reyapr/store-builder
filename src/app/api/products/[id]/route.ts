@@ -28,3 +28,27 @@ export async function PATCH(request: Request, context: { params: any }) {
     return NextResponse.json({ error: (error as Error).message }, { status: 400 });
   }
 }
+
+export async function DELETE(_: Request, context: { params: any }) {
+  const { id } = context.params as { id: string };
+  try {
+    const existingProduct = await prisma.product.findUnique({
+      where: {
+        id
+      }
+    })
+    
+    if (!existingProduct) {
+      return NextResponse.json({ error: 'Product does not exist' }, { status: 400 });
+    }
+    
+    await prisma.product.delete({
+      where: {
+        id
+      }
+    });
+    return NextResponse.json({ message: 'Success to delete product'}, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: (error as Error).message }, { status: 400 });
+  }
+}

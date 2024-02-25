@@ -1,6 +1,7 @@
 "use client";
 import { useCreateCategory } from "@/app/categories/use-create-category";
 import { useDeleteCategory } from "@/app/categories/use-delete-category";
+import { useGetCateogries } from "@/app/categories/use-get-category";
 import { useUpdateCategory } from "@/app/categories/use-update-category";
 import { useGetStore } from "@/app/stores/use-get-store";
 import CategoryFormModal from "@/components/CategoryModal";
@@ -26,17 +27,8 @@ import { useEffect, useState } from "react";
 
 export default function Categories() {
   const toast = useToast();
-  const [categories, setCategories] = useState([] as any[]);
   const {stores, fetchStores} = useGetStore(toast);
-  
-  const fetchCategories = async () => {
-    try {
-      const { data } = await axios.get('/api/categories');
-      setCategories(data.categories);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const {categories, fetchCategories} = useGetCateogries(toast);
   
   const sortCategories = (a: ICategory, b: ICategory) => new Date(a.createdAt) > new Date(b.createdAt)? 1 : -1;
   

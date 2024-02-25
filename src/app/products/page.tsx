@@ -1,17 +1,54 @@
-'use client';
+"use client";
 import Layout from "@/components/Layout";
-import { Button, ButtonGroup, Grid, GridItem, Table, TableCaption, TableContainer, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
-import { useState } from "react";
+import {
+  Button,
+  ButtonGroup,
+  Grid,
+  GridItem,
+  Table,
+  TableCaption,
+  TableContainer,
+  Tbody,
+  Th,
+  Thead,
+  Tr,
+  useToast,
+} from "@chakra-ui/react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function ProductPage() {
+  const toast = useToast();
   const [products, setProducts] = useState([] as any[]);
+
+  const fetchProducts = async () => {
+    try {
+      const { data } = await axios.get('/api/products');
+      setProducts(data.products);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as Error).message,
+        status: "error",
+        duration: 2500,
+        isClosable: true,
+      })
+    }
+  };
   
-  const sortProducts = (a: any, b: any) => new Date(a.createdAt) > new Date(b.createdAt)? 1 : -1;
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const sortProducts = (a: any, b: any) =>
+    new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1;
   return (
     <Layout>
       <Grid>
-        <GridItem justifySelf='end' colEnd={13} paddingTop={3} paddingRight={3}>
-          <Button colorScheme="blue" onClick={() => {}}>Create Product</Button>
+        <GridItem justifySelf="end" colEnd={13} paddingTop={3} paddingRight={3}>
+          <Button colorScheme="blue" onClick={() => {}}>
+            Create Product
+          </Button>
         </GridItem>
       </Grid>
       <TableContainer>
@@ -29,26 +66,28 @@ export default function ProductPage() {
             </Tr>
           </Thead>
           <Tbody>
-            {
-              products.sort(sortProducts).map((product) => {
-                return (
-                  <Tr key={product.id}>
-                    <Th>{product.id}</Th>
-                    <Th>{product.name}</Th>
-                    <Th>{product.price}</Th>
-                    <Th>{product.quantity}</Th>
-                    <Th>{product.store.name}</Th>
-                    <Th>{product.category.name}</Th>
-                    <Th>
-                      <ButtonGroup gap={2}>
-                        <Button colorScheme="blue" onClick={() => {}}>Edit</Button>
-                        <Button colorScheme="red" onClick={() => {}}>Delete</Button>
-                      </ButtonGroup>
-                    </Th>
-                  </Tr>
-                )
-              })
-            }
+            {products.sort(sortProducts).map((product) => {
+              return (
+                <Tr key={product.id}>
+                  <Th>{product.id}</Th>
+                  <Th>{product.name}</Th>
+                  <Th>{product.price}</Th>
+                  <Th>{product.quantity}</Th>
+                  <Th>{product.store.name}</Th>
+                  <Th>{product.category.name}</Th>
+                  <Th>
+                    <ButtonGroup gap={2}>
+                      <Button colorScheme="blue" onClick={() => {}}>
+                        Edit
+                      </Button>
+                      <Button colorScheme="red" onClick={() => {}}>
+                        Delete
+                      </Button>
+                    </ButtonGroup>
+                  </Th>
+                </Tr>
+              );
+            })}
           </Tbody>
         </Table>
       </TableContainer>

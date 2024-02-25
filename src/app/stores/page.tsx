@@ -2,7 +2,7 @@
 import StoreFormModal from "@/components/StoreModal";
 import Layout from "@/components/Layout";
 import { createClient } from "@/utils/supabase/client";
-import { useToast } from "@chakra-ui/react";
+import { Button, ButtonGroup, Grid, GridItem, Table, TableCaption, TableContainer, Tag, Tbody, Th, Thead, Tr, useToast } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { DeleteAlert } from "@/components/DeleteAlert";
 import { useCreateStore } from "@/app/stores/use-create-store";
@@ -20,6 +20,9 @@ export default function Store() {
   const createStoreHook = useCreateStore(toast, fetchStores, supabase);
   const updateStoreHook = useUpdateStore(toast, fetchStores, supabase);
   const deleteStoreHook = useDeleteStore(toast, fetchStores, supabase);
+  
+  const sortByCreatedAt = (a: any, b: any) =>
+    new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1;
 
   useEffect(() => {
     fetchStores();
@@ -47,67 +50,45 @@ export default function Store() {
         title="Delete Store"
         id={deleteStoreHook.targetDeleteStoreId}
       />
-      <div 
-        style={{ 
-          display: 'flex', 
-          flex: 11, 
-          justifyContent: 'center', 
-          alignItems: 'center',
-          flexDirection: 'column',
-        }}
-      >
-        <div>
-          <b>Store</b>
-        </div>
-        <div>
-          <div>
-            <button 
-              onClick={createStoreHook.onOpen}  
-              style={{backgroundColor: '#6a78a6', color: 'white'}}
-            >
-              Create Store
-            </button>
-          </div>
-          <div>
-            <table>
-              <thead>
-                <tr>
-                  <th style={tdStandardStyle}>ID</th>
-                  <th style={tdStandardStyle}>Name</th>
-                  <th style={tdStandardStyle}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  stores.sort((a,b) => a.id > b.id ? -1 : 1).map((item, index) => {
-                    return (
-                      <tr key={item.id}>
-                        <td style={tdStandardStyle}>{item.id}</td>
-                        <td style={tdStandardStyle}>{item.name}</td>
-                        <td style={tdStandardStyle}>
-                          <button 
-                            onClick={() => updateStoreHook.handleEdit({ id: item.id, name: item.name})} 
-                            style={{backgroundColor: '#6a78a6', color: 'white'}}
-                          >
-                            Edit
-                          </button>
-                          |
-                          <button 
-                            onClick={() => deleteStoreHook.handleOpenDeleteModal(item.id)} 
-                            style={{backgroundColor: '#6a78a6', color: 'white'}}
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })
-                }
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+       <Grid>
+        <GridItem justifySelf="end" colEnd={13} paddingTop={3} paddingRight={3}>
+          <Button colorScheme="blue" onClick={createStoreHook.onOpen}>
+            Create Store
+          </Button>
+        </GridItem>
+      </Grid>
+      <TableContainer>
+        <Table variant={"simple"}>
+          <TableCaption>Store</TableCaption>
+          <Thead>
+            <Tr>
+              <Th>ID</Th>
+              <Th>Name</Th>
+              <Th>Actions</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {stores.sort(sortByCreatedAt).map((store) => {
+              return (
+                <Tr key={store.id}>
+                  <Th>{store.id}</Th>
+                  <Th>{store.name}</Th>
+                  <Th>
+                    <ButtonGroup gap={2}>
+                      <Button colorScheme="blue" onClick={() => updateStoreHook.handleEdit(store)}>
+                        Edit
+                      </Button>
+                      <Button colorScheme="red" onClick={() => deleteStoreHook.handleOpenDeleteModal(store.id)}>
+                        Delete
+                      </Button>
+                    </ButtonGroup>
+                  </Th>
+                </Tr>
+              );
+            })}
+          </Tbody>
+        </Table>
+      </TableContainer>
     </Layout>
   );
 }

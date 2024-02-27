@@ -50,6 +50,7 @@ export default function CategoryFormModal(props: MyModalProps) {
       [e.target.name]: e.target.value
     });
   }
+  console.log(!input.storeId, '<=================== input.storeId ==================');
 
   return (
     <>
@@ -89,7 +90,7 @@ export default function CategoryFormModal(props: MyModalProps) {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onSubmit(input)}>
+            <Button isDisabled={!input.storeId} colorScheme="blue" mr={3} onClick={onSubmit(input)}>
               Save
             </Button>
             <Button onClick={onClose}>Cancel</Button>

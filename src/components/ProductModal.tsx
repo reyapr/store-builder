@@ -167,7 +167,7 @@ export default function ProductFormModal(props: MyModalProps) {
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onSubmit(request)}>
+            <Button isDisabled={!request.storeId} colorScheme="blue" mr={3} onClick={onSubmit(request)}>
               Save
             </Button>
             <Button onClick={onClose}>Cancel</Button>

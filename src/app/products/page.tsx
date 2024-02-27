@@ -2,12 +2,12 @@
 import { useGetCateogries } from "@/app/categories/use-get-category";
 import { useCreateProduct } from "@/app/products/use-create-product";
 import { useDeleteProduct } from "@/app/products/use-delete-product";
+import { useGetProducts } from "@/app/products/use-get-product";
 import { useUpdateProduct } from "@/app/products/use-update-product";
 import { useGetStore } from "@/app/stores/use-get-store";
 import { DeleteAlert } from "@/components/DeleteAlert";
 import Layout from "@/components/Layout";
 import ProductFormModal from "@/components/ProductModal";
-import { IProduct } from "@/interfaces/product";
 import {
   Button,
   ButtonGroup,
@@ -23,37 +23,21 @@ import {
   Tr,
   useToast,
 } from "@chakra-ui/react";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-export default function ProductPage() {
+export default function ProductPage() {  
   const toast = useToast();
-  const [products, setProducts] = useState([] as IProduct[]);
   const {stores, fetchStores} = useGetStore(toast);
   const {categories, fetchCategories} = useGetCateogries(toast);
-  
-  const fetchProducts = async () => {
-    try {
-      const { data } = await axios.get('/api/products');
-      setProducts(data.products);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: (error as Error).message,
-        status: "error",
-        duration: 2500,
-        isClosable: true,
-      })
-    }
-  };
-  
-  const toIDRFormat = (price: number) => {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
-  }
+  const {products, fetchProducts} = useGetProducts(toast);
   
   const createProductHook = useCreateProduct(toast, fetchProducts);
   const updateProductHook = useUpdateProduct(toast, fetchProducts);
   const deleteProductHook = useDeleteProduct(toast, fetchProducts);
+  
+  const toIDRFormat = (price: number) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+  }
   
   useEffect(() => {
     fetchProducts();

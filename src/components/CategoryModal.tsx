@@ -50,7 +50,6 @@ export default function CategoryFormModal(props: MyModalProps) {
       [e.target.name]: e.target.value
     });
   }
-  console.log(!input.storeId, '<=================== input.storeId ==================');
 
   return (
     <>

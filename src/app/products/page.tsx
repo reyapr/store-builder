@@ -8,6 +8,7 @@ import { useGetStore } from "@/app/stores/use-get-store";
 import { DeleteAlert } from "@/components/DeleteAlert";
 import Layout from "@/components/Layout";
 import ProductFormModal from "@/components/ProductModal";
+import { toIDRFormat } from "@/utils/idr-format";
 import {
   Button,
   ButtonGroup,
@@ -34,10 +35,6 @@ export default function ProductPage() {
   const createProductHook = useCreateProduct(toast, fetchProducts);
   const updateProductHook = useUpdateProduct(toast, fetchProducts);
   const deleteProductHook = useDeleteProduct(toast, fetchProducts);
-  
-  const toIDRFormat = (price: number) => {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
-  }
   
   useEffect(() => {
     fetchProducts();

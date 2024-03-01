@@ -10,8 +10,6 @@ import { useUpdateStore } from "@/app/stores/use-update-store";
 import { useDeleteStore } from "@/app/stores/use-delete-store";
 import { useGetStore } from "@/app/stores/use-get-store";
 
-const tdStandardStyle = { border: '1px solid', padding: '5px'}
-
 export default function Store() {
   const supabase = createClient();
   const toast = useToast();

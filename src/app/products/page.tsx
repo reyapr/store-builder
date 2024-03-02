@@ -1,6 +1,6 @@
 "use client";
 import { useGetCateogries } from "@/app/categories/useGetCategory";
-import { useGetProducts } from "@/app/products/use-get-product";
+import { useGetProducts } from "@/app/products/useGetProduct";
 import { useCreateProduct } from "@/app/products/useCreateProduct";
 import { useDeleteProduct } from "@/app/products/useDeleteProduct";
 import { useUpdateProduct } from "@/app/products/useUpdateProduct";

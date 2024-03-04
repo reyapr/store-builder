@@ -23,19 +23,6 @@ export function ProductCard(props: ProductCardProps) {
   const product: IProduct = props.product
   const toast = useToast()
   
-  const handleAddProductToCart = () => {
-    try {
-      props.addToCart(props.product)
-    } catch (error) {
-      toast({
-        title: "Failed to add product to cart",
-        description: (error as Error).message,
-        status: "error",
-        duration: 2500,
-        isClosable: true,
-      })
-    }
-  }
   return (
     <Card>
       <CardBody>
@@ -59,7 +46,7 @@ export function ProductCard(props: ProductCardProps) {
       <Divider />
       <CardFooter>
         <ButtonGroup spacing="2">
-          <Button variant="solid" colorScheme="blue" onClick={handleAddProductToCart}>
+          <Button variant="solid" colorScheme="blue" onClick={() => props.addToCart(props.product)}>
             Tambah ke Cart
           </Button>
         </ButtonGroup>

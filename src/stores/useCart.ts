@@ -19,9 +19,6 @@ export const cartStore = create<IState & IActions>()(persist((set, get) => ({
     totalPrice: 0,
     addProduct: (product) => {
       const productInCart = get().products.find((p) => p.id === product.id);
-      if(productInCart && productInCart.quantity + 1 > productInCart?.stock) {
-        throw new Error('Stock is not enough');
-      }
       
       if (productInCart) {
         set((state) => ({

@@ -1,6 +1,7 @@
 import { useStore } from "@/app/[storeName]/useStore";
 import { cartStore } from "@/stores/useCart";
 import { Badge, Box, Flex, Icon, IconButton, Spacer, Text } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import { MdOutlineShoppingCart } from "react-icons/md";
 
 interface NavbarProps {
@@ -9,6 +10,7 @@ interface NavbarProps {
 
 export function Navbar(props: NavbarProps) {
   const cart = useStore(cartStore, (state) => state, props.storeName);
+  const router = useRouter();
   
   return (
     <Flex bg='gray.700'>
@@ -21,7 +23,7 @@ export function Navbar(props: NavbarProps) {
       <Box margin={3} marginRight={6}>
         <IconButton
           aria-label="cart"
-          onClick={() => {}}
+          onClick={() => router.push(`${props.storeName}/cart`)}
           variant={'outline'}
           icon={
             <Box>

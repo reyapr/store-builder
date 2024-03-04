@@ -4,7 +4,6 @@ import { persist } from "zustand/middleware";
 
 export interface IState {
   products: IProductCart[];
-  totalPrice: number;
 }
 
 export interface IActions {
@@ -12,11 +11,12 @@ export interface IActions {
   removeProduct: (productId: string) => void;
   getTotalQuantity: () => number;
   clearCart: () => void;
+  getProducts: () => IProductCart[];
+  getTotalPrice: () => number;
 }
 
 export const cartStore = create<IState & IActions>()(persist((set, get) => ({
     products: [],
-    totalPrice: 0,
     addProduct: (product) => {
       const productInCart = get().products.find((p) => p.id === product.id);
       
@@ -47,6 +47,8 @@ export const cartStore = create<IState & IActions>()(persist((set, get) => ({
       })),
     getTotalQuantity: () => get().products.reduce((acc, product) => acc + product.quantity, 0),
     clearCart: () => set({ products: [] }),
+    getProducts: () => get().products,
+    getTotalPrice: () => get().products.reduce((acc, product) => acc + (product.price * product.quantity), 0)
   }),
   {
     name: 'cart',

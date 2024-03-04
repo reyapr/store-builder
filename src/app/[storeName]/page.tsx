@@ -22,6 +22,7 @@ export default function StoreProductList({ params }: { params: { storeName: stri
     fetchProducts();
   }, []);
   
+  
   return (
     <Layout storeName={params.storeName}>
       <Grid gap={4} templateColumns='repeat(4, 1fr)'>

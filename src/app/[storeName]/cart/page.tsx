@@ -1,4 +1,5 @@
 "use client";
+import OrdererInput from "@/app/[storeName]/cart/components/OrdererInput";
 import { Layout } from "@/app/[storeName]/components/Layout";
 import { useStore } from "@/app/[storeName]/useStore";
 import NumberInput from "@/components/NumberInput";
@@ -6,6 +7,7 @@ import { cartStore } from "@/stores/useCart";
 import { toIDRFormat } from "@/utils/idr-format";
 import {
   Box,
+  Button,
   Card,
   CardBody,
   CardFooter,
@@ -18,7 +20,13 @@ import {
   Stack,
   StackDivider,
   Text,
+  Input,
+  FormLabel,
+  FormControl,
+  Textarea
 } from "@chakra-ui/react";
+import { clear } from "console";
+import { useState } from "react";
 
 export default function CartPage({
   params,
@@ -28,6 +36,19 @@ export default function CartPage({
   const cart = useStore(cartStore, (state) => state, params.storeName);
   const items = (cart.getProducts && cart.getProducts()) || [];
   const totalCartPrice = cart.getTotalPrice && cart.getTotalPrice();
+  
+  const [input, setInput] = useState({
+    name: '',
+    phone: '',
+    address: ''
+  })
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setInput({
+      ...input,
+      [e.target.name]: e.target.value
+    })
+  }
 
   return (
     <Layout storeName={params.storeName}>
@@ -53,7 +74,7 @@ export default function CartPage({
                   <Text>Quantity: {product.quantity}</Text>
                 </Box>
                 <Spacer/>
-                <Box alignSelf={'center'}>
+                <Box alignSelf='center'>
                   <NumberInput 
                     quantity={product.quantity} 
                     productId={product.id} 
@@ -66,8 +87,25 @@ export default function CartPage({
         </CardBody>
         <Divider />
         <CardFooter>
-          <Text>Total: {toIDRFormat(totalCartPrice)}</Text>
+          <Box alignSelf='center'>
+            <Heading fontSize={'xl'}>
+              <Text>Order Detail</Text>
+            </Heading>
+            <Text>Total: {toIDRFormat(totalCartPrice)}</Text>
+          </Box>
+          <Spacer/>
+          <Box alignSelf='center'>
+            <Button bgColor='blue.200'>Pesan</Button>
+          </Box>
         </CardFooter>
+      </Card>
+      <Card>
+        <CardHeader>
+          <Heading>Data Pemesan</Heading>
+        </CardHeader>
+        <CardBody>
+          <OrdererInput input={input} handleChange={handleChange} />
+        </CardBody>
       </Card>
     </Layout>
   );

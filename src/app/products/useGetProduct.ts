@@ -3,11 +3,11 @@ import { CreateToastFnReturn } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
 
-export function useGetProducts(toast: CreateToastFnReturn) {
+export function useGetProducts(toast: CreateToastFnReturn, storeName?: string) {
   const [products, setProducts] = useState([] as IProduct[]);
   const fetchProducts = async () => {
     try {
-      const { data } = await axios.get('/api/products');
+      const { data } = await axios.get('/api/products', { params: { storeName, isStockAvailable: true } });
       setProducts(data.products);
     } catch (error) {
       toast({

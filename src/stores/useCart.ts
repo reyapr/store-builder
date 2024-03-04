@@ -13,6 +13,7 @@ export interface IActions {
   clearCart: () => void;
   getProducts: () => IProductCart[];
   getTotalPrice: () => number;
+  updateProductQuantity: (productId: string, num: number) => void;
 }
 
 export const cartStore = create<IState & IActions>()(persist((set, get) => ({
@@ -48,7 +49,12 @@ export const cartStore = create<IState & IActions>()(persist((set, get) => ({
     getTotalQuantity: () => get().products.reduce((acc, product) => acc + product.quantity, 0),
     clearCart: () => set({ products: [] }),
     getProducts: () => get().products,
-    getTotalPrice: () => get().products.reduce((acc, product) => acc + (product.price * product.quantity), 0)
+    getTotalPrice: () => get().products.reduce((acc, product) => acc + (product.price * product.quantity), 0),
+    updateProductQuantity: (productId, num) => {
+        set(state => ({
+          products: state.products.map((p: IProductCart) => p.id === productId ? {...p, quantity: p.quantity + num } : p)
+        }))
+    }
   }),
   {
     name: 'cart',

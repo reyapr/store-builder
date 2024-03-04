@@ -15,7 +15,7 @@ export default function StoreProductList({ params }: { params: { storeName: stri
   const cart = useStore(cartStore, (state) => state)
   
   const { validateCurrentPage } = useProductList(toast, router, params.storeName);
-  const { products, fetchProducts }  = useGetProducts(toast, params.storeName);
+  const { products, fetchProducts }  = useGetProducts(toast, params.storeName, true);
   
   useEffect(() => {
     validateCurrentPage();

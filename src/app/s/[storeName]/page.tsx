@@ -1,7 +1,7 @@
 "use client"
-import { Layout } from "@/app/[storeName]/components/Layout";
-import { useProductList } from "@/app/[storeName]/use-product-list";
-import { useStore } from "@/app/[storeName]/useStore";
+import { Layout } from "@/app/s/[storeName]/components/Layout";
+import { useProductList } from "@/app/s/[storeName]/use-product-list";
+import { useStore } from "@/app/s/[storeName]/useStore";
 import { useGetProducts } from "@/app/products/useGetProduct";
 import { ProductCard } from "@/components/ProductCard";
 import { cartStore } from "@/stores/useCart";

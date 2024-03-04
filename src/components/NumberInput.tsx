@@ -16,7 +16,7 @@ export default function NumberInput(props: INumberInputProps) {
     <HStack maxW="140px">
       <Button 
         onClick={() => handleQuantity(1)} bgColor='cyan.200'>+</Button>
-      <Input value={props.quantity} />
+      <Input value={props.quantity} padding='0px' textAlign={'center'}/>
       <Button onClick={() => handleQuantity(-1)} bgColor='red.200'>-</Button>
     </HStack>
   )

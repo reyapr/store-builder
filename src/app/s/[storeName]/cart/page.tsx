@@ -1,7 +1,7 @@
 "use client";
-import OrdererInput from "@/app/[storeName]/cart/components/OrdererInput";
-import { Layout } from "@/app/[storeName]/components/Layout";
-import { useStore } from "@/app/[storeName]/useStore";
+import OrdererInput from "@/app/s/[storeName]/cart/components/OrdererInput";
+import { Layout } from "@/app/s/[storeName]/components/Layout";
+import { useStore } from "@/app/s/[storeName]/useStore";
 import NumberInput from "@/components/NumberInput";
 import { cartStore } from "@/stores/useCart";
 import { toIDRFormat } from "@/utils/idr-format";
@@ -21,7 +21,6 @@ import {
   Text,
   SimpleGrid,
 } from "@chakra-ui/react";
-import { clear } from "console";
 import { useState } from "react";
 
 export default function CartPage({
@@ -34,9 +33,9 @@ export default function CartPage({
   const totalCartPrice = cart.getTotalPrice && cart.getTotalPrice();
 
   const [input, setInput] = useState({
-    name: "",
-    phone: "",
-    address: "",
+    name: '',
+    phone: '',
+    address: '',
   });
 
   const handleChange = (
@@ -51,28 +50,22 @@ export default function CartPage({
   const isSubmitDisabled = !input.name || !input.phone || !input.address;
   
   const handleOrder = () => {
-    const text = `Assalamualaikum, saya mau order .
-    
+    const text = `Assalamualaikum, saya mau order.
     ${items.map((product, i) => {
-      return `*${i}. ${product.name}* 
-      Quantity: ${product.quantity} 
-      Harga (@): ${toIDRFormat(product.price)} 
-      Total Harga: ${toIDRFormat(product.price * product.quantity)}\n`;
-    })}
-    
-    Total : *${totalCartPrice}*
-    
-    Pengiriman : *${input.address}*
-    
-    --------------------------------
-    *Nama :*
-    ${input.name} ( ${input.phone} ) 
-    
-    *Alamat :*
-    ${input.address}
-    
-    Via https://test.id`
-    const waUrl = `https://wa.me/${input.phone}?text=${text}`
+      return `\n${i+1}. *${product.name}*
+      Quantity: ${product.quantity}
+      Harga (@): ${toIDRFormat(product.price)}
+      Total Harga: ${toIDRFormat(product.price * product.quantity)}`;
+    }).join(' ')}` +
+    `\n\nTotal : *${toIDRFormat(totalCartPrice)}*`+
+    `\n\n*Pengiriman* : ${input.address}\n` +
+    '--------------------------------' +
+    '\n*Nama :*' +
+    `\n${input.name} ( ${input.phone} )` +
+    '\n\n*Alamat :*' + 
+    `\n${input.address}` + 
+    `\nVia ${location.origin}`
+    const waUrl = `https://wa.me/+6285723087803?text=${encodeURI(text)}`
     window.open(waUrl, '_blank');
   }
   

@@ -1,4 +1,4 @@
-import { useStore } from "@/app/[storeName]/useStore";
+import { useStore } from "@/app/s/[storeName]/useStore";
 import { cartStore } from "@/stores/useCart";
 import { Badge, Box, Flex, Icon, IconButton, Spacer, Text } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";

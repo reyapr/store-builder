@@ -32,6 +32,7 @@ export default function OrdererInput(props: IOrdererInputProps) {
         placeholder="No. Handphone"
         marginBottom={2}
         onChange={props.handleChange}
+        type="number"
       />
 
       <FormLabel>Alamat Lengkap/Pengiriman:</FormLabel>

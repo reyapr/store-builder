@@ -1,4 +1,4 @@
-import { Navbar } from "@/app/[storeName]/components/Navbar";
+import { Navbar } from "@/app/s/[storeName]/components/Navbar";
 import { Box } from "@chakra-ui/react";
 
 interface LayoutProps {

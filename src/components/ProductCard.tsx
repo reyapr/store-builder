@@ -11,7 +11,6 @@ import {
   Button,
   Image,
   Text,
-  useToast
 } from "@chakra-ui/react";
 
 interface ProductCardProps {
@@ -21,8 +20,7 @@ interface ProductCardProps {
 
 export function ProductCard(props: ProductCardProps) {
   const product: IProduct = props.product
-  const toast = useToast()
-  
+
   return (
     <Card>
       <CardBody>

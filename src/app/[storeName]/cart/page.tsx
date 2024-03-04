@@ -47,6 +47,35 @@ export default function CartPage({
       [e.target.name]: e.target.value,
     });
   };
+  
+  const isSubmitDisabled = !input.name || !input.phone || !input.address;
+  
+  const handleOrder = () => {
+    const text = `Assalamualaikum, saya mau order .
+    
+    ${items.map((product, i) => {
+      return `*${i}. ${product.name}* 
+      Quantity: ${product.quantity} 
+      Harga (@): ${toIDRFormat(product.price)} 
+      Total Harga: ${toIDRFormat(product.price * product.quantity)}\n`;
+    })}
+    
+    Total : *${totalCartPrice}*
+    
+    Pengiriman : *${input.address}*
+    
+    --------------------------------
+    *Nama :*
+    ${input.name} ( ${input.phone} ) 
+    
+    *Alamat :*
+    ${input.address}
+    
+    Via https://test.id`
+    const waUrl = `https://wa.me/${input.phone}?text=${text}`
+    window.open(waUrl, '_blank');
+  }
+  
 
   return (
     <Layout storeName={params.storeName}>
@@ -106,7 +135,7 @@ export default function CartPage({
               </Box>
               <Spacer />
               <Box alignSelf="center">
-                <Button bgColor="blue.200">Pesan</Button>
+                <Button isDisabled={isSubmitDisabled} bgColor="blue.200" onClick={handleOrder}>Pesan</Button>
               </Box>
             </Flex>
           </CardBody>

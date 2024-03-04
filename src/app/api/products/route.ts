@@ -5,6 +5,7 @@ import { ICreateProductRequest } from "@/interfaces/product";
 
 export async function GET(request: NextRequest) {
   const storeName  = request.nextUrl.searchParams.get('storeName');
+  const isStockAvailable = request.nextUrl.searchParams.get('isStockAvailable');
   const dbQuery: Prisma.ProductFindManyArgs = {
     include: {
       categories: true,
@@ -20,6 +21,13 @@ export async function GET(request: NextRequest) {
   if(storeName) {
     dbQuery.where!.store = { name: storeName as string }
   }
+  
+  if(isStockAvailable) {
+    dbQuery.where!.stock = {
+      gt: 0
+    }
+  }
+  
   try {
     const products = await prisma.product.findMany(dbQuery);
     return NextResponse.json({ products }, { status: 200 });

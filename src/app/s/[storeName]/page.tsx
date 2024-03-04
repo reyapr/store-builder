@@ -2,7 +2,7 @@
 import { Layout } from "@/app/s/[storeName]/components/Layout";
 import { useProductList } from "@/app/s/[storeName]/use-product-list";
 import { useStore } from "@/app/s/[storeName]/useStore";
-import { useGetProducts } from "@/app/products/useGetProduct";
+import { useGetProducts } from "@/app/dashboard/products/useGetProduct";
 import { ProductCard } from "@/components/ProductCard";
 import { cartStore } from "@/stores/useCart";
 import { Grid, useToast } from "@chakra-ui/react";

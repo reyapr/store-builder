@@ -5,10 +5,10 @@ import { createClient } from "@/utils/supabase/client";
 import { Button, ButtonGroup, Grid, GridItem, Table, TableCaption, TableContainer, Tag, Tbody, Th, Thead, Tr, useToast } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { DeleteAlert } from "@/components/DeleteAlert";
-import { useCreateStore } from "@/app/stores/useCreateStore";
-import { useUpdateStore } from "@/app/stores/useUpdateStore";
-import { useDeleteStore } from "@/app/stores/useDeleteStore";
-import { useGetStore } from "@/app/stores/useGetStore";
+import { useCreateStore } from "@/app/dashboard/stores/useCreateStore";
+import { useUpdateStore } from "@/app/dashboard/stores/useUpdateStore";
+import { useDeleteStore } from "@/app/dashboard/stores/useDeleteStore";
+import { useGetStore } from "@/app/dashboard/stores/useGetStore";
 
 export default function Store() {
   const supabase = createClient();

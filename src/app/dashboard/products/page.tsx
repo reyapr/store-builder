@@ -1,10 +1,10 @@
 "use client";
-import { useGetCateogries } from "@/app/categories/useGetCategory";
-import { useGetProducts } from "@/app/products/useGetProduct";
-import { useCreateProduct } from "@/app/products/useCreateProduct";
-import { useDeleteProduct } from "@/app/products/useDeleteProduct";
-import { useUpdateProduct } from "@/app/products/useUpdateProduct";
-import { useGetStore } from "@/app/stores/useGetStore";
+import { useGetCateogries } from "@/app/dashboard/categories/useGetCategory";
+import { useGetProducts } from "@/app/dashboard/products/useGetProduct";
+import { useCreateProduct } from "@/app/dashboard/products/useCreateProduct";
+import { useDeleteProduct } from "@/app/dashboard/products/useDeleteProduct";
+import { useUpdateProduct } from "@/app/dashboard/products/useUpdateProduct";
+import { useGetStore } from "@/app/dashboard/stores/useGetStore";
 import { DeleteAlert } from "@/components/DeleteAlert";
 import Layout from "@/components/Layout";
 import ProductFormModal from "@/components/ProductModal";

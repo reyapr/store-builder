@@ -1,5 +1,5 @@
 import { useCartStore } from "@/stores/useCart";
-import { Box, Flex, Icon, Spacer, Text } from "@chakra-ui/react";
+import { Badge, Box, Flex, Icon, IconButton, Spacer, Text } from "@chakra-ui/react";
 import { MdOutlineShoppingCart } from "react-icons/md";
 
 interface NavbarProps {
@@ -18,7 +18,19 @@ export function Navbar(props: NavbarProps) {
       </Box>
       <Spacer />
       <Box margin={3} marginRight={6}>
-        <Icon fontSize={'2xl'} color={'white'} as={MdOutlineShoppingCart}/>
+        <IconButton
+          aria-label="cart"
+          onClick={() => {}}
+          variant={'outline'}
+          icon={
+            <Box>
+              <Icon fontSize={'2xl'} color={'white'} as={MdOutlineShoppingCart}/>
+              <Badge colorScheme="red" borderRadius="full" variant="solid" position="absolute" top={-1} right={-1}>
+                {cart.getTotalQuantity()}
+              </Badge>
+            </Box>
+          }
+        />
       </Box>
     </Flex>
   )

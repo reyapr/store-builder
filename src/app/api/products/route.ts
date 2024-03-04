@@ -3,19 +3,25 @@ import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { ICreateProductRequest } from "@/interfaces/product";
 
-export async function GET(request: Request) {
-  try {
-    const products = await prisma.product.findMany({
-      include: {
-        categories: true,
-        store: true
-      },
-      where: {
-        store: {
-          isDeleted: false
-        }
+export async function GET(request: NextRequest) {
+  const storeName  = request.nextUrl.searchParams.get('storeName');
+  const dbQuery: Prisma.ProductFindManyArgs = {
+    include: {
+      categories: true,
+      store: true
+    },
+    where: {
+      store: {
+        isDeleted: false
       }
-    });
+    }
+  }
+
+  if(storeName) {
+    dbQuery.where!.store = { name: storeName as string }
+  }
+  try {
+    const products = await prisma.product.findMany(dbQuery);
     return NextResponse.json({ products }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: (error as Error).message }, { status: 500 });

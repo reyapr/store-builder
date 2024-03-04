@@ -80,7 +80,7 @@ export default function ProductFormModal(props: MyModalProps) {
     });
   }
   
-  const handleQuantityChange = (value: string) => {
+  const handleStockChange = (value: string) => {
     const quantity = parseInt(value) || 0;
     if (quantity < 0) return;
     setInput({
@@ -127,12 +127,12 @@ export default function ProductFormModal(props: MyModalProps) {
               />
             </FormControl>
             <FormControl marginBottom={2}>
-              <FormLabel>Quantity</FormLabel>
+              <FormLabel>Stock</FormLabel>
               <NumberInput 
                 value={input.stock} 
-                onChange={handleQuantityChange} 
+                onChange={handleStockChange} 
               >
-                <NumberInputField placeholder="Product Quantity" />
+                <NumberInputField placeholder="Product Stock" />
                 <NumberInputStepper>
                   <NumberIncrementStepper />
                   <NumberDecrementStepper />

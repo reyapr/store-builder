@@ -85,7 +85,7 @@ export default function ProductPage() {
               <Th>ID</Th>
               <Th>Name</Th>
               <Th>Price</Th>
-              <Th>Quantity</Th>
+              <Th>Stock</Th>
               <Th>Store</Th>
               <Th>Categories</Th>
               <Th>Actions</Th>

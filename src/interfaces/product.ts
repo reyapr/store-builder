@@ -41,5 +41,5 @@ export interface IEditProductRequest {
 }
 
 export interface IProductCart extends IProduct {
-  total: number;
+  quantity: number;
 }

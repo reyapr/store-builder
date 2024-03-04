@@ -1,5 +1,7 @@
 import { prisma } from "@/app/api/config";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
+import { ICreateProductRequest } from "@/interfaces/product";
 
 export async function GET(request: Request) {
   try {
@@ -21,21 +23,21 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const productRequest = await request.json();
+  const productRequest: ICreateProductRequest = await request.json();
   try {
     
     const product = await prisma.product.create({
       data: { 
         name: productRequest.name,
         price: productRequest.price,
-        quantity: productRequest.quantity,
+        stock: productRequest.stock,
         store: {
           connect: {
             id: productRequest.storeId
           }
         },
         categories: {
-          connect: productRequest.categoryIds.map((id: number) => ({ id }))
+          connect: productRequest.categoryIds.map((id: string) => ({ id }))
         }
       },
     });

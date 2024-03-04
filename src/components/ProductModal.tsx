@@ -40,7 +40,7 @@ export default function ProductFormModal(props: MyModalProps) {
   const [input, setInput] = useState({
     name: '',
     price: '',
-    quantity: 0,
+    stock: 0,
     storeId: '',
     categories: []
   } as ICreateProductInput);
@@ -60,7 +60,7 @@ export default function ProductFormModal(props: MyModalProps) {
       name: data?.name || '',
       storeId: data?.storeId || '',
       price: data?.price || '',
-      quantity: data?.quantity || 0,
+      stock: data?.stock || 0,
       categories: data?.categories || []
     });
   }, [data?.name]);
@@ -85,7 +85,7 @@ export default function ProductFormModal(props: MyModalProps) {
     if (quantity < 0) return;
     setInput({
       ...input,
-      quantity
+      stock: quantity
     });
   }
   
@@ -129,7 +129,7 @@ export default function ProductFormModal(props: MyModalProps) {
             <FormControl marginBottom={2}>
               <FormLabel>Quantity</FormLabel>
               <NumberInput 
-                value={input.quantity} 
+                value={input.stock} 
                 onChange={handleQuantityChange} 
               >
                 <NumberInputField placeholder="Product Quantity" />

@@ -1,8 +1,9 @@
 import { prisma } from "@/app/api/config";
+import { ICreateProductRequest } from "@/interfaces/product";
 import { NextResponse } from "next/server";
 
 export async function PATCH(request: Request, context: { params: any }) {
-  const productRequest = await request.json();
+  const productRequest: ICreateProductRequest = await request.json();
   const { id } = context.params as { id: string };
   try {
     const store = await prisma.product.update({
@@ -12,14 +13,14 @@ export async function PATCH(request: Request, context: { params: any }) {
       data: {
         name: productRequest.name,
         price: productRequest.price,
-        quantity: productRequest.quantity,
+        stock: productRequest.stock,
         store: {
           connect: {
             id: productRequest.storeId
           }
         },
         categories: {
-          set: productRequest.categoryIds.map((id: number) => ({ id }))
+          set: productRequest.categoryIds.map((id: string) => ({ id }))
         }
       }
     });

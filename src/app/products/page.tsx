@@ -98,7 +98,7 @@ export default function ProductPage() {
                   <Th>{product.id}</Th>
                   <Th>{product.name}</Th>
                   <Th>{toIDRFormat(product.price)}</Th>
-                  <Th>{product.quantity}</Th>
+                  <Th>{product.stock}</Th>
                   <Th>{product.store.name}</Th>
                   <Th>{product.categories.map(category => {
                     return (

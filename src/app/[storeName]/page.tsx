@@ -12,7 +12,7 @@ import { useEffect } from "react";
 export default function StoreProductList({ params }: { params: { storeName: string } }) {
   const toast = useToast();
   const router = useRouter();
-  const cart = useStore(cartStore, (state) => state)
+  const cart = useStore(cartStore, (state) => state, params.storeName)
   
   const { validateCurrentPage } = useProductList(toast, router, params.storeName);
   const { products, fetchProducts }  = useGetProducts(toast, params.storeName, true);

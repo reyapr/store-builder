@@ -8,7 +8,7 @@ interface NavbarProps {
 }
 
 export function Navbar(props: NavbarProps) {
-  const cart = useStore(cartStore, (state) => state);
+  const cart = useStore(cartStore, (state) => state, props.storeName);
   
   return (
     <Flex bg='gray.700'>

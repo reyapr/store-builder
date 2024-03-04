@@ -7,11 +7,17 @@ interface INumberInputProps {
 }
 
 export default function NumberInput(props: INumberInputProps) {
+  
+  const handleQuantity = (num: number) => {
+    props.updateProductQuantity(props.productId, num)
+  }
+  
   return (
-    <HStack maxW="150px">
-      <Button onClick={() => props.updateProductQuantity(props.productId, 1)}>+</Button>
+    <HStack maxW="140px">
+      <Button 
+        onClick={() => handleQuantity(1)} bgColor='cyan.200'>+</Button>
       <Input value={props.quantity} />
-      <Button onClick={() => props.updateProductQuantity(props.productId, -1)}>-</Button>
+      <Button onClick={() => handleQuantity(-1)} bgColor='red.200'>-</Button>
     </HStack>
   )
 }

@@ -1,4 +1,5 @@
-import { useCartStore } from "@/stores/useCart";
+import { useStore } from "@/app/[storeName]/useStore";
+import { cartStore } from "@/stores/useCart";
 import { Badge, Box, Flex, Icon, IconButton, Spacer, Text } from "@chakra-ui/react";
 import { MdOutlineShoppingCart } from "react-icons/md";
 
@@ -7,7 +8,7 @@ interface NavbarProps {
 }
 
 export function Navbar(props: NavbarProps) {
-  const cart = useCartStore();
+  const cart = useStore(cartStore, (state) => state);
   
   return (
     <Flex bg='gray.700'>
@@ -26,7 +27,7 @@ export function Navbar(props: NavbarProps) {
             <Box>
               <Icon fontSize={'2xl'} color={'white'} as={MdOutlineShoppingCart}/>
               <Badge colorScheme="red" borderRadius="full" variant="solid" position="absolute" top={-1} right={-1}>
-                {cart.getTotalQuantity()}
+                {cart.getTotalQuantity && cart.getTotalQuantity()}
               </Badge>
             </Box>
           }

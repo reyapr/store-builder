@@ -1,6 +1,7 @@
 import { useStore } from "@/app/s/[storeName]/useStore";
 import { cartStore } from "@/stores/useCart";
 import { Badge, Box, Flex, Icon, IconButton, Spacer, Text } from "@chakra-ui/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MdOutlineShoppingCart } from "react-icons/md";
 
@@ -15,9 +16,12 @@ export function Navbar(props: NavbarProps) {
   return (
     <Flex bg='gray.700'>
       <Box margin={3}>
-        <Text fontSize="2xl" fontWeight="bold" color={'white'}>
-          {props.storeName}
-        </Text>
+        <Link href={`/s/${props.storeName}`}>
+          <Text fontSize="2xl" fontWeight="bold" color={'white'}>
+            {props.storeName}
+          </Text>
+        </Link>
+       
       </Box>
       <Spacer />
       <Box margin={3} marginRight={6}>

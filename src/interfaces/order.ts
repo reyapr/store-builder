@@ -15,13 +15,14 @@ export interface IProductOrder {
   id: number;
   quantity: number;
   product: {
+    id: string;
     name: string;
     price: number;
   }
 }
 
 export interface IOrders {
-  id: number;
+  id: string;
   total: number;
   createdAt: string;
   updatedAt: string;
@@ -34,5 +35,14 @@ export interface IOrders {
   store: {
     name: string;
   },
+  status: string;
+}
+
+export interface IUpdateOrderStatusRequest {
+  id: string;
+  status: string;
+}
+
+export interface IUpdateOrderStatusApiRequest {
   status: string;
 }

@@ -1,9 +1,10 @@
 "use client";
+import UpdateStatusModal from "@/app/dashboard/orders/components/UpdateStatusModal";
 import ListOfProductModal from "@/app/dashboard/orders/components/ListOfProductModal";
 import { useGetOrder } from "@/app/dashboard/orders/useGetOrder";
 import { useViewProductOrders } from "@/app/dashboard/orders/useViewProductOrders";
 import Layout from "@/components/Layout";
-import { EOrderStatus } from "@/constants/order";
+import { EOrderStatus, mapOrderStatusToColor } from "@/constants/order";
 import { IProductOrder } from "@/interfaces/order";
 import { toIDRFormat } from "@/utils/idr-format";
 import { sortByCreatedAt } from "@/utils/sort";
@@ -19,20 +20,15 @@ import {
   Tag,
   ButtonGroup,
   useToast,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
-
-const mapStatusToColor: {[key: string]: string} = {
-  [EOrderStatus.PENDING]: "orange",
-  [EOrderStatus.COMPLETED]: "green",
-  [EOrderStatus.FAILED]: "red",
-}
+import { useUpdateOrderStatus } from "@/app/dashboard/orders/useUpdateStatus";
 
 export default function Home() {
   const toast = useToast();
   const { orders, fetchOrders } = useGetOrder(toast);
-  const viewProductOrders = useViewProductOrders();
+  const viewProductOrdersHook = useViewProductOrders();
+  const updateOrderStatusHook = useUpdateOrderStatus(toast, fetchOrders);
   
   const getTotalQuantity = (items: IProductOrder[]) => {
     return items.reduce((acc, item) => {
@@ -53,9 +49,16 @@ export default function Home() {
   return (
     <Layout>
       <ListOfProductModal
-        isOpen={viewProductOrders.isOpen}
-        onClose={viewProductOrders.onClose}
-        productOrders={viewProductOrders.productOrders}
+        isOpen={viewProductOrdersHook.isOpen}
+        onClose={viewProductOrdersHook.onClose}
+        productOrders={viewProductOrdersHook.productOrders}
+      />
+      <UpdateStatusModal
+        isOpen={updateOrderStatusHook.isOpen}
+        onClose={updateOrderStatusHook.onClose}
+        statuses={Object.values(EOrderStatus)}
+        orderRequest={updateOrderStatusHook.request}
+        onSubmit={updateOrderStatusHook.onSubmit}
       />
       <TableContainer>
         <Table variant={"simple"}>
@@ -86,13 +89,13 @@ export default function Home() {
                   <Th>
                     <Button
                       colorScheme="cyan"
-                      onClick={() => viewProductOrders.onOpen(order.products)}
+                      onClick={() => viewProductOrdersHook.onOpen(order.products)}
                     >
                       View
                     </Button>
                   </Th>
                   <Th>
-                    <Tag colorScheme={mapStatusToColor[order.status]}>
+                    <Tag colorScheme={mapOrderStatusToColor[order.status]}>
                       {order.status}
                     </Tag>
                   </Th>
@@ -100,7 +103,7 @@ export default function Home() {
                     <ButtonGroup gap={2}>
                       <Button
                         colorScheme="blue"
-                        onClick={() => {}}
+                        onClick={() => updateOrderStatusHook.onOpen({ id: order.id, status: order.status })}
                       >
                         Update Status
                       </Button>

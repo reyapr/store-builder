@@ -110,3 +110,24 @@ export async function POST(request: Request) {
     );
   }
 }
+
+
+export async function GET() {
+  const orders = await prisma.order.findMany({
+    include: {
+      customer: true,
+      products: {
+        include: {
+          product: true,
+        },
+      },
+      store: true,
+    },
+    where: {
+      store: {
+        isDeleted: false,
+      }
+    }
+  });
+  return NextResponse.json(orders, { status: 200 });
+}

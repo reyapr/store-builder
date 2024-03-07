@@ -44,24 +44,26 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Store does not exist' }, { status: 400 });
     }
     
-    let customer = await prisma.customer.findUnique({
-      where: {
-        phoneNumber: orderRequest.orderer.phoneNumber
-      }
-    })
     
-    if(!customer) {
-      customer = await prisma.customer.create({
-        data: {
-          name: orderRequest.orderer.name,
-          phoneNumber: orderRequest.orderer.phoneNumber,
-          address: orderRequest.orderer.address,
-        }
-      })
-    }
     
     const order = await prisma.$transaction(async (trx) => {
       await promiseUpdateStock(trx, orderRequest.items)
+      
+      let customer = await trx.customer.findUnique({
+        where: {
+          phoneNumber: orderRequest.orderer.phoneNumber
+        }
+      })
+      
+      if(!customer) {
+        customer = await trx.customer.create({
+          data: {
+            name: orderRequest.orderer.name,
+            phoneNumber: orderRequest.orderer.phoneNumber,
+            address: orderRequest.orderer.address,
+          }
+        })
+      }
       
       return trx.order.create({
         data: {

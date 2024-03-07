@@ -1,19 +1,29 @@
 import { prisma } from "@/app/api/config";
 import { createCategorySchema } from "@/app/api/validator";
-import { NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: Request) {
-  try {
-    const categories = await prisma.category.findMany({
-      include: {
-        store: true,
-      },
-      where: {
-        store: {
-          isDeleted: false
-        }
+export async function GET(request: NextRequest) {
+  const storeName  = request.nextUrl.searchParams.get('storeName');
+  
+  const dbQuery: Prisma.CategoryFindManyArgs = {
+    include: {
+      store: true
+    },
+    where: {
+      store: {
+        isDeleted: false
       }
-    });
+    }
+  }
+      
+  if(storeName) {
+    dbQuery.where!.store = { name: storeName as string }
+  }
+  
+  try {
+    const categories = await prisma.category.findMany(dbQuery);
+    
     return NextResponse.json({ categories }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: (error as Error).message }, { status: 500 });

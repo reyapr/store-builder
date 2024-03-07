@@ -5,9 +5,14 @@ import { useState } from "react";
 
 export function useGetProducts(toast: CreateToastFnReturn, storeName?: string, isStockAvailable?: boolean) {
   const [products, setProducts] = useState([] as IProduct[]);
-  const fetchProducts = async () => {
+  const fetchProducts = async (categoryIds?: string[]) => {
     try {
-      const { data } = await axios.get('/api/products', { params: { storeName, isStockAvailable } });
+      const { data } = await axios.get('/api/products', { 
+        params: { 
+          storeName, isStockAvailable, 
+          categories: categoryIds?.join(',')
+        } 
+      });
       setProducts(data.products);
     } catch (error) {
       toast({

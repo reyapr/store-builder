@@ -7,6 +7,8 @@ import { createProductSchema } from "@/app/api/validator";
 export async function GET(request: NextRequest) {
   const storeName  = request.nextUrl.searchParams.get('storeName');
   const isStockAvailable = request.nextUrl.searchParams.get('isStockAvailable');
+  const categories = request.nextUrl.searchParams.get('categories');
+  
   const dbQuery: Prisma.ProductFindManyArgs = {
     include: {
       categories: true,
@@ -26,6 +28,16 @@ export async function GET(request: NextRequest) {
   if(isStockAvailable) {
     dbQuery.where!.stock = {
       gt: 0
+    }
+  }
+  
+  if(categories) {
+    dbQuery.where!.categories = {
+      some: {
+        id: {
+          in: categories.split(',')
+        }
+      }
     }
   }
   

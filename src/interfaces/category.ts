@@ -1,3 +1,4 @@
+import { IStore } from "@/interfaces/store";
 
 export interface ICreateCategoryRequest {
   name: string;
@@ -16,4 +17,5 @@ export interface ICategory {
   storeId: string;
   createdAt: string;
   updatedAt: string;
+  store?: IStore;
 }

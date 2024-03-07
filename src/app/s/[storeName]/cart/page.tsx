@@ -3,6 +3,7 @@ import OrdererInput from "@/app/s/[storeName]/cart/components/OrdererInput";
 import { Layout } from "@/app/s/[storeName]/components/Layout";
 import { useStore } from "@/app/s/[storeName]/useStore";
 import NumberInput from "@/components/NumberInput";
+import { IOrderRequest } from "@/interfaces/order";
 import { cartStore } from "@/stores/useCart";
 import { toIDRFormat } from "@/utils/idr-format";
 import {
@@ -20,7 +21,9 @@ import {
   StackDivider,
   Text,
   SimpleGrid,
+  useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
 import { useState } from "react";
 
 export default function CartPage({
@@ -28,13 +31,14 @@ export default function CartPage({
 }: {
   params: { storeName: string };
 }) {
+  const toast = useToast();
   const cart = useStore(cartStore, (state) => state, params.storeName);
   const items = (cart.getProducts && cart.getProducts()) || [];
   const totalCartPrice = cart.getTotalPrice && cart.getTotalPrice();
 
   const [input, setInput] = useState({
     name: '',
-    phone: '',
+    phoneNumber: '',
     address: '',
   });
 
@@ -47,9 +51,9 @@ export default function CartPage({
     });
   };
   
-  const isSubmitDisabled = !input.name || !input.phone || !input.address;
+  const isSubmitDisabled = !input.name || !input.phoneNumber || !input.address || !items.length;
   
-  const handleOrder = () => {
+  const redirectToWA = () => {
     const text = `Assalamualaikum, saya mau order.
     ${items.map((product, i) => {
       return `\n${i+1}. *${product.name}*
@@ -61,12 +65,42 @@ export default function CartPage({
     `\n\n*Pengiriman* : ${input.address}\n` +
     '--------------------------------' +
     '\n*Nama :*' +
-    `\n${input.name} ( ${input.phone} )` +
+    `\n${input.name} ( ${input.phoneNumber} )` +
     '\n\n*Alamat :*' + 
     `\n${input.address}` + 
     `\nVia ${location.origin}`
+    
+    
     const waUrl = `https://wa.me/+6285723087803?text=${encodeURI(text)}`
-    window.open(waUrl, '_blank');
+    window.location.replace(waUrl);
+  }
+  
+  const createOrder = async () => {
+    const request: IOrderRequest = {
+      storeName: params.storeName,
+      items: items,
+      totalPrice: totalCartPrice,
+      orderer: input,
+    }
+    
+    await axios.post(`/api/order`, request)
+  }
+  
+  const handleOrder = async () => {
+    try {
+      await createOrder()
+      cart.clearCart()
+      redirectToWA()
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Gagal membuat pesanan. Silahkan coba lagi.',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    }
+    
   }
   
 

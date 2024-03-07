@@ -4,7 +4,7 @@ import { useState } from "react";
 interface IOrdererInputProps {
   input: {
     name: string;
-    phone: string;
+    phoneNumber: string;
     address: string;
   };
   handleChange: (
@@ -27,8 +27,8 @@ export default function OrdererInput(props: IOrdererInputProps) {
 
       <FormLabel>Nomor Handphone:</FormLabel>
       <Input
-        name="phone"
-        value={props.input.phone}
+        name="phoneNumber"
+        value={props.input.phoneNumber}
         placeholder="No. Handphone"
         marginBottom={2}
         onChange={props.handleChange}

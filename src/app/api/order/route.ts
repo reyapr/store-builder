@@ -1,7 +1,34 @@
 import { prisma } from "@/app/api/config";
 import { EOrderStatus } from "@/constants/order";
 import { IOrderRequest } from "@/interfaces/order";
+import { IProductCart } from "@/interfaces/product";
+import { PrismaClient } from "@prisma/client/extension";
 import { NextResponse } from "next/server";
+
+const promiseUpdateStock = (trx: PrismaClient, items: IProductCart[]) => Promise.all(items.map(async (item) => {
+  const product = await trx.product.findUnique({
+    where: {
+      id: item.id
+    }
+  })
+  
+  if (!product) {
+    throw new Error('Product does not exist');
+  }
+  
+  if (product.stock < item.quantity) {
+    throw new Error(`Product ${product.name} out of stock`);
+  }
+  
+  await trx.product.update({
+    where: {
+      id: item.id
+    },
+    data: {
+      stock: item.stock - item.quantity
+    }
+  })
+}))
 
 export async function POST(request: Request) {
   const orderRequest: IOrderRequest = await request.json();
@@ -33,34 +60,39 @@ export async function POST(request: Request) {
       })
     }
     
-    const order = await prisma.order.create({
-      data: {
-        total: orderRequest.totalPrice,
-        customer: {
-          connect: {
-            id: customer.id
-          }
-        },
-        products: {
-          create: orderRequest.items.map((item) => {
-            return {
-              product: {
-                connect: {
-                  id: item.id
-                }
-              },
-              quantity: item.quantity
+    const order = await prisma.$transaction(async (trx) => {
+      await promiseUpdateStock(trx, orderRequest.items)
+      
+      return trx.order.create({
+        data: {
+          total: orderRequest.totalPrice,
+          customer: {
+            connect: {
+              id: customer!.id
             }
-          })
-        },
-        status: EOrderStatus.PENDING,
-        store: {
-          connect: {
-            id: store.id
+          },
+          products: {
+            create: orderRequest.items.map((item) => {
+              return {
+                product: {
+                  connect: {
+                    id: item.id
+                  }
+                },
+                quantity: item.quantity
+              }
+            })
+          },
+          status: EOrderStatus.PENDING,
+          store: {
+            connect: {
+              id: store.id
+            }
           }
         }
-      }
+      })
     })
+    
     
     return NextResponse.json({ order, message: 'Success to order' }, { status: 200 });
   } catch (error) {

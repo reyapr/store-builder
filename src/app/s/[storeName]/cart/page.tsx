@@ -92,9 +92,15 @@ export default function CartPage({
       cart.clearCart()
       redirectToWA()
     } catch (error) {
+      let errorMessage = 'Gagal membuat pesanan. Silahkan coba lagi.'
+      
+      if((error as any).response.data.error.includes('out of stock')) {
+        errorMessage = (error as any).response.data.error
+      }
+      
       toast({
         title: 'Error',
-        description: 'Gagal membuat pesanan. Silahkan coba lagi.',
+        description: errorMessage,
         status: 'error',
         duration: 9000,
         isClosable: true,

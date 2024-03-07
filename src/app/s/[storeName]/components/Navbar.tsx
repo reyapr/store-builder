@@ -12,6 +12,7 @@ interface NavbarProps {
 export function Navbar(props: NavbarProps) {
   const cart = useStore(cartStore, (state) => state, props.storeName);
   const router = useRouter();
+  const quantity = cart.getTotalQuantity && cart.getTotalQuantity();
   
   return (
     <Flex bg='gray.700'>
@@ -32,9 +33,11 @@ export function Navbar(props: NavbarProps) {
           icon={
             <Box>
               <Icon fontSize={'2xl'} color={'white'} as={MdOutlineShoppingCart}/>
-              <Badge colorScheme="red" borderRadius="full" variant="solid" position="absolute" top={-1} right={-1}>
-                {cart.getTotalQuantity && cart.getTotalQuantity()}
-              </Badge>
+              {quantity > 0 && 
+                <Badge colorScheme="red" borderRadius="full" variant="solid" position="absolute" top={-1} right={-1}>
+                  {quantity}
+                </Badge>
+              }
             </Box>
           }
         />

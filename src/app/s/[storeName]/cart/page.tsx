@@ -120,7 +120,7 @@ export default function CartPage({
           <Divider color="gray.300" />
           <CardBody>
             <Stack divider={<StackDivider />} spacing="4">
-              {items.map((product) => (
+              {items.filter(p => p.quantity > 0).map((product) => (
                 <Flex key={product.id}>
                   <Box boxSize={20} marginRight={5}>
                     <Image

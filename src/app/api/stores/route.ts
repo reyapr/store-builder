@@ -1,9 +1,17 @@
 import { prisma } from "@/app/api/config";
+import { createStoreSchema } from "@/app/api/validator";
 import { ICreateStoreRequest } from "@/interfaces/store";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const newStoreRequest: ICreateStoreRequest = await request.json();
+  const requestJson = await request.json();
+  const createStoreReq = createStoreSchema.safeParse(requestJson);
+  
+  if (!createStoreReq.success) {
+    return NextResponse.json({ error: createStoreReq.error }, { status: 400 });
+  }
+  
+  const newStoreRequest: ICreateStoreRequest = createStoreReq.data;
   try {
     const existingUser = await prisma.user.findUnique({
       where: {

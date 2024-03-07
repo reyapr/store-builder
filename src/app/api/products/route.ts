@@ -2,6 +2,7 @@ import { prisma } from "@/app/api/config";
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { ICreateProductRequest } from "@/interfaces/product";
+import { createProductSchema } from "@/app/api/validator";
 
 export async function GET(request: NextRequest) {
   const storeName  = request.nextUrl.searchParams.get('storeName');
@@ -37,7 +38,13 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: Request) {
-  const productRequest: ICreateProductRequest = await request.json();
+  const requestJson = await request.json();
+  const createProductReq = createProductSchema.safeParse(requestJson);
+  if (!createProductReq.success) {
+    return NextResponse.json({ error: createProductReq.error }, { status: 400 });
+  }
+  
+  const productRequest: ICreateProductRequest = createProductReq.data;
   try {
     
     const product = await prisma.product.create({

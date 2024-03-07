@@ -1,4 +1,5 @@
 import { prisma } from "@/app/api/config";
+import { createCategorySchema } from "@/app/api/validator";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -20,7 +21,13 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const { storeId, ...newCategory } = await request.json();
+  const requestJson = await request.json();
+  const createCategoryReq = createCategorySchema.safeParse(requestJson);
+  
+  if (!createCategoryReq.success) {
+    return NextResponse.json({ error: createCategoryReq.error }, { status: 400 });
+  }
+  const { storeId, ...newCategory } = createCategoryReq.data;
   try {
     const category = await prisma.category.create({
       data: { 

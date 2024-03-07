@@ -1,5 +1,7 @@
 "use client";
+import ListOfProductModal from "@/app/dashboard/orders/components/ListOfProductModal";
 import { useGetOrder } from "@/app/dashboard/orders/useGetOrder";
+import { useViewProductOrders } from "@/app/dashboard/orders/useViewProductOrders";
 import Layout from "@/components/Layout";
 import { EOrderStatus } from "@/constants/order";
 import { IProductOrder } from "@/interfaces/order";
@@ -17,6 +19,7 @@ import {
   Tag,
   ButtonGroup,
   useToast,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 
@@ -29,6 +32,7 @@ const mapStatusToColor: {[key: string]: string} = {
 export default function Home() {
   const toast = useToast();
   const { orders, fetchOrders } = useGetOrder(toast);
+  const viewProductOrders = useViewProductOrders();
   
   const getTotalQuantity = (items: IProductOrder[]) => {
     return items.reduce((acc, item) => {
@@ -48,6 +52,11 @@ export default function Home() {
 
   return (
     <Layout>
+      <ListOfProductModal
+        isOpen={viewProductOrders.isOpen}
+        onClose={viewProductOrders.onClose}
+        productOrders={viewProductOrders.productOrders}
+      />
       <TableContainer>
         <Table variant={"simple"}>
           <TableCaption>Products</TableCaption>
@@ -77,9 +86,7 @@ export default function Home() {
                   <Th>
                     <Button
                       colorScheme="cyan"
-                      onClick={() => {
-                        console.log(order.products);
-                      }}
+                      onClick={() => viewProductOrders.onOpen(order.products)}
                     >
                       View
                     </Button>

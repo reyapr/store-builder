@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
   const storeName  = request.nextUrl.searchParams.get('storeName');
   const isStockAvailable = request.nextUrl.searchParams.get('isStockAvailable');
   const categories = request.nextUrl.searchParams.get('categories');
+  const searchQuery = request.nextUrl.searchParams.get('q');
   
   const dbQuery: Prisma.ProductFindManyArgs = {
     include: {
@@ -28,6 +29,12 @@ export async function GET(request: NextRequest) {
   if(isStockAvailable) {
     dbQuery.where!.stock = {
       gt: 0
+    }
+  }
+  
+  if(searchQuery) {
+    dbQuery.where!.name = {
+      contains: searchQuery
     }
   }
   

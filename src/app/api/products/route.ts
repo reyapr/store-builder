@@ -34,7 +34,8 @@ export async function GET(request: NextRequest) {
   
   if(searchQuery) {
     dbQuery.where!.name = {
-      contains: searchQuery
+      contains: searchQuery,
+      mode: 'insensitive'
     }
   }
   

@@ -35,3 +35,4 @@ workflows:
   build:
     jobs:
       - build-node
+      - deploy

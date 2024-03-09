@@ -13,20 +13,35 @@ export function useUpdateProduct(toast: CreateToastFnReturn, fetchProducts: () =
     storeId: '',
     categories: [],
     description: '',
-    image: undefined
+    imageUrl: ''
   } as IEditProductRequest
   
   const [currentEditForm, setCurrentEditForm] = useState(initForm);
   
   const handleUpdateProduct = (request: ICreateProductRequest) => async () => {
     try {
-      await axios.patch(`/api/products/${currentEditForm.id}`, request);
+      const form = new FormData();
+      form.append('name', request.name);
+      form.append('price', request.price.toString());
+      form.append('stock', request.stock.toString());
+      form.append('storeId', request.storeId);
+      form.append('categoryIds', JSON.stringify(request.categoryIds));
+      form.append('description', request.description);
+      form.append('image', request.image);
+      
+      await axios.patch(`/api/products/${currentEditForm.id}`, form);
       fetchProducts();
       onClose();
     } catch (error) {
+      let description;
+      if((error as any).response.data.error.includes('resource already exist')) {
+        description = 'Image name is already exist. Please use another image.';
+      } else {
+        description = (error as Error).message;
+      }
       toast({
         title: "Error",
-        description: (error as Error).message,
+        description,
         status: "error",
         duration: 2500,
         isClosable: true,
@@ -46,7 +61,7 @@ export function useUpdateProduct(toast: CreateToastFnReturn, fetchProducts: () =
         value: category.id
       })),
       description: product.description,
-      image: product.image
+      imageUrl: product.imageUrl
     }
     
     setCurrentEditForm(request);

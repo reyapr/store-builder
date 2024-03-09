@@ -34,12 +34,13 @@ export interface MyModalProps {
   stores: IStore[];
   categories: ICategory[];
   title: string;
+  editMode?: boolean;
 }
 
 type InputElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
 export default function ProductFormModal(props: MyModalProps) {
-  const { isOpen, onClose, onSubmit, data } = props;
+  const { isOpen, onClose, onSubmit, data, editMode } = props;
   
   const [input, setInput] = useState({
     name: '',
@@ -193,7 +194,7 @@ export default function ProductFormModal(props: MyModalProps) {
             </FormControl>
             <FormControl>
               <FormLabel>Image</FormLabel>
-              {input.imageUrl && <Image src={input.imageUrl} alt="product image" />}
+              {editMode && data?.imageUrl && <Image src={data.imageUrl} alt="product image" width={150}/>}
               <Input id='input-file' type='file' accept="image/*" onChange={handleImageChange}/>
             </FormControl>
           </ModalBody>

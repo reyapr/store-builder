@@ -1,18 +1,61 @@
 import { prisma } from "@/app/api/config";
 import { updateProductSchema } from "@/app/api/validator";
-import { ICreateProductRequest } from "@/interfaces/product";
+import { ISupabaseUploadResponse } from "@/interfaces/supabase";
+import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
+const replaceImageInSupabase = async (image: File, currentUrl: string | null): Promise<ISupabaseUploadResponse> => {
+  if(process.env.BUCKET_NAME === undefined) {
+    throw new Error('BUCKET_NAME is not defined');
+  }
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  
+  if(currentUrl) {
+    const splittedUrl = currentUrl.split('/');
+    const currentPath = splittedUrl[splittedUrl.length - 1];
+    const removeResponse = await supabase.storage.from(process.env.BUCKET_NAME).remove([`${currentPath}`]);
+    if(removeResponse.error) {
+      throw new Error(removeResponse.error.message);
+    }
+  }
+  
+  const uploadResponse = await supabase.storage.from(process.env.BUCKET_NAME).upload(image.name, image);
+ 
+  return uploadResponse as ISupabaseUploadResponse;
+
+}
+
 export async function PATCH(request: Request, context: { params: any }) {
-  const requestJson = await request.json();
+  const res = await request.formData()
+  const requestJson = Object.fromEntries(res) as Record<string, any>;
+  requestJson.categoryIds = JSON.parse(requestJson.categoryIds as string);
+  requestJson.price = Number(requestJson.price as string);
+  requestJson.stock = Number(requestJson.stock as string);
+  
   const updateProductReq = updateProductSchema.safeParse(requestJson);
   if (!updateProductReq.success) {
     return NextResponse.json({ error: updateProductReq.error }, { status: 400 });
   }
   
-  const productRequest: ICreateProductRequest = updateProductReq.data;
+  
+  const { image, ...productRequest } = updateProductReq.data;
   const { id } = context.params as { id: string };
   try {
+    const currentProduct = await prisma.product.findUnique({ where: { id } });
+    if (!currentProduct) {
+      return NextResponse.json({ error: 'Product does not exist' }, { status: 400 });
+    }
+    
+    const { data, error } = await replaceImageInSupabase(image, currentProduct.imageUrl);
+    if(error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    if(!data) {
+      return NextResponse.json({ error: 'Image upload failed' }, { status: 500 });
+    }
+    
     const store = await prisma.product.update({
       where: {
         id
@@ -21,6 +64,8 @@ export async function PATCH(request: Request, context: { params: any }) {
         name: productRequest.name,
         price: productRequest.price,
         stock: productRequest.stock,
+        description: productRequest.description,
+        imageUrl: process.env.NEXT_PUBLIC_SUPABASE_IMAGE_URL + '/' + data.fullPath,
         store: {
           connect: {
             id: productRequest.storeId

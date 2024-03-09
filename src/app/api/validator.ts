@@ -40,6 +40,8 @@ export const updateProductSchema = z.object({
   stock: z.number(),
   storeId: z.string(),
   categoryIds: z.array(z.string()),
+  description: z.string(),
+  image: z.any(),
 })
 
 
@@ -63,6 +65,8 @@ export const createOrderSchema = z.object({
       createdAt: z.string(),
       updatedAt: z.string(),
     }),
+    description: z.string(),
+    imageUrl: z.string(),
     categories: z.array(z.object({
       id: z.string(),
       name: z.string(),

@@ -4,17 +4,7 @@ import { Prisma } from "@prisma/client";
 import { createProductSchema } from "@/app/api/validator";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
-import { StorageError } from "@supabase/storage-js";
-
-interface ISupabaseDataUploadResponse {
-  id: string; 
-  path: string; 
-  fullPath: string 
-}
-interface ISupabaseUploadResponse { 
-  data: ISupabaseDataUploadResponse | null,
-  error: StorageError
-}
+import { ISupabaseUploadResponse } from "@/interfaces/supabase";
 
 export async function GET(request: NextRequest) {
   const storeName  = request.nextUrl.searchParams.get('storeName');
@@ -106,7 +96,6 @@ export async function POST(request: NextRequest) {
   if(!data) {
     return NextResponse.json({ error: 'Image upload failed' }, { status: 500 });
   }
-  console.log(data.fullPath, '<=================== data.fullPath ==================');
   
   try {
     

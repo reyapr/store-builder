@@ -63,6 +63,7 @@ export default function ProductPage() {
         stores={stores}
         categories={categories}
         data={updateProductHook.currentEditForm}
+        editMode
       />
       <DeleteAlert
         isOpen={deleteProductHook.isOpen}
@@ -110,7 +111,7 @@ export default function ProductPage() {
                     )
                   })}</Th>
                   <Th>
-                    {product.imageUrl && <Image src={product.imageUrl} alt={product.name} width={100} />}
+                    {product.imageUrl && <Image src={product.imageUrl} alt={product.name} maxWidth={200} />}
                   </Th>
                   <Th>
                     <ButtonGroup gap={2}>

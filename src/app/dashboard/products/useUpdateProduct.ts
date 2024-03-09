@@ -9,7 +9,7 @@ export function useUpdateProduct(toast: CreateToastFnReturn, fetchProducts: () =
     id: '',
     name: '',
     price: '',
-    quantity: 0,
+    stock: 0,
     storeId: '',
     categories: [],
   } as IEditProductRequest
@@ -36,7 +36,7 @@ export function useUpdateProduct(toast: CreateToastFnReturn, fetchProducts: () =
     const request: IEditProductRequest = {
       id: product.id,
       name: product.name,
-      quantity: product.quantity,
+      stock: product.stock,
       price: product.price.toString(),
       storeId: product.store.id,
       categories: product.categories.map((category) => ({
@@ -44,7 +44,7 @@ export function useUpdateProduct(toast: CreateToastFnReturn, fetchProducts: () =
         value: category.id
       }))
     }
-    console.log(request, '<=================== request ==================');
+    
     setCurrentEditForm(request);
     onOpen();
   }

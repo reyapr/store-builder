@@ -1,3 +1,4 @@
+import { DASHBOARD_LOGIN_PATH } from '@/constants/auth'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
@@ -64,28 +65,17 @@ export async function middleware(request: NextRequest) {
   const { data } = await supabase.auth.getSession()
   
   // protected route
-  if (!data.session && path !== '/login') {
-    response = NextResponse.redirect(new URL('/login', request.url))
+  if (!data.session && path !== DASHBOARD_LOGIN_PATH) {
+    response = NextResponse.redirect(new URL(DASHBOARD_LOGIN_PATH, request.url))
   }
   
-  if(data.session && path === '/login') {
-    response = NextResponse.redirect(new URL('/', request.url))
+  if(data.session && path === DASHBOARD_LOGIN_PATH) {
+    response = NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
   return response
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - error (error handling)
-     * - auth/callback (auth callback)
-     * Feel free to modify this pattern to include more paths.
-     */
-    '/((?!_next/static|_next/image|favicon.ico|error|api|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-  ],
+  matcher: '/dashboard/:path*',
 }

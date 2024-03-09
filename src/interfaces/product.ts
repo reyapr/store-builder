@@ -4,7 +4,7 @@ import { IStore } from "@/interfaces/store";
 export interface ICreateProductRequest {
   name: string;
   price: number;
-  quantity: number;
+  stock: number;
   storeId: string;
   categoryIds: string[];
 }
@@ -17,7 +17,7 @@ export interface ICategoryInput {
 export interface ICreateProductInput {
   name: string;
   price: string;
-  quantity: number;
+  stock: number;
   storeId: string;
   categories: ICategoryInput[];
 }
@@ -26,7 +26,7 @@ export interface IProduct {
   id: string;
   name: string;
   price: number;
-  quantity: number;
+  stock: number;
   store: IStore;
   categories: ICategory[];
 }
@@ -35,7 +35,11 @@ export interface IEditProductRequest {
   id: string;
   name: string;
   price: string;
-  quantity: number;
+  stock: number;
   storeId: string;
   categories: ICategoryInput[];
+}
+
+export interface IProductCart extends IProduct {
+  quantity: number;
 }

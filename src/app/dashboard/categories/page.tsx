@@ -1,9 +1,9 @@
 "use client";
-import { useCreateCategory } from "@/app/categories/useCreateCategory";
-import { useDeleteCategory } from "@/app/categories/useDeleteCategory";
-import { useGetCateogries } from "@/app/categories/useGetCategory";
-import { useUpdateCategory } from "@/app/categories/useUpdateCategory";
-import { useGetStore } from "@/app/stores/useGetStore";
+import { useCreateCategory } from "@/app/dashboard/categories/useCreateCategory";
+import { useDeleteCategory } from "@/app/dashboard/categories/useDeleteCategory";
+import { useGetCateogries } from "@/app/dashboard/categories/useGetCategory";
+import { useUpdateCategory } from "@/app/dashboard/categories/useUpdateCategory";
+import { useGetStore } from "@/app/dashboard/stores/useGetStore";
 import CategoryFormModal from "@/components/CategoryModal";
 import { DeleteAlert } from "@/components/DeleteAlert";
 import Layout from "@/components/Layout";

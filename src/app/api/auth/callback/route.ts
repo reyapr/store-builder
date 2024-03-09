@@ -41,7 +41,7 @@ export async function GET(request: Request) {
       await axios.post(`${origin}/api/users`, createUserRequest)
     } finally {
       if (!error) {
-        return NextResponse.redirect(`${origin}`)
+        return NextResponse.redirect(`${origin}/dashboard`)
       }
     }
   }

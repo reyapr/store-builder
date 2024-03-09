@@ -5,22 +5,22 @@ const MENU = [
   {
     id: 2,
     name: 'Stores',
-    path: '/stores'
+    path: '/dashboard/stores'
   },
   {
     id: 3,
     name: 'Products',
-    path: '/products'
+    path: '/dashboard/products'
   },
   {
     id: 4,
     name: 'Orders',
-    path: '/orders'
+    path: '/dashboard/orders'
   },
   {
     id: 5,
     name: 'Categories',
-    path: '/categories'
+    path: '/dashboard/categories'
   }
 ]
 

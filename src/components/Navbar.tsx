@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { DASHBOARD_LOGIN_PATH } from "@/constants/auth";
 
 export default function Navbar() {
   const supabase = createClient();
@@ -13,7 +14,7 @@ export default function Navbar() {
       if (error) {
         console.error('Error logging out:', error)
       }
-      router.push('/login')
+      router.push(DASHBOARD_LOGIN_PATH)
     } catch (error) {
       console.log(error, 'error');
     }

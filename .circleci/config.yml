@@ -18,7 +18,6 @@ jobs:
       - run:
           name: Create the ~/artifacts directory if it doesn't exist
           command: mkdir -p ~/artifacts
-      # Copy output to artifacts dir
       - run:
           name: Copy artifacts
           command: cp -R build dist public .output .next .docusaurus ~/artifacts 2>/dev/null || true
@@ -36,6 +35,3 @@ workflows:
   build:
     jobs:
       - build-node
-      - deploy:
-        requires:
-          - build-node

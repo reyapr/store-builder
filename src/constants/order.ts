@@ -9,3 +9,9 @@ export const mapOrderStatusToColor: {[key: string]: string} = {
   [EOrderStatus.COMPLETED]: "green",
   [EOrderStatus.FAILED]: "red",
 }
+
+export enum ETimeFrame {
+  DAILY = 'daily',
+  WEEKLY = 'weekly',
+  MONTHLY = 'monthly'
+}

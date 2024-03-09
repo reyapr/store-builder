@@ -4,7 +4,7 @@ import { EOrderStatus } from "@/constants/order";
 import { IOrderRequest } from "@/interfaces/order";
 import { IProductCart } from "@/interfaces/product";
 import { PrismaClient } from "@prisma/client/extension";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const promiseUpdateStock = (trx: PrismaClient, items: IProductCart[]) =>
   Promise.all(

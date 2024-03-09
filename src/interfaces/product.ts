@@ -20,6 +20,7 @@ export interface ICreateProductInput {
   stock: number;
   storeId: string;
   categories: ICategoryInput[];
+  description: string;
 }
 
 export interface IProduct {
@@ -29,6 +30,7 @@ export interface IProduct {
   stock: number;
   store: IStore;
   categories: ICategory[];
+  description: string;
 }
 
 export interface IEditProductRequest {
@@ -38,6 +40,7 @@ export interface IEditProductRequest {
   stock: number;
   storeId: string;
   categories: ICategoryInput[];
+  description: string;
 }
 
 export interface IProductCart extends IProduct {

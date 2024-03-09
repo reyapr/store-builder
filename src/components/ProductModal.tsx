@@ -18,6 +18,7 @@ import {
   NumberInputField,
   NumberInputStepper,
   Select,
+  Textarea,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
@@ -34,6 +35,8 @@ export interface MyModalProps {
   title: string;
 }
 
+type InputElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
 export default function ProductFormModal(props: MyModalProps) {
   const { isOpen, onClose, onSubmit, data } = props;
   
@@ -42,7 +45,8 @@ export default function ProductFormModal(props: MyModalProps) {
     price: '',
     stock: 0,
     storeId: '',
-    categories: []
+    categories: [],
+    description: ''
   } as ICreateProductInput);
   
   const unFormatPrice = (price: string) => {
@@ -61,11 +65,12 @@ export default function ProductFormModal(props: MyModalProps) {
       storeId: data?.storeId || '',
       price: data?.price || '',
       stock: data?.stock || 0,
-      categories: data?.categories || []
+      categories: data?.categories || [],
+      description: data?.description || ''
     });
   }, [data?.name]);
   
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
+  const handleChange = (e: React.ChangeEvent<InputElement>): void => {
     setInput({
       ...input,
       [e.target.name]: e.target.value,
@@ -163,6 +168,15 @@ export default function ProductFormModal(props: MyModalProps) {
                 value={input.categories}
                 options={categoryOptions}
                 isDisabled={!input.storeId}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Description</FormLabel>
+              <Textarea 
+                placeholder="Product Description" 
+                value={input.description} 
+                onChange={handleChange} 
+                name='description'
               />
             </FormControl>
           </ModalBody>

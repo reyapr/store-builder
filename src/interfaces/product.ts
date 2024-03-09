@@ -23,7 +23,8 @@ export interface ICreateProductInput {
   storeId: string;
   categories: ICategoryInput[];
   description: string;
-  image: File | null;
+  image?: File | null;
+  imageUrl?: string;
 }
 
 export interface IProduct {
@@ -34,7 +35,8 @@ export interface IProduct {
   store: IStore;
   categories: ICategory[];
   description: string;
-  imageUrl: string;
+  imageUrl?: string;
+  image?: File;
 }
 
 export interface IEditProductRequest {
@@ -45,7 +47,7 @@ export interface IEditProductRequest {
   storeId: string;
   categories: ICategoryInput[];
   description: string;
-  iamge: File
+  image?: File;
 }
 
 export interface IProductCart extends IProduct {

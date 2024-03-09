@@ -106,6 +106,8 @@ export async function POST(request: NextRequest) {
   if(!data) {
     return NextResponse.json({ error: 'Image upload failed' }, { status: 500 });
   }
+  console.log(data.fullPath, '<=================== data.fullPath ==================');
+  
   try {
     
     const product = await prisma.product.create({
@@ -114,7 +116,7 @@ export async function POST(request: NextRequest) {
         price: productRequest.price,
         stock: productRequest.stock,
         description: productRequest.description,
-        imageUrl: data.fullPath,
+        imageUrl: process.env.NEXT_PUBLIC_SUPABASE_IMAGE_URL + '/' + data.fullPath,
         store: {
           connect: {
             id: productRequest.storeId

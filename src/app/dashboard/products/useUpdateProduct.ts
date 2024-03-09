@@ -12,7 +12,8 @@ export function useUpdateProduct(toast: CreateToastFnReturn, fetchProducts: () =
     stock: 0,
     storeId: '',
     categories: [],
-    description: ''
+    description: '',
+    image: undefined
   } as IEditProductRequest
   
   const [currentEditForm, setCurrentEditForm] = useState(initForm);
@@ -44,7 +45,8 @@ export function useUpdateProduct(toast: CreateToastFnReturn, fetchProducts: () =
         label: category.name,
         value: category.id
       })),
-      description: product.description
+      description: product.description,
+      image: product.image
     }
     
     setCurrentEditForm(request);

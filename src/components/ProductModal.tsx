@@ -4,6 +4,7 @@ import {
   Button,
   FormControl,
   FormLabel,
+  Image,
   Input,
   Modal,
   ModalBody,
@@ -192,7 +193,8 @@ export default function ProductFormModal(props: MyModalProps) {
             </FormControl>
             <FormControl>
               <FormLabel>Image</FormLabel>
-              <Input type='file' accept="image/*" onChange={handleImageChange}/>
+              {input.imageUrl && <Image src={input.imageUrl} alt="product image" />}
+              <Input id='input-file' type='file' accept="image/*" onChange={handleImageChange}/>
             </FormControl>
           </ModalBody>
           <ModalFooter>

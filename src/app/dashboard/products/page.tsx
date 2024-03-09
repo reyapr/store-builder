@@ -14,6 +14,7 @@ import {
   ButtonGroup,
   Grid,
   GridItem,
+  Image,
   Table,
   TableCaption,
   TableContainer,
@@ -88,6 +89,7 @@ export default function ProductPage() {
               <Th>Stock</Th>
               <Th>Store</Th>
               <Th>Categories</Th>
+              <Th>Image</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
@@ -107,6 +109,9 @@ export default function ProductPage() {
                       </Tag>
                     )
                   })}</Th>
+                  <Th>
+                    {product.imageUrl && <Image src={product.imageUrl} alt={product.name} width={100} />}
+                  </Th>
                   <Th>
                     <ButtonGroup gap={2}>
                       <Button colorScheme="blue" onClick={() => updateProductHook.onOpen(product)}>

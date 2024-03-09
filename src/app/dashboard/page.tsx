@@ -13,10 +13,10 @@ import {
   Legend,
   TimeScale
 } from 'chart.js';
-import 'chartjs-adapter-date-fns';
 import { useEffect, useState } from "react";
 import { Line } from 'react-chartjs-2'
 import moment from 'moment';
+import { Box, Button, Flex, Select } from "@chakra-ui/react";
 
 
 ChartJS.register(
@@ -41,15 +41,32 @@ export const options = {
       text: 'Total Order Chart',
     },
   },
- 
+  scales: {
+    x: {
+      title: {
+        display: true,
+        text: 'Time Frame'
+      }
+    },
+    y: {
+      title: {
+        display: true,
+        text: 'Amount (IDR)'
+      }
+    }
+  }
 };
 
 export default function HomeDashboard() {
+  const years = Array.from({ length : 5}, (_, i) => new Date().getFullYear() - i)
   const [data, setData] = useState([])
   const [timeFrame, setTimeFrame] = useState(ETimeFrame.DAILY)
+  const [year, setYear] = useState(years[0])
   
-  const fetchData = async (timeFrame: ETimeFrame) => {
-    const response = await axios.get(`/api/order/total-order?timeFrame=${timeFrame}`);
+  const fetchData = async (timeFrame: ETimeFrame, year: number) => {
+    const response = await axios.get(`/api/order/total-order`, {
+      params: { timeFrame, year }
+    });
     const dataChartFormat = response.data.result.map((item: any) => {
       let x;
       switch (item.time_frame) {
@@ -77,8 +94,8 @@ export default function HomeDashboard() {
   }
   
   useEffect(() => {
-    fetchData(timeFrame);
-  },[timeFrame])
+    fetchData(timeFrame, year);
+  },[timeFrame, year])
   
   const dataChart = {
     datasets: [
@@ -91,13 +108,24 @@ export default function HomeDashboard() {
     ]
   }
   
+ 
+  
   return (
     <Layout>
-      <div style={{ display: 'flex', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <button onClick={() => setTimeFrame(ETimeFrame.DAILY)}>Daily</button>
-        <button onClick={() => setTimeFrame(ETimeFrame.WEEKLY)}>Weekly</button>
-        <button onClick={() => setTimeFrame(ETimeFrame.MONTHLY)}>Monthly</button>
-      </div>
+      <Flex>
+        <Box>
+          <Button onClick={() => setTimeFrame(ETimeFrame.DAILY)}>Daily</Button>
+          <Button onClick={() => setTimeFrame(ETimeFrame.WEEKLY)}>Weekly</Button>
+          <Button onClick={() => setTimeFrame(ETimeFrame.MONTHLY)}>Monthly</Button>
+        </Box>
+        <Box>
+          <Select placeholder='Select option' value={year} onChange={(e) => setYear(Number(e.target.value))}>
+            {years.map(year => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </Select>
+        </Box>
+      </Flex>
       <div style={{ display: 'flex', flex: 11, justifyContent: 'center', alignItems: 'center' }}>
         <Line options={options} data={dataChart} />
       </div>

@@ -32,3 +32,10 @@ jobs:
       - run:
           name: deploy
           command: ssh -oStrictHostKeyChecking=no -v $USER@$IP "$WORK_DIR"
+workflows:
+  build:
+    jobs:
+      - build-node
+    # - deploy:
+    #     requires:
+    #       - build-node

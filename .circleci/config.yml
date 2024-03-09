@@ -26,11 +26,11 @@ jobs:
           destination: node-build
   deploy:
     docker:
-      - image: ubuntu-2204:2023.07.2
+      - image: cimg/base:stable
     steps:
       - run:
           name: deploy
-          command: ssh -oStrictHostKeyChecking=no -v $USER@$IP "$WORK_DIR"
+          command: ssh -oStrictHostKeyChecking=no -v $USER@$IP "./deploy.sh"
 workflows:
   build-test-and-deploy:
     jobs:

@@ -5,10 +5,12 @@ orbs:
   node: circleci/node@5
 jobs:
   build-node:
-    # Build node project
     executor: node/default
     steps:
       - checkout
+      - when:
+        condition:
+          equal: [ main ]
       - node/install-packages:
           pkg-manager: npm
       - run:
@@ -25,7 +27,7 @@ jobs:
           destination: node-build
   deploy:
     docker:
-      - image: cimg/base:stable
+      - image: ubuntu-2204:2023.07.2
     steps:
       - run:
           name: deploy

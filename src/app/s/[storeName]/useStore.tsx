@@ -1,6 +1,4 @@
-import { IState, IActions } from "@/stores/useCart"
 import { useEffect, useState } from "react"
-import { UseBoundStore, StoreApi } from "zustand"
 
 export const useStore = <T, F>(
   store: (callback: (state: T) => unknown) => unknown,

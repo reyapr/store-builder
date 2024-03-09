@@ -1,9 +1,10 @@
 import { prisma } from "@/app/api/config";
+import { createOrderSchema } from "@/app/api/validator";
 import { EOrderStatus } from "@/constants/order";
 import { IOrderRequest } from "@/interfaces/order";
 import { IProductCart } from "@/interfaces/product";
 import { PrismaClient } from "@prisma/client/extension";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const promiseUpdateStock = (trx: PrismaClient, items: IProductCart[]) =>
   Promise.all(
@@ -34,7 +35,13 @@ const promiseUpdateStock = (trx: PrismaClient, items: IProductCart[]) =>
   );
 
 export async function POST(request: Request) {
-  const orderRequest: IOrderRequest = await request.json();
+  const requestJson = await request.json();
+  const createOrderReq = createOrderSchema.safeParse(requestJson);
+  if (!createOrderReq.success) {
+    return NextResponse.json({ error: createOrderReq.error }, { status: 400 });
+  }
+  
+  const orderRequest: IOrderRequest = createOrderReq.data;
   try {
     const store = await prisma.store.findFirst({
       where: {

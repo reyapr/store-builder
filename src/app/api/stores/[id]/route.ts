@@ -1,9 +1,17 @@
 import { prisma } from "@/app/api/config";
+import { updateStoreSchema } from "@/app/api/validator";
 import { IUpdateStoreRequest } from "@/interfaces/store";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(request: Request, context: { params: any }) {
-  const updateStoreRequest: IUpdateStoreRequest = await request.json();
+  const requestJson = await request.json();
+  const updateStoreReq = updateStoreSchema.safeParse(requestJson);
+  
+  if (!updateStoreReq.success) {
+    return NextResponse.json({ error: updateStoreReq.error }, { status: 400 });
+  }
+  
+  const updateStoreRequest: IUpdateStoreRequest = updateStoreReq.data;
   const { id } = context.params as { id: string };
   try {
     const store = await prisma.store.update({

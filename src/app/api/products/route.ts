@@ -2,10 +2,14 @@ import { prisma } from "@/app/api/config";
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { ICreateProductRequest } from "@/interfaces/product";
+import { createProductSchema } from "@/app/api/validator";
 
 export async function GET(request: NextRequest) {
   const storeName  = request.nextUrl.searchParams.get('storeName');
   const isStockAvailable = request.nextUrl.searchParams.get('isStockAvailable');
+  const categories = request.nextUrl.searchParams.get('categories');
+  const searchQuery = request.nextUrl.searchParams.get('q');
+  
   const dbQuery: Prisma.ProductFindManyArgs = {
     include: {
       categories: true,
@@ -28,6 +32,23 @@ export async function GET(request: NextRequest) {
     }
   }
   
+  if(searchQuery) {
+    dbQuery.where!.name = {
+      contains: searchQuery,
+      mode: 'insensitive'
+    }
+  }
+  
+  if(categories) {
+    dbQuery.where!.categories = {
+      some: {
+        id: {
+          in: categories.split(',')
+        }
+      }
+    }
+  }
+  
   try {
     const products = await prisma.product.findMany(dbQuery);
     return NextResponse.json({ products }, { status: 200 });
@@ -37,7 +58,13 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: Request) {
-  const productRequest: ICreateProductRequest = await request.json();
+  const requestJson = await request.json();
+  const createProductReq = createProductSchema.safeParse(requestJson);
+  if (!createProductReq.success) {
+    return NextResponse.json({ error: createProductReq.error }, { status: 400 });
+  }
+  
+  const productRequest: ICreateProductRequest = createProductReq.data;
   try {
     
     const product = await prisma.product.create({

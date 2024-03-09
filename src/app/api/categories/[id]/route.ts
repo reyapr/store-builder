@@ -1,8 +1,16 @@
 import { prisma } from "@/app/api/config";
+import { updateCategorySchema } from "@/app/api/validator";
 import { NextResponse } from "next/server";
 
 export async function PATCH(request: Request, context: { params: any }) {
-  const categoryRequest = await request.json();
+  const requestJson = await request.json();
+  const updateCategoryReq = updateCategorySchema.safeParse(requestJson);
+  
+  if (!updateCategoryReq.success) {
+    return NextResponse.json({ error: updateCategoryReq.error }, { status: 400 });
+  }
+  
+  const categoryRequest = updateCategoryReq.data;
   const { id } = context.params as { id: string };
   try {
     const store = await prisma.category.update({

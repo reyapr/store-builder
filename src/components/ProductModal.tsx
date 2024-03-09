@@ -46,7 +46,8 @@ export default function ProductFormModal(props: MyModalProps) {
     stock: 0,
     storeId: '',
     categories: [],
-    description: ''
+    description: '',
+    image: null
   } as ICreateProductInput);
   
   const unFormatPrice = (price: string) => {
@@ -66,7 +67,8 @@ export default function ProductFormModal(props: MyModalProps) {
       price: data?.price || '',
       stock: data?.stock || 0,
       categories: data?.categories || [],
-      description: data?.description || ''
+      description: data?.description || '',
+      image: data?.image || null
     });
   }, [data?.name]);
   
@@ -91,6 +93,15 @@ export default function ProductFormModal(props: MyModalProps) {
     setInput({
       ...input,
       stock: quantity
+    });
+  }
+  
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setInput({
+      ...input,
+      image: file
     });
   }
   
@@ -178,6 +189,10 @@ export default function ProductFormModal(props: MyModalProps) {
                 onChange={handleChange} 
                 name='description'
               />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Image</FormLabel>
+              <Input type='file' accept="image/*" onChange={handleImageChange}/>
             </FormControl>
           </ModalBody>
           <ModalFooter>

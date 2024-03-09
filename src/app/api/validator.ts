@@ -31,6 +31,7 @@ export const createProductSchema = z.object({
   storeId: z.string(),
   categoryIds: z.array(z.string()),
   description: z.string(),
+  image: z.any(),
 })
 
 export const updateProductSchema = z.object({

@@ -7,13 +7,28 @@ export function useCreateProduct(toast: CreateToastFnReturn, fetchProducts: () =
   
   const handleCreateProduct = (request: ICreateProductRequest) => async () => {
     try {
-      const response = await axios.post('/api/products', request);
+      const form = new FormData();
+      form.append('name', request.name);
+      form.append('price', request.price.toString());
+      form.append('stock', request.stock.toString());
+      form.append('storeId', request.storeId);
+      form.append('categoryIds', JSON.stringify(request.categoryIds));
+      form.append('description', request.description);
+      form.append('image', request.image);
+      
+      await axios.post('/api/products', form);
       fetchProducts();
       onClose();
     } catch (error) {
+      let description;
+      if((error as any).response.data.error.includes('resource already exist')) {
+        description = 'Image name is already exist. Please use another image.';
+      } else {
+        description = (error as Error).message;
+      }
       toast({
         title: "Error",
-        description: (error as Error).message,
+        description,
         status: "error",
         duration: 2500,
         isClosable: true,

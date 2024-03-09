@@ -30,7 +30,7 @@ jobs:
     steps:
       - run:
           name: deploy
-          command: ssh -oStrictHostKeyChecking=no -v $USER@$IP "$WORK_DIR"
+          command: ssh -oStrictHostKeyChecking=no -v $USER@$IP ".deploy.sh"
 workflows:
   build:
     jobs:

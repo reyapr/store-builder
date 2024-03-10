@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
   const { image, ...productRequest } = createProductReq.data;
   
   let imageUrl;
-  if(image) {
+  if(image.name) {
     const { data, error } = await updloadToSupabase(image)
     if(error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

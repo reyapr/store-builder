@@ -48,7 +48,7 @@ export async function PATCH(request: Request, context: { params: any }) {
       return NextResponse.json({ error: 'Product does not exist' }, { status: 400 });
     }
     let newImageUrl;
-    if(image) {
+    if (image.name) {
       const { data, error } = await replaceImageInSupabase(image, currentProduct.imageUrl);
       if(error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
@@ -81,6 +81,7 @@ export async function PATCH(request: Request, context: { params: any }) {
     });
     return NextResponse.json({ store }, { status: 200 });
   } catch (error) {
+    console.log(error, '<=================== error ==================');
     return NextResponse.json({ error: (error as Error).message }, { status: 400 });
   }
 }

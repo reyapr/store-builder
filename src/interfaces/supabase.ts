@@ -1,11 +1,11 @@
-import { StorageError } from "@supabase/storage-js";
+import { StorageError } from '@supabase/storage-js'
 
 export interface ISupabaseDataUploadResponse {
-  id: string; 
-  path: string; 
-  fullPath: string 
+  id: string
+  path: string
+  fullPath: string
 }
-export interface ISupabaseUploadResponse { 
-  data: ISupabaseDataUploadResponse | null,
+export interface ISupabaseUploadResponse {
+  data: ISupabaseDataUploadResponse | null
   error: StorageError
 }

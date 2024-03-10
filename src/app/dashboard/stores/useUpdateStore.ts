@@ -1,43 +1,50 @@
-import { ISubmitStoreFormRequest, IUpdateStoreRequest } from "@/interfaces/store";
-import { CreateToastFnReturn, useDisclosure } from "@chakra-ui/react";
-import axios from "axios";
-import { useState } from "react";
-import { SupabaseClient } from "@supabase/supabase-js";
+import {
+  ISubmitStoreFormRequest,
+  IUpdateStoreRequest
+} from '@/interfaces/store'
+import { CreateToastFnReturn, useDisclosure } from '@chakra-ui/react'
+import axios from 'axios'
+import { useState } from 'react'
+import { SupabaseClient } from '@supabase/supabase-js'
 
-export function useUpdateStore(toast: CreateToastFnReturn, fetchStores: () => void, supabase: SupabaseClient) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+export function useUpdateStore(
+  toast: CreateToastFnReturn,
+  fetchStores: () => void,
+  supabase: SupabaseClient
+) {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const [currentEditForm, setCurrentEditForm] = useState({
     id: '',
-    name: '',
-  } as IUpdateStoreRequest);
-  
+    name: ''
+  } as IUpdateStoreRequest)
+
   const submitUpdateStore = (request: ISubmitStoreFormRequest) => async () => {
     try {
-      await axios.patch(`/api/stores/${request.id}`, request);
-      fetchStores();
+      await axios.patch(`/api/stores/${request.id}`, request)
+      fetchStores()
     } catch (error) {
       toast({
-        title: "Error",
+        title: 'Error',
         description: (error as Error).message,
-        status: "error",
+        status: 'error',
         duration: 2500,
-        isClosable: true,
+        isClosable: true
       })
     }
-    handleEditClose();
+    handleEditClose()
   }
-  
+
   const handleEdit = (request: IUpdateStoreRequest) => {
-    setCurrentEditForm(request);
-    
-    onOpen();
+    setCurrentEditForm(request)
+
+    onOpen()
   }
-  
+
   const handleEditClose = () => {
-    setCurrentEditForm({ id: '', name: ''})
-    onClose();
+    setCurrentEditForm({ id: '', name: '' })
+    onClose()
   }
-  
+
   return {
     isOpen,
     onOpen,

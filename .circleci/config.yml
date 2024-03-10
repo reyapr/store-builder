@@ -4,37 +4,29 @@ version: 2.1
 orbs:
   node: circleci/node@5
 jobs:
-  build-node:
-    executor: node/default
-    steps:
-      - checkout
-      - when:
-        condition:
-          equal: [ main ]
-      - node/install-packages:
-          pkg-manager: npm
-      - run:
-          command: npm run build
-      - run:
-          name: Create the ~/artifacts directory if it doesn't exist
-          command: mkdir -p ~/artifacts
-      - run:
-          name: Copy artifacts
-          command: cp -R build dist public .output .next .docusaurus ~/artifacts 2>/dev/null || true
-      - store_artifacts:
-          path: ~/artifacts
-          destination: node-build
   deploy:
     docker:
       - image: cimg/base:stable
     steps:
+      - when:
+        condition:
+          equal: [ main ]
       - run:
           name: deploy
           command: ssh -oStrictHostKeyChecking=no -v $USER@$IP "./deploy.sh"
+  deploy-pr:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - when:
+        and:
+            not:
+                equal: [ main ]
+      - run:
+          name: deploy-pr
+          command: ssh -oStrictHostKeyChecking=no -v $USER@$IP "./deploy-pr.sh"
 workflows:
-  build-test-and-deploy:
+  deploy:
     jobs:
-      - build-node
-      - deploy:
-          requires:
-            - build-node
+      - deploy
+      - deploy-pr

@@ -20,6 +20,7 @@ import {
   TableContainer,
   Tag,
   Tbody,
+  Textarea,
   Th,
   Thead,
   Tr,
@@ -91,6 +92,7 @@ export default function ProductPage() {
               <Th>Store</Th>
               <Th>Categories</Th>
               <Th>Image</Th>
+              <Th>Description</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
@@ -112,6 +114,9 @@ export default function ProductPage() {
                   })}</Th>
                   <Th>
                     {product.imageUrl && <Image src={product.imageUrl} alt={product.name} maxWidth={200} />}
+                  </Th>
+                  <Th>
+                    <Textarea width={300} height={200} isReadOnly value={product.description} />
                   </Th>
                   <Th>
                     <ButtonGroup gap={2}>

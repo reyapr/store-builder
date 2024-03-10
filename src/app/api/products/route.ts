@@ -88,13 +88,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: createProductReq.error }, { status: 400 });
   }
   const { image, ...productRequest } = createProductReq.data;
-  const { data, error } = await updloadToSupabase(image)
-  if(error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
   
-  if(!data) {
-    return NextResponse.json({ error: 'Image upload failed' }, { status: 500 });
+  let imageUrl;
+  if(image) {
+    const { data, error } = await updloadToSupabase(image)
+    if(error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    
+    if(!data) {
+      return NextResponse.json({ error: 'Image upload failed' }, { status: 500 });
+    }
+    imageUrl = process.env.NEXT_PUBLIC_SUPABASE_IMAGE_URL + '/' + data.fullPath;
   }
   
   try {
@@ -105,7 +110,7 @@ export async function POST(request: NextRequest) {
         price: productRequest.price,
         stock: productRequest.stock,
         description: productRequest.description,
-        imageUrl: process.env.NEXT_PUBLIC_SUPABASE_IMAGE_URL + '/' + data.fullPath,
+        imageUrl: imageUrl,
         store: {
           connect: {
             id: productRequest.storeId

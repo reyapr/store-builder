@@ -47,13 +47,16 @@ export async function PATCH(request: Request, context: { params: any }) {
     if (!currentProduct) {
       return NextResponse.json({ error: 'Product does not exist' }, { status: 400 });
     }
-    
-    const { data, error } = await replaceImageInSupabase(image, currentProduct.imageUrl);
-    if(error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-    if(!data) {
-      return NextResponse.json({ error: 'Image upload failed' }, { status: 500 });
+    let newImageUrl;
+    if(image) {
+      const { data, error } = await replaceImageInSupabase(image, currentProduct.imageUrl);
+      if(error) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+      }
+      if(!data) {
+        return NextResponse.json({ error: 'Image upload failed' }, { status: 500 });
+      }
+      newImageUrl = process.env.NEXT_PUBLIC_SUPABASE_IMAGE_URL + '/' + data.fullPath;
     }
     
     const store = await prisma.product.update({
@@ -65,7 +68,7 @@ export async function PATCH(request: Request, context: { params: any }) {
         price: productRequest.price,
         stock: productRequest.stock,
         description: productRequest.description,
-        imageUrl: process.env.NEXT_PUBLIC_SUPABASE_IMAGE_URL + '/' + data.fullPath,
+        imageUrl: newImageUrl || currentProduct.imageUrl,
         store: {
           connect: {
             id: productRequest.storeId

@@ -18,16 +18,13 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      - run:
-          name: "set env variable"
-          command: export PR_NUMBER=$CIRCLE_PR_NUMBER >> "$BASH_ENV"
       - when:
         and:
             not:
                 equal: [ main ]    
       - run:
           name: deploy-pr
-          command: ssh -oStrictHostKeyChecking=no -v $USER@$IP "./deploy-pr.sh $PR_NUMBER"
+          command: ssh -oStrictHostKeyChecking=no -v $USER@$IP './deploy-pr.sh ${PR_NUMBER}'
 workflows:
   deploy:
     jobs:

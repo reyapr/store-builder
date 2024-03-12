@@ -22,9 +22,11 @@ jobs:
         and:
             not:
                 equal: [ main ]
+      environment: 
+        PR_NUMBER: $CIRCLE_PR_NUMBER
       - run:
           name: deploy-pr
-          command: ssh -oStrictHostKeyChecking=no -v $USER@$IP "./deploy-pr.sh ${CIRCLE_PR_NUMBER} $CIRCLE_PULL_REQUEST"
+          command: ssh -oStrictHostKeyChecking=no -v $USER@$IP "./deploy-pr.sh $PR_NUMBER"
 workflows:
   deploy:
     jobs:

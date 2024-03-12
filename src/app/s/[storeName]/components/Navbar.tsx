@@ -21,7 +21,7 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 
 interface NavbarProps {
   storeName: string;
-  home: boolean;
+  home?: boolean;
 }
 
 export function Navbar(props: NavbarProps) {

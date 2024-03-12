@@ -24,7 +24,7 @@ jobs:
                 equal: [ main ]
       - run:
           name: deploy-pr
-          command: ssh -oStrictHostKeyChecking=no -v $USER@$IP "./deploy-pr.sh $CIRCLE_PR_NUMBER $CIRCLE_PULL_REQUEST"
+          command: ssh -oStrictHostKeyChecking=no -v $USER@$IP "./deploy-pr.sh ${CIRCLE_PR_NUMBER} $CIRCLE_PULL_REQUEST"
 workflows:
   deploy:
     jobs:

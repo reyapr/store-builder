@@ -28,5 +28,14 @@ jobs:
 workflows:
   deploy:
     jobs:
-      - deploy
-      - deploy-pr
+      - deploy:
+        filters:
+            branches:
+                only:
+                  - main
+      - deploy-pr:
+        filters:
+          branches:
+            not:
+              only:
+                - main

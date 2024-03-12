@@ -18,10 +18,13 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
+      - run:
+          name: "set env variable"
+          command: export PR_NUMBER=$CIRCLE_PR_NUMBER >> "$BASH_ENV"
       - when:
         and:
             not:
-                equal: [ main ]
+                equal: [ main ]    
       - run:
           name: deploy-pr
           environment: 

@@ -83,12 +83,12 @@ export default function Categories() {
           </Thead>
           <Tbody>
             {
-              categories.sort(sortCategories).map((category) => {
+              categories.sort(sortCategories).map((category: ICategory) => {
                 return (
                   <Tr key={category.id}>
                     <Th>{category.id}</Th>
                     <Th>{category.name}</Th>
-                    <Th>{category.store.name}</Th>
+                    <Th>{category.store?.name}</Th>
                     <Th>
                       <ButtonGroup gap={2}>
                         <Button colorScheme="blue" onClick={() => editCategoryHook.onOpen(category)}>Edit</Button>

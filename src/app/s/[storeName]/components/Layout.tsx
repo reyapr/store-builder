@@ -4,7 +4,7 @@ import { Box } from "@chakra-ui/react";
 interface LayoutProps {
   children: React.ReactNode;
   storeName: string;
-  home: boolean;
+  home?: boolean;
 }
 
 export function Layout(props: LayoutProps) {

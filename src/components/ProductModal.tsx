@@ -4,6 +4,7 @@ import {
   Button,
   FormControl,
   FormLabel,
+  Image,
   Input,
   Modal,
   ModalBody,
@@ -18,6 +19,7 @@ import {
   NumberInputField,
   NumberInputStepper,
   Select,
+  Textarea,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
@@ -32,17 +34,22 @@ export interface MyModalProps {
   stores: IStore[];
   categories: ICategory[];
   title: string;
+  editMode?: boolean;
 }
 
+type InputElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
 export default function ProductFormModal(props: MyModalProps) {
-  const { isOpen, onClose, onSubmit, data } = props;
+  const { isOpen, onClose, onSubmit, data, editMode } = props;
   
   const [input, setInput] = useState({
     name: '',
     price: '',
     stock: 0,
     storeId: '',
-    categories: []
+    categories: [],
+    description: '',
+    image: null
   } as ICreateProductInput);
   
   const unFormatPrice = (price: string) => {
@@ -61,11 +68,13 @@ export default function ProductFormModal(props: MyModalProps) {
       storeId: data?.storeId || '',
       price: data?.price || '',
       stock: data?.stock || 0,
-      categories: data?.categories || []
+      categories: data?.categories || [],
+      description: data?.description || '',
+      image: data?.image || null
     });
   }, [data?.name]);
   
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
+  const handleChange = (e: React.ChangeEvent<InputElement>): void => {
     setInput({
       ...input,
       [e.target.name]: e.target.value,
@@ -86,6 +95,15 @@ export default function ProductFormModal(props: MyModalProps) {
     setInput({
       ...input,
       stock: quantity
+    });
+  }
+  
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setInput({
+      ...input,
+      image: file
     });
   }
   
@@ -164,6 +182,20 @@ export default function ProductFormModal(props: MyModalProps) {
                 options={categoryOptions}
                 isDisabled={!input.storeId}
               />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Description</FormLabel>
+              <Textarea 
+                placeholder="Product Description" 
+                value={input.description} 
+                onChange={handleChange} 
+                name='description'
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Image</FormLabel>
+              {editMode && data?.imageUrl && <Image src={data.imageUrl} alt="product image" width={150}/>}
+              <Input id='input-file' type='file' accept="image/*" onChange={handleImageChange}/>
             </FormControl>
           </ModalBody>
           <ModalFooter>

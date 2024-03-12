@@ -1,35 +1,40 @@
-import { IProduct } from "@/interfaces/product";
-import { CreateToastFnReturn } from "@chakra-ui/react";
-import axios from "axios";
-import { useState } from "react";
+import { IProduct } from '@/interfaces/product'
+import { CreateToastFnReturn } from '@chakra-ui/react'
+import axios from 'axios'
+import { useState } from 'react'
 
 export interface IFetchProductRequest {
-  categoryIds?: string[];
-  searchInput?: string;
+  categoryIds?: string[]
+  searchInput?: string
 }
 
-export function useGetProducts(toast: CreateToastFnReturn, storeName?: string, isStockAvailable?: boolean) {
-  const [products, setProducts] = useState([] as IProduct[]);
+export function useGetProducts(
+  toast: CreateToastFnReturn,
+  storeName?: string,
+  isStockAvailable?: boolean
+) {
+  const [products, setProducts] = useState([] as IProduct[])
   const fetchProducts = async (req?: IFetchProductRequest) => {
     try {
-      const { data } = await axios.get('/api/products', { 
-        params: { 
-          storeName, isStockAvailable, 
+      const { data } = await axios.get('/api/products', {
+        params: {
+          storeName,
+          isStockAvailable,
           categories: req?.categoryIds?.join(','),
           q: req?.searchInput
-        } 
-      });
-      setProducts(data.products);
+        }
+      })
+      setProducts(data.products)
     } catch (error) {
       toast({
-        title: "Error",
+        title: 'Error',
         description: (error as Error).message,
-        status: "error",
+        status: 'error',
         duration: 2500,
-        isClosable: true,
+        isClosable: true
       })
     }
-  };
+  }
 
-  return { products, fetchProducts };
+  return { products, fetchProducts }
 }

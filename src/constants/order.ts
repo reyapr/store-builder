@@ -4,10 +4,10 @@ export enum EOrderStatus {
   FAILED = 'FAILED'
 }
 
-export const mapOrderStatusToColor: {[key: string]: string} = {
-  [EOrderStatus.PENDING]: "orange",
-  [EOrderStatus.COMPLETED]: "green",
-  [EOrderStatus.FAILED]: "red",
+export const mapOrderStatusToColor: { [key: string]: string } = {
+  [EOrderStatus.PENDING]: 'orange',
+  [EOrderStatus.COMPLETED]: 'green',
+  [EOrderStatus.FAILED]: 'red'
 }
 
 export enum ETimeFrame {

@@ -49,6 +49,8 @@ model Product {
   storeId       String
   orders        ProductOrder[]
   categories    Category[]
+  imageUrl      String?
+  description   String?
 }
 
 model Customer {

@@ -1,26 +1,46 @@
-import { ICreateProductRequest } from "@/interfaces/product";
-import { CreateToastFnReturn, useDisclosure } from "@chakra-ui/react";
-import axios from "axios";
+import { ICreateProductRequest } from '@/interfaces/product'
+import { CreateToastFnReturn, useDisclosure } from '@chakra-ui/react'
+import axios from 'axios'
 
-export function useCreateProduct(toast: CreateToastFnReturn, fetchProducts: () => void){
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  
+export function useCreateProduct(
+  toast: CreateToastFnReturn,
+  fetchProducts: () => void
+) {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const handleCreateProduct = (request: ICreateProductRequest) => async () => {
     try {
-      const response = await axios.post('/api/products', request);
-      fetchProducts();
-      onClose();
+      const form = new FormData()
+      form.append('name', request.name)
+      form.append('price', request.price.toString())
+      form.append('stock', request.stock.toString())
+      form.append('storeId', request.storeId)
+      form.append('categoryIds', JSON.stringify(request.categoryIds))
+      form.append('description', request.description)
+      form.append('image', request.image)
+
+      await axios.post('/api/products', form)
+      fetchProducts()
+      onClose()
     } catch (error) {
+      let description
+      if (
+        (error as any).response.data.error.includes('resource already exist')
+      ) {
+        description = 'Image name is already exist. Please use another image.'
+      } else {
+        description = (error as Error).message
+      }
       toast({
-        title: "Error",
-        description: (error as Error).message,
-        status: "error",
+        title: 'Error',
+        description,
+        status: 'error',
         duration: 2500,
-        isClosable: true,
-      });
+        isClosable: true
+      })
     }
   }
-  
+
   return {
     isOpen,
     onOpen,

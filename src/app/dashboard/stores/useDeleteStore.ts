@@ -1,39 +1,43 @@
-import { CreateToastFnReturn, useDisclosure } from "@chakra-ui/react";
-import axios from "axios";
-import { SupabaseClient } from "@supabase/supabase-js";
-import { useState } from "react";
+import { CreateToastFnReturn, useDisclosure } from '@chakra-ui/react'
+import axios from 'axios'
+import { SupabaseClient } from '@supabase/supabase-js'
+import { useState } from 'react'
 
-export function useDeleteStore(toast: CreateToastFnReturn, fetchStores: () => void, supabase: SupabaseClient){
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  
-  const [targetDeleteStoreId, setTargetDeleteStoreId] = useState('' as string);
-  
+export function useDeleteStore(
+  toast: CreateToastFnReturn,
+  fetchStores: () => void,
+  supabase: SupabaseClient
+) {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const [targetDeleteStoreId, setTargetDeleteStoreId] = useState('' as string)
+
   const handleOpenDeleteModal = (id: string) => {
-    setTargetDeleteStoreId(id);
-    onOpen();
+    setTargetDeleteStoreId(id)
+    onOpen()
   }
-  
+
   const handleDeleteClose = () => {
-    setTargetDeleteStoreId('');
-    onClose();
+    setTargetDeleteStoreId('')
+    onClose()
   }
-  
+
   const submitDeleteStore = (id: string) => async () => {
     try {
-      await axios.delete(`/api/stores/${id}`);
-      fetchStores();
+      await axios.delete(`/api/stores/${id}`)
+      fetchStores()
     } catch (error) {
       toast({
-        title: "Error",
+        title: 'Error',
         description: (error as Error).message,
-        status: "error",
+        status: 'error',
         duration: 2500,
-        isClosable: true,
+        isClosable: true
       })
     }
-    handleDeleteClose();
+    handleDeleteClose()
   }
-  
+
   return {
     isOpen,
     onOpen,

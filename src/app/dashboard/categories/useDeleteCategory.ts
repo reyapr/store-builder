@@ -1,39 +1,43 @@
-import { CreateToastFnReturn, useDisclosure } from "@chakra-ui/react";
-import axios from "axios";
-import { useState } from "react";
+import { CreateToastFnReturn, useDisclosure } from '@chakra-ui/react'
+import axios from 'axios'
+import { useState } from 'react'
 
-export function useDeleteCategory(toast: CreateToastFnReturn, fetchCategories: () => void){
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  
-  const [targetDeleteCategoryId, setTargetDeleteCateogryId] = useState('' as string);
-  
+export function useDeleteCategory(
+  toast: CreateToastFnReturn,
+  fetchCategories: () => void
+) {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const [targetDeleteCategoryId, setTargetDeleteCateogryId] = useState(
+    '' as string
+  )
+
   const handleOpenDeleteModal = (id: string) => {
-    setTargetDeleteCateogryId(id);
-    onOpen();
+    setTargetDeleteCateogryId(id)
+    onOpen()
   }
-  
+
   const handleDeleteClose = () => {
-    setTargetDeleteCateogryId('');
-    onClose();
+    setTargetDeleteCateogryId('')
+    onClose()
   }
-  
-  
+
   const handleDeleteCategory = (id: string) => async () => {
     try {
-      await axios.delete(`/api/categories/${id}`);
-      fetchCategories();
-      onClose();
+      await axios.delete(`/api/categories/${id}`)
+      fetchCategories()
+      onClose()
     } catch (error) {
       toast({
-        title: "Error",
+        title: 'Error',
         description: (error as Error).message,
-        status: "error",
+        status: 'error',
         duration: 2500,
-        isClosable: true,
+        isClosable: true
       })
     }
   }
-  
+
   return {
     isOpen,
     onOpen: handleOpenDeleteModal,

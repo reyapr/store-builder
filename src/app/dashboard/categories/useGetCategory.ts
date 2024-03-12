@@ -1,26 +1,31 @@
-import { ICategory } from "@/interfaces/category";
-import { CreateToastFnReturn } from "@chakra-ui/react";
-import axios from "axios";
-import { useState } from "react";
+import { ICategory } from '@/interfaces/category'
+import { CreateToastFnReturn } from '@chakra-ui/react'
+import axios from 'axios'
+import { useState } from 'react'
 
-export function useGetCateogries(toast: CreateToastFnReturn, storeName?: string){
-  const [categories, setCategories] = useState<ICategory[]>([] as ICategory[]);
-  
+export function useGetCateogries(
+  toast: CreateToastFnReturn,
+  storeName?: string
+) {
+  const [categories, setCategories] = useState<ICategory[]>([] as ICategory[])
+
   const fetchCategories = async () => {
     try {
-      const { data } = await axios.get('/api/categories', { params: { storeName } });
-      setCategories(data.categories);
+      const { data } = await axios.get('/api/categories', {
+        params: { storeName }
+      })
+      setCategories(data.categories)
     } catch (error) {
       toast({
-        title: "Error",
+        title: 'Error',
         description: (error as Error).message,
-        status: "error",
+        status: 'error',
         duration: 2500,
-        isClosable: true,
+        isClosable: true
       })
     }
   }
-  
+
   return {
     categories,
     fetchCategories

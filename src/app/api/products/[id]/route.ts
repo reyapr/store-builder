@@ -70,8 +70,13 @@ export async function PATCH(request: Request, context: { params: any }) {
           { status: 500 }
         )
       }
-      newImageUrl =
-        process.env.NEXT_PUBLIC_SUPABASE_IMAGE_URL + '/' + data.fullPath
+      const cookieStore = cookies()
+      const supabase = createClient(cookieStore)
+
+      const { data: storageData } = supabase.storage
+        .from(process.env.BUCKET_NAME as string)
+        .getPublicUrl(data.path)
+      newImageUrl = storageData.publicUrl
     }
 
     const store = await prisma.product.update({

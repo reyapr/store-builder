@@ -1,6 +1,7 @@
-import { useStore } from "@/app/s/[storeName]/useStore";
-import { cartStore } from "@/stores/useCart";
-import { createQueryString } from "@/utils/url-params";
+import React from 'react'
+import { useStore } from '@/app/s/[storeName]/useStore'
+import { cartStore } from '@/stores/useCart'
+import { createQueryString } from '@/utils/url-params'
 import {
   Badge,
   Box,
@@ -12,50 +13,50 @@ import {
   Input,
   InputGroup,
   InputRightElement,
-  Text,
-} from "@chakra-ui/react";
-import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { MdOutlineShoppingCart } from "react-icons/md";
+  Text
+} from '@chakra-ui/react'
+import Link from 'next/link'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useState } from 'react'
+import { MdOutlineShoppingCart } from 'react-icons/md'
 
 interface NavbarProps {
-  storeName: string;
-  home?: boolean;
+  storeName: string
+  home?: boolean
 }
 
 export function Navbar(props: NavbarProps) {
-  const cart = useStore(cartStore, (state) => state, props.storeName);
-  const router = useRouter();
-  const params = useSearchParams();
-  const pathname = usePathname();
-  const quantity = cart.getTotalQuantity && cart.getTotalQuantity();
-  const [searchInput, setSearchInput] = useState(params.get("search") || "");
+  const cart = useStore(cartStore, (state) => state, props.storeName)
+  const router = useRouter()
+  const params = useSearchParams()
+  const pathname = usePathname()
+  const quantity = cart.getTotalQuantity && cart.getTotalQuantity()
+  const [searchInput, setSearchInput] = useState(params.get('search') || '')
   const handleSearch = () => {
     const query = createQueryString(params, {
-      key: "search",
-      value: searchInput,
-    });
+      key: 'search',
+      value: searchInput
+    })
 
-    router.push(`${pathname}${query}`);
-  };
+    router.push(`${pathname}${query}`)
+  }
 
   return (
-    <Flex bg="gray.700" justifyContent={"space-between"}>
+    <Flex bg="gray.700" justifyContent={'space-between'}>
       <Box margin={3}>
         <Link href={`/s/${props.storeName}`}>
-          <Text fontSize="2xl" fontWeight="bold" color={"white"}>
+          <Text fontSize="2xl" fontWeight="bold" color={'white'}>
             {props.storeName}
           </Text>
         </Link>
       </Box>
       {props.home && (
-        <Box m={3} width={"lg"}>
+        <Box m={3} width={'lg'}>
           <FormControl>
             <InputGroup size="lg">
               <Input
                 placeholder="Search Product"
-                bg={"gray.550"}
+                bg={'gray.550'}
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
               />
@@ -63,8 +64,8 @@ export function Navbar(props: NavbarProps) {
                 <Button
                   h="2.00rem"
                   onClick={handleSearch}
-                  bg={"gray.700"}
-                  color={"white"}
+                  bg={'gray.700'}
+                  color={'white'}
                 >
                   Search
                 </Button>
@@ -77,12 +78,12 @@ export function Navbar(props: NavbarProps) {
         <IconButton
           aria-label="cart"
           onClick={() => router.push(`${props.storeName}/cart`)}
-          variant={"outline"}
+          variant={'outline'}
           icon={
             <Box>
               <Icon
-                fontSize={"2xl"}
-                color={"white"}
+                fontSize={'2xl'}
+                color={'white'}
                 as={MdOutlineShoppingCart}
               />
               {quantity > 0 && (
@@ -102,5 +103,5 @@ export function Navbar(props: NavbarProps) {
         />
       </Box>
     </Flex>
-  );
+  )
 }

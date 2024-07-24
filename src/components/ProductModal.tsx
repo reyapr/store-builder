@@ -1,5 +1,9 @@
-import { ICategoryInput, ICreateProductInput, ICreateProductRequest } from "@/interfaces/product";
-import { IStore } from "@/interfaces/store";
+import {
+  ICategoryInput,
+  ICreateProductInput,
+  ICreateProductRequest
+} from '@/interfaces/product'
+import { IStore } from '@/interfaces/store'
 import {
   Button,
   FormControl,
@@ -19,29 +23,16 @@ import {
   NumberInputField,
   NumberInputStepper,
   Select,
-  Textarea,
-} from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import { NumericFormat } from "react-number-format";
-import { Select as MultiSelect, MultiValue } from "chakra-react-select"
-import { ICategory } from "@/interfaces/category";
+  Textarea
+} from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
+import { NumericFormat } from 'react-number-format'
+import { Select as MultiSelect, MultiValue } from 'chakra-react-select'
+import { ICategory } from '@/interfaces/category'
 
-export interface MyModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (request: ICreateProductRequest) => () => void;
-  data?: ICreateProductInput,
-  stores: IStore[];
-  categories: ICategory[];
-  title: string;
-  editMode?: boolean;
-}
+export default function ProductFormModal(props: Props) {
+  const { isOpen, onClose, onSubmit, data, editMode } = props
 
-type InputElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-
-export default function ProductFormModal(props: MyModalProps) {
-  const { isOpen, onClose, onSubmit, data, editMode } = props;
-  
   const [input, setInput] = useState({
     name: '',
     price: '',
@@ -50,18 +41,18 @@ export default function ProductFormModal(props: MyModalProps) {
     categories: [],
     description: '',
     image: null
-  } as ICreateProductInput);
-  
+  } as ICreateProductInput)
+
   const unFormatPrice = (price: string) => {
-    return parseInt(price.replace(/Rp|\./g, '').replace(',','.'));
+    return parseInt(price.replace(/Rp|\./g, '').replace(',', '.'))
   }
-  
+
   const request = {
-    ...input, 
-    price: unFormatPrice(input.price), 
-    categoryIds: input.categories.map(category => category.value)
-  } as ICreateProductRequest;
-  
+    ...input,
+    price: unFormatPrice(input.price),
+    categoryIds: input.categories.map((category) => category.value)
+  } as ICreateProductRequest
+
   useEffect(() => {
     setInput({
       name: data?.name || '',
@@ -71,52 +62,49 @@ export default function ProductFormModal(props: MyModalProps) {
       categories: data?.categories || [],
       description: data?.description || '',
       image: data?.image || null
-    });
-  }, [data?.name]);
-  
+    })
+  }, [data?.name])
+
   const handleChange = (e: React.ChangeEvent<InputElement>): void => {
     setInput({
       ...input,
       [e.target.name]: e.target.value,
       categories: e.target.name === 'storeId' ? [] : input.categories
-    });
+    })
   }
-  
+
   const handleCategoriesChange = (value: MultiValue<ICategoryInput>) => {
     setInput({
       ...input,
       categories: value as ICategoryInput[]
-    });
+    })
   }
-  
+
   const handleStockChange = (value: string) => {
-    const quantity = parseInt(value) || 0;
-    if (quantity < 0) return;
+    const quantity = parseInt(value) || 0
+    if (quantity < 0) return
     setInput({
       ...input,
       stock: quantity
-    });
+    })
   }
-  
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const file = e.target.files?.[0]
+    if (!file) return
     setInput({
       ...input,
       image: file
-    });
+    })
   }
-  
+
   const categoryOptions = props.categories
-    .filter(category => category.storeId === input.storeId)
-    .map(category => ({ label: category.name, value: category.id }))
-  
+    .filter((category) => category.storeId === input.storeId)
+    .map((category) => ({ label: category.name, value: category.id }))
+
   return (
     <>
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-      >
+      <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{props.title}</ModalHeader>
@@ -124,11 +112,11 @@ export default function ProductFormModal(props: MyModalProps) {
           <ModalBody pb={6}>
             <FormControl marginBottom={2}>
               <FormLabel>Name</FormLabel>
-              <Input 
-                placeholder="Product Name" 
-                value={input.name} 
-                onChange={handleChange} 
-                name='name'
+              <Input
+                placeholder="Product Name"
+                value={input.name}
+                onChange={handleChange}
+                name="name"
               />
             </FormControl>
             <FormControl marginBottom={2}>
@@ -136,20 +124,17 @@ export default function ProductFormModal(props: MyModalProps) {
               <Input
                 as={NumericFormat}
                 prefix="Rp."
-                value={input.price} 
+                value={input.price}
                 thousandSeparator="."
                 decimalSeparator=","
-                onChange={handleChange} 
-                name='price'
+                onChange={handleChange}
+                name="price"
                 placeholder="Product Price"
               />
             </FormControl>
             <FormControl marginBottom={2}>
               <FormLabel>Stock</FormLabel>
-              <NumberInput 
-                value={input.stock} 
-                onChange={handleStockChange} 
-              >
+              <NumberInput value={input.stock} onChange={handleStockChange}>
                 <NumberInputField placeholder="Product Stock" />
                 <NumberInputStepper>
                   <NumberIncrementStepper />
@@ -160,23 +145,25 @@ export default function ProductFormModal(props: MyModalProps) {
             <FormControl marginBottom={2}>
               <FormLabel>Store</FormLabel>
               <Select
-                placeholder='Select Store' 
-                value={input.storeId} 
+                placeholder="Select Store"
+                value={input.storeId}
                 onChange={handleChange}
-                name='storeId'
+                name="storeId"
               >
-                {
-                  props.stores.map(store => {
-                    return <option key={store.id} value={store.id}>{store.name}</option>
-                  })
-                }
+                {props.stores.map((store) => {
+                  return (
+                    <option key={store.id} value={store.id}>
+                      {store.name}
+                    </option>
+                  )
+                })}
               </Select>
             </FormControl>
             <FormControl>
               <FormLabel>Categories</FormLabel>
               <MultiSelect
                 isMulti
-                placeholder='Select Categories'
+                placeholder="Select Categories"
                 onChange={handleCategoriesChange}
                 value={input.categories}
                 options={categoryOptions}
@@ -185,21 +172,33 @@ export default function ProductFormModal(props: MyModalProps) {
             </FormControl>
             <FormControl>
               <FormLabel>Description</FormLabel>
-              <Textarea 
-                placeholder="Product Description" 
-                value={input.description} 
-                onChange={handleChange} 
-                name='description'
+              <Textarea
+                placeholder="Product Description"
+                value={input.description}
+                onChange={handleChange}
+                name="description"
               />
             </FormControl>
             <FormControl>
               <FormLabel>Image</FormLabel>
-              {editMode && data?.imageUrl && <Image src={data.imageUrl} alt="product image" width={150}/>}
-              <Input id='input-file' type='file' accept="image/*" onChange={handleImageChange}/>
+              {editMode && data?.imageUrl && (
+                <Image src={data.imageUrl} alt="product image" width={150} />
+              )}
+              <Input
+                id="input-file"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button isDisabled={!request.storeId} colorScheme="blue" mr={3} onClick={onSubmit(request)}>
+            <Button
+              isDisabled={!request.storeId}
+              colorScheme="blue"
+              mr={3}
+              onClick={onSubmit(request)}
+            >
               Save
             </Button>
             <Button onClick={onClose}>Cancel</Button>
@@ -207,5 +206,18 @@ export default function ProductFormModal(props: MyModalProps) {
         </ModalContent>
       </Modal>
     </>
-  );
+  )
 }
+
+export interface Props {
+  isOpen: boolean
+  onClose: () => void
+  onSubmit: (request: ICreateProductRequest) => () => void
+  data?: ICreateProductInput
+  stores: IStore[]
+  categories: ICategory[]
+  title: string
+  editMode?: boolean
+}
+
+type InputElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement

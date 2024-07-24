@@ -1,44 +1,42 @@
-import React, { PropsWithChildren, ReactElement } from 'react';
-import Link from "next/link"
+import React from 'react'
+import { Button, Flex } from '@chakra-ui/react'
+import Link from 'next/link'
 
 const MENU = [
   {
     id: 2,
-    name: 'Stores',
+    name: 'Toko',
     path: '/dashboard/stores'
   },
   {
     id: 3,
-    name: 'Products',
+    name: 'Produk',
     path: '/dashboard/products'
   },
   {
     id: 4,
-    name: 'Orders',
+    name: 'Order',
     path: '/dashboard/orders'
   },
   {
     id: 5,
-    name: 'Categories',
+    name: 'Kategori',
     path: '/dashboard/categories'
   }
 ]
 
-export default function Sidebar({ children } : PropsWithChildren) {
+export default function Sidebar() {
   return (
-    <div style={{ display: 'flex'}}>
-      <div style={{ flex: 1, borderWidth: '1px'}}>
-        {
-          MENU.map((item) => (
-            <div key={item.id}>
-              <Link href={item.path}>{item.name}</Link>
-            </div>
-          ))
-        }
-      </div>
-      <main style={{ flex: 11, borderWidth: '1px'}}>
-        {children}
-      </main>
-    </div>
+    <Flex
+      flexDirection="column"
+      width="180px"
+      boxShadow="0 0 15px rgb(0 0 0 / 0.15)"
+    >
+      {MENU.map((item) => (
+        <Button key={item.id} variant="ghost">
+          <Link href={item.path}>{item.name}</Link>
+        </Button>
+      ))}
+    </Flex>
   )
 }

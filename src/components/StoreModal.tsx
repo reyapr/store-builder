@@ -1,4 +1,4 @@
-import { ISubmitStoreFormRequest } from "@/interfaces/store";
+import { ISubmitStoreFormRequest } from '@/interfaces/store'
 import {
   Button,
   FormControl,
@@ -10,40 +10,26 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  ModalOverlay,
-} from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+  ModalOverlay
+} from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
 
-export interface MyModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (request: ISubmitStoreFormRequest) => () => void;
-  data?: {
-    name: string;
-    id: string;
-  },
-  title: string;
-}
+export default function StoreFormModal(props: Props) {
+  const { isOpen, onClose, onSubmit, data } = props
 
-export default function StoreFormModal(props: MyModalProps) {
-  const { isOpen, onClose, onSubmit, data } = props;
-  
-  const [name, setName] = useState(data?.name || '');
-  
+  const [name, setName] = useState(data?.name || '')
+
   useEffect(() => {
-    setName(data?.name || '');
-  }, [data?.name]);
-  
+    setName(data?.name || '')
+  }, [data?.name])
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
+    setName(e.target.value)
   }
 
   return (
     <>
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-      >
+      <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{props.title}</ModalHeader>
@@ -51,12 +37,20 @@ export default function StoreFormModal(props: MyModalProps) {
           <ModalBody pb={6}>
             <FormControl>
               <FormLabel>Name</FormLabel>
-              <Input placeholder="Store Name" value={name} onChange={handleChange} />
+              <Input
+                placeholder="Store Name"
+                value={name}
+                onChange={handleChange}
+              />
             </FormControl>
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onSubmit({ name, id: data?.id })}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={onSubmit({ name, id: data?.id })}
+            >
               Save
             </Button>
             <Button onClick={onClose}>Cancel</Button>
@@ -64,5 +58,16 @@ export default function StoreFormModal(props: MyModalProps) {
         </ModalContent>
       </Modal>
     </>
-  );
+  )
+}
+
+export interface Props {
+  isOpen: boolean
+  onClose: () => void
+  onSubmit: (request: ISubmitStoreFormRequest) => () => void
+  data?: {
+    name: string
+    id: string
+  }
+  title: string
 }

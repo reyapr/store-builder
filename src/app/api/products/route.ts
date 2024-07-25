@@ -5,6 +5,9 @@ import { createProductSchema } from '@/app/api/validator'
 import { cookies } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
 import { ISupabaseUploadResponse } from '@/interfaces/supabase'
+import { v5 as uuidv5 } from 'uuid'
+
+const NAMESPACE = process.env.BUCKET_NAME;
 
 export async function GET(request: NextRequest) {
   const storeName = request.nextUrl.searchParams.get('storeName')
@@ -62,6 +65,10 @@ export async function GET(request: NextRequest) {
   }
 }
 
+const generateUniqImageName = (name: string) => {
+  return `${name}_${crypto.randomUUID()}`
+}
+
 const updloadToSupabase = async (
   image: File
 ): Promise<ISupabaseUploadResponse> => {
@@ -71,9 +78,11 @@ const updloadToSupabase = async (
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)
 
+  const uniqImageName = generateUniqImageName(image.name)
+
   const response = await supabase.storage
     .from(process.env.BUCKET_NAME)
-    .upload(image.name, image, {
+    .upload(uniqImageName, image, {
       upsert: false
     })
 
@@ -106,7 +115,15 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       )
     }
-    imageUrl = process.env.NEXT_PUBLIC_SUPABASE_IMAGE_URL + '/' + data.fullPath
+
+    const cookieStore = cookies()
+    const supabase = createClient(cookieStore)
+
+    
+    const { data: storageData } = supabase.storage
+      .from(process.env.BUCKET_NAME as string)
+      .getPublicUrl(data.path)
+    imageUrl = storageData.publicUrl
   }
 
   try {

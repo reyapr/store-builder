@@ -5,7 +5,7 @@ import { useState } from 'react'
 
 export interface IFetchProductRequest {
   categoryIds?: string[]
-  searchInput?: string
+  query?: string
 }
 
 export function useGetProducts(
@@ -21,7 +21,7 @@ export function useGetProducts(
           storeName,
           isStockAvailable,
           categories: req?.categoryIds?.join(','),
-          q: req?.searchInput
+          q: req?.query
         }
       })
       setProducts(data.products)

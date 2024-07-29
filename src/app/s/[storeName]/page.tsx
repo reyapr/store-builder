@@ -3,7 +3,7 @@ import React from 'react'
 import { Layout } from '@/app/s/[storeName]/components/Layout'
 import { useProductList } from '@/app/s/[storeName]/use-product-list'
 import { useStore } from '@/app/s/[storeName]/useStore'
-import { useGetProducts } from '@/app/dashboard/products/useGetProduct'
+import { getProducts } from '@/app/dashboard/products/useGetProduct'
 import { ProductCard } from '@/components'
 import { cartStore } from '@/stores/useCart'
 import { Box, FormControl, FormLabel, Grid, useToast } from '@chakra-ui/react'
@@ -107,7 +107,7 @@ export default function StoreProductList({
         </FormControl>
       </Box>
       <Grid gap={4} templateColumns="repeat(4, 1fr)">
-        {products.map((product) => (
+        {products.map((product: IProduct.IProduct) => (
           <ProductCard
             key={product.id}
             product={product}

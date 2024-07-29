@@ -2,13 +2,26 @@ import axios from 'axios'
 import { useQuery, useMutation, UseQueryResult } from '@tanstack/react-query'
 import {
   ICreateProductRequest,
-  IProduct
+  IProduct,
+  IProductResponse,
+  IProductsResponse,
 } from '@/interfaces/product'
+
+export const getProduct = (
+  productId: String
+): UseQueryResult<IProductResponse, Error> =>
+  useQuery<IProductResponse, Error>({
+    queryKey: ['product', productId],
+    queryFn: async () => {
+      const { data } = await axios.get(`/api/products/${productId}`)
+      return data
+    }
+  })
 
 export const getProducts = (
   params?: IFetchProductRequest
-): UseQueryResult<IProduct[], Error> =>
-  useQuery<IProduct[], Error>({
+): UseQueryResult<IProductResponse[], Error> =>
+  useQuery<IProductResponse[], Error>({
     queryKey: ['products'],
     queryFn: async () => {
       const { data } = await axios.get('/api/products', { params })

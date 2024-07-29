@@ -26,8 +26,16 @@ export default function ProductPage() {
   const sortProducts = (a: any, b: any) =>
     new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1
 
+  const breadcrumbs = [
+    { label: 'dashboard', path: '/dashboard' },
+    { label: 'produk', path: '/dashboard/product' }
+  ]
   return (
-    <Layout>
+    <Layout
+      breadcrumbs={breadcrumbs}
+      error={error as Error}
+      isFetching={isFetching}
+    >
       {isFetching && (
         <Box padding="6" boxShadow="lg" bg="white">
           <SkeletonCircle size="10" />

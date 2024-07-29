@@ -11,8 +11,20 @@ export interface ICreateProductRequest {
   image: File
 }
 
-export interface ICreateProductsResponse {
-  products: IProduct[]
+export interface IProductsResponse {
+  products: IProductResponse[]
+}
+
+export interface IProductResponse {
+  id: string
+  name: string
+  price: number
+  stock: number
+  description: string
+  imageUrl: string
+  storeId: string,
+  createdAt: string
+  updatedAt: string
 }
 
 export interface ICategoryInput {

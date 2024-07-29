@@ -3,20 +3,13 @@ import {
   ICreateProductInput,
   ICreateProductRequest
 } from '@/interfaces/product'
-import { IStore } from '@/interfaces/store'
 import {
   Button,
+  Flex,
   FormControl,
   FormLabel,
   Image,
   Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -32,24 +25,18 @@ import { Select as MultiSelect, MultiValue } from 'chakra-react-select'
 
 import { useGetCateogries } from '@/app/dashboard/categories/useGetCategory'
 import { useGetStore } from '@/app/dashboard/stores/useGetStore'
-import { ICategory } from '@/interfaces/category'
 
-export default function ProductFormModal(props: Props) {
-  const { onSubmit, data, editMode } = props
+export default function ProductFormModal({
+  onSubmit,
+  product,
+  editMode
+}: Props) {
   const toast = useToast()
 
   const { categories, fetchCategories } = useGetCateogries(toast)
   const { stores, fetchStores } = useGetStore(toast)
 
-  const [input, setInput] = useState({
-    name: '',
-    price: '',
-    stock: 0,
-    storeId: '',
-    categories: [],
-    description: '',
-    image: null
-  } as ICreateProductInput)
+  const [input, setInput] = useState(product)
 
   const unFormatPrice = (price: string) => {
     return parseInt(price.replace(/Rp|\./g, '').replace(',', '.'))
@@ -60,18 +47,6 @@ export default function ProductFormModal(props: Props) {
     price: unFormatPrice(input.price),
     categoryIds: input.categories.map((category) => category.value)
   } as ICreateProductRequest
-
-  useEffect(() => {
-    setInput({
-      name: data?.name || '',
-      storeId: data?.storeId || '',
-      price: data?.price || '',
-      stock: data?.stock || 0,
-      categories: data?.categories || [],
-      description: data?.description || '',
-      image: data?.image || null
-    })
-  }, [data?.name])
 
   const handleChange = (e: React.ChangeEvent<InputElement>): void => {
     setInput({
@@ -110,7 +85,6 @@ export default function ProductFormModal(props: Props) {
     .filter((category) => category.storeId === input.storeId)
     .map((category) => ({ label: category.name, value: category.id }))
 
-  console.log({ stores })
   return (
     <>
       <FormControl marginBottom={2}>
@@ -185,15 +159,28 @@ export default function ProductFormModal(props: Props) {
       </FormControl>
       <FormControl>
         <FormLabel>Image</FormLabel>
-        {editMode && data?.imageUrl && (
-          <Image src={data.imageUrl} alt="product image" width={150} />
-        )}
-        <Input
-          id="input-file"
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-        />
+        <Flex>
+          {product.imageUrl && (
+            <Image src={product.imageUrl} alt="product image" width={150} />
+          )}
+          <Input
+            id="input-file"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+        </Flex>
+      </FormControl>
+      <FormControl mt={6}>
+        <Button
+          w="full"
+          isDisabled={!request.storeId}
+          colorScheme="blue"
+          mr={3}
+          onClick={onSubmit(request)}
+        >
+          Simpan
+        </Button>
       </FormControl>
     </>
   )
@@ -201,7 +188,7 @@ export default function ProductFormModal(props: Props) {
 
 export interface Props {
   onSubmit: (request: ICreateProductRequest) => () => void
-  data?: ICreateProductInput
+  product: ICreateProductInput
   title: string
   editMode?: boolean
 }

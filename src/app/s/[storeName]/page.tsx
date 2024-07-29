@@ -3,22 +3,17 @@ import React from 'react'
 import { Layout } from '@/app/s/[storeName]/components/Layout'
 import { useProductList } from '@/app/s/[storeName]/use-product-list'
 import { useStore } from '@/app/s/[storeName]/useStore'
-import { getProducts } from '@/app/dashboard/products/useGetProduct'
 import { ProductCard } from '@/components'
 import { cartStore } from '@/stores/useCart'
 import { Box, FormControl, FormLabel, Grid, useToast } from '@chakra-ui/react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { useGetCateogries } from '@/app/dashboard/categories/useGetCategory'
+import { useGetCateogries } from '@/app/dashboard/categories/actions'
 import { Select as MultiSelect } from 'chakra-react-select'
 import { ICategory, IProduct } from '@/interfaces'
 import { createQueryString } from '@/utils/url-params'
 
-export default function StoreProductList({
-  params
-}: {
-  params: { storeName: string }
-}) {
+export default function Stores({ params }: { params: { storeName: string } }) {
   const toast = useToast()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -50,21 +45,12 @@ export default function StoreProductList({
       )
     : []
 
-  const { products, fetchProducts } = useGetProducts(
-    toast,
-    params.storeName,
-    true
-  )
-
   const [inputCategories, setInputCategories] =
     useState<IProduct.ICategoryInput[]>(initInputCategories)
 
   useEffect(() => {
     validateCurrentPage()
     fetchCategories()
-    if (!categoryIds && !searchInput) {
-      fetchProducts()
-    }
   }, [])
 
   useEffect(() => {
@@ -86,8 +72,6 @@ export default function StoreProductList({
   useEffect(() => {
     const categoryIds = searchParams.get('categories')?.split(',')
     const searchQuery = searchParams.get('search') || undefined
-
-    fetchProducts({ categoryIds, searchInput: searchQuery })
   }, [searchParams.get('categories'), searchParams.get('search')])
 
   return (
@@ -107,7 +91,7 @@ export default function StoreProductList({
         </FormControl>
       </Box>
       <Grid gap={4} templateColumns="repeat(4, 1fr)">
-        {products.map((product: IProduct.IProduct) => (
+        {[].map((product: IProduct.IProduct) => (
           <ProductCard
             key={product.id}
             product={product}

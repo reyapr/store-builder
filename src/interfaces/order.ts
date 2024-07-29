@@ -21,7 +21,7 @@ export interface IProductOrder {
   }
 }
 
-export interface IOrders {
+export interface IOrder {
   id: string
   total: number
   createdAt: string

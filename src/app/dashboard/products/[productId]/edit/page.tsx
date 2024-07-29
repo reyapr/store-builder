@@ -3,7 +3,7 @@
 import React from 'react'
 import { Layout, ProductForm } from '@/components'
 
-import { getProduct } from '../../useGetProduct'
+import { getProduct } from '@/app/dashboard/products/actions'
 
 export default function Edit({ params }: Props) {
   const { data, isFetching, error } = getProduct(params.productId)

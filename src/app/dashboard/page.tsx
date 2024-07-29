@@ -68,7 +68,7 @@ export default function HomeDashboard() {
   const [year, setYear] = useState(years[0])
 
   const fetchData = async (timeFrame: ETimeFrame, year: number) => {
-    const response = await axios.get(`/api/order/total-order`, {
+    const response = await axios.get(`/api/orders/total-order`, {
       params: { timeFrame, year }
     })
     const dataChartFormat = response.data.result.map((item: any) => {

@@ -1,15 +1,6 @@
 'use client'
-import { useEffect, useState } from 'react'
-import { useCreateCategory } from '@/app/dashboard/categories/useCreateCategory'
-import { useDeleteCategory } from '@/app/dashboard/categories/useDeleteCategory'
-import { useGetCateogries } from '@/app/dashboard/categories/useGetCategory'
-import { useUpdateCategory } from '@/app/dashboard/categories/useUpdateCategory'
-import { useGetStore } from '@/app/dashboard/stores/useGetStore'
-import {
-  CategoryModal as CategoryFormModal,
-  DeleteAlert,
-  Layout
-} from '@/components'
+import { getCategories } from '@/app/dashboard/categories/actions'
+import { Layout } from '@/components'
 import { ICategory } from '@/interfaces/category'
 import {
   Button,
@@ -17,7 +8,6 @@ import {
   Grid,
   GridItem,
   Table,
-  TableCaption,
   TableContainer,
   Tbody,
   Th,
@@ -28,24 +18,32 @@ import {
 
 export default function Categories() {
   const toast = useToast()
-  const { stores, fetchStores } = useGetStore(toast)
-  const { categories, fetchCategories } = useGetCateogries(toast)
+  const {
+    data: categories,
+    isFetching: isFetchingCategories,
+    error: errorCategories
+  } = getCategories()
 
   const sortCategories = (a: ICategory, b: ICategory) =>
     new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1
 
-  const createCategoryHook = useCreateCategory(toast, fetchCategories)
-  const editCategoryHook = useUpdateCategory(toast, fetchCategories)
-  const deleteCategoryHook = useDeleteCategory(toast, fetchCategories)
-
-  useEffect(() => {
-    fetchCategories()
-    fetchStores()
-  }, [])
+  const breadcrumbs = [
+    { label: 'Dashboard', path: '/dashboard' },
+    { label: 'Kategori', path: '/dashboard/categories' }
+  ]
 
   return (
-    <Layout>
-      <CategoryFormModal
+    <Layout
+      breadcrumbs={breadcrumbs}
+      isFetching={isFetchingCategories}
+      error={errorCategories as Error}
+      rightHeaderComponent={
+        <Button colorScheme="blue" size="sm" onClick={() => {}}>
+          Create Category
+        </Button>
+      }
+    >
+      {/* <CategoryFormModal
         title="Create new category"
         isOpen={createCategoryHook.isOpen}
         onClose={createCategoryHook.onClose}
@@ -66,17 +64,17 @@ export default function Categories() {
         onSubmit={deleteCategoryHook.handleDeleteCategory}
         title="Delete Category"
         id={deleteCategoryHook.targetDeleteCategoryId}
-      />
+      /> */}
       <Grid>
-        <GridItem justifySelf="end" colEnd={13} paddingTop={3} paddingRight={3}>
-          <Button colorScheme="blue" onClick={createCategoryHook.onOpen}>
-            Create Category
-          </Button>
-        </GridItem>
+        <GridItem
+          justifySelf="end"
+          colEnd={13}
+          paddingTop={3}
+          paddingRight={3}
+        ></GridItem>
       </Grid>
       <TableContainer>
         <Table variant={'simple'}>
-          <TableCaption>Categories</TableCaption>
           <Thead>
             <Tr>
               <Th>ID</Th>
@@ -86,31 +84,26 @@ export default function Categories() {
             </Tr>
           </Thead>
           <Tbody>
-            {categories.sort(sortCategories).map((category: ICategory) => {
-              return (
-                <Tr key={category.id}>
-                  <Th>{category.id}</Th>
-                  <Th>{category.name}</Th>
-                  <Th>{category.store?.name}</Th>
-                  <Th>
-                    <ButtonGroup gap={2}>
-                      <Button
-                        colorScheme="blue"
-                        onClick={() => editCategoryHook.onOpen(category)}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        colorScheme="red"
-                        onClick={() => deleteCategoryHook.onOpen(category.id)}
-                      >
-                        Delete
-                      </Button>
-                    </ButtonGroup>
-                  </Th>
-                </Tr>
-              )
-            })}
+            {categories &&
+              categories.sort(sortCategories).map((category: ICategory) => {
+                return (
+                  <Tr key={category.id}>
+                    <Th>{category.id}</Th>
+                    <Th>{category.name}</Th>
+                    <Th>{category.store?.name}</Th>
+                    <Th>
+                      <ButtonGroup gap={2}>
+                        <Button colorScheme="blue" size="sm" onClick={() => {}}>
+                          Edit
+                        </Button>
+                        <Button colorScheme="red" size="sm" onClick={() => {}}>
+                          Delete
+                        </Button>
+                      </ButtonGroup>
+                    </Th>
+                  </Tr>
+                )
+              })}
           </Tbody>
         </Table>
       </TableContainer>

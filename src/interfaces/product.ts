@@ -25,6 +25,7 @@ export interface IProductResponse {
   storeId: string,
   createdAt: string
   updatedAt: string
+  store: IStore
 }
 
 export interface ICategoryInput {

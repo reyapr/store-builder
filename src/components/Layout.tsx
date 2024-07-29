@@ -1,4 +1,4 @@
-import { ReactNode, type PropsWithChildren } from 'react'
+import { ReactNode } from 'react'
 import {
   Alert,
   AlertIcon,
@@ -18,7 +18,8 @@ export default function Layout({
   children,
   breadcrumbs,
   error,
-  isFetching
+  isFetching,
+  rightHeaderComponent
 }: Props) {
   return (
     <HStack align="start" spacing={0}>
@@ -31,7 +32,15 @@ export default function Layout({
         bg={useColorModeValue('gray.50', 'gray.900')}
       >
         {!!breadcrumbs?.length && (
-          <Box bg="white" borderBottomWidth="1px" boxShadow="xs" mb={6} p={3}>
+          <Flex
+            bg="white"
+            borderBottomWidth="1px"
+            boxShadow="xs"
+            mb={6}
+            p={3}
+            justifyContent="space-between"
+            alignItems="center"
+          >
             <Breadcrumb>
               {breadcrumbs.map(({ label, path }) => (
                 <BreadcrumbItem key={path}>
@@ -39,29 +48,45 @@ export default function Layout({
                 </BreadcrumbItem>
               ))}
             </Breadcrumb>
-          </Box>
+            <Flex>{rightHeaderComponent}</Flex>
+          </Flex>
         )}
-        <Box m={3} p={3} bg="white" boxShadow="md" minH="80vh">
-          {error && (
+
+        {error && (
+          <Box p={3} mb={3}>
             <Alert status="error" mb={3} height="48px">
               <AlertIcon />
               {error.message}
             </Alert>
-          )}
-          {isFetching && (
-            <Flex
-              flex={1}
-              justify="center"
-              color="blue.400"
-              align="center"
-              minH="80vh"
-            >
-              <Spinner />
-            </Flex>
-          )}
+          </Box>
+        )}
+        {!error && (
+          <Flex
+            flex={1}
+            flexGrow={0}
+            direction="column"
+            m={3}
+            p={3}
+            bg="white"
+            boxShadow="md"
+            borderRadius="md"
+            overflowX="auto"
+          >
+            {isFetching && (
+              <Flex
+                flex={1}
+                justify="center"
+                color="blue.400"
+                align="center"
+                minH="80vh"
+              >
+                <Spinner />
+              </Flex>
+            )}
 
-          {!error && !isFetching && children}
-        </Box>
+            {!error && !isFetching && children}
+          </Flex>
+        )}
       </Box>
     </HStack>
   )
@@ -71,6 +96,7 @@ type Props = {
   children: ReactNode
   error?: Error
   isFetching?: boolean
+  rightHeaderComponent?: ReactNode
   breadcrumbs?: {
     label: string
     path: string

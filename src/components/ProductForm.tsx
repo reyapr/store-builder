@@ -17,26 +17,30 @@ import {
   NumberInputStepper,
   Select,
   Textarea,
-  useToast
+  useToast,
+  VStack
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { NumericFormat } from 'react-number-format'
 import { Select as MultiSelect, MultiValue } from 'chakra-react-select'
 
-import { useGetCateogries } from '@/app/dashboard/categories/useGetCategory'
-import { useGetStore } from '@/app/dashboard/stores/useGetStore'
+import { getCategories } from '@/app/dashboard/categories/actions'
+import { getStores } from '@/app/dashboard/stores/actions'
 
-export default function ProductFormModal({
-  onSubmit,
-  product,
-  editMode
-}: Props) {
-  const toast = useToast()
-
-  const { categories, fetchCategories } = useGetCateogries(toast)
-  const { stores, fetchStores } = useGetStore(toast)
-
+export default function ProductFormModal({ onSubmit, product }: Props) {
   const [input, setInput] = useState(product)
+  const [categoryOptions, setCategoryOptions] = useState<ICategoryInput[]>([])
+
+  const {
+    data: categories,
+    isFetching: isFetchingCategories,
+    error: errorCategories
+  } = getCategories()
+  const {
+    data: stores,
+    isFetching: isFetchingStores,
+    error: errorStores
+  } = getStores()
 
   const unFormatPrice = (price: string) => {
     return parseInt(price.replace(/Rp|\./g, '').replace(',', '.'))
@@ -81,12 +85,17 @@ export default function ProductFormModal({
     })
   }
 
-  const categoryOptions = categories
-    .filter((category) => category.storeId === input.storeId)
-    .map((category) => ({ label: category.name, value: category.id }))
+  useEffect(() => {
+    if (!!categories?.length) {
+      const options: ICategoryInput[] = categories
+        .filter((category) => category.storeId === input.storeId)
+        .map((category) => ({ label: category.name, value: category.id }))
+      setCategoryOptions(options)
+    }
+  }, [categories])
 
   return (
-    <>
+    <VStack gap={3}>
       <FormControl marginBottom={2}>
         <FormLabel>Name</FormLabel>
         <Input
@@ -127,7 +136,7 @@ export default function ProductFormModal({
           onChange={handleChange}
           name="storeId"
         >
-          {!!stores.length &&
+          {!!stores?.length &&
             stores.map((store) => {
               return (
                 <option key={store.id} value={store.id}>
@@ -182,7 +191,7 @@ export default function ProductFormModal({
           Simpan
         </Button>
       </FormControl>
-    </>
+    </VStack>
   )
 }
 
@@ -190,7 +199,6 @@ export interface Props {
   onSubmit: (request: ICreateProductRequest) => () => void
   product: ICreateProductInput
   title: string
-  editMode?: boolean
 }
 
 type InputElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement

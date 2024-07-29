@@ -19,3 +19,8 @@ export interface ICategory {
   updatedAt: string
   store?: IStore
 }
+
+
+export interface ICategoriesResponse {
+  categories: ICategory[]
+}

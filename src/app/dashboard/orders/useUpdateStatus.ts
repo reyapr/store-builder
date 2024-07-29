@@ -28,7 +28,7 @@ export function useUpdateOrderStatus(
 
   const onSubmit = async (request: IUpdateOrderStatusRequest) => {
     try {
-      await axios.patch(`/api/order/${request.id}`, request)
+      await axios.patch(`/api/orders/${request.id}`, request)
       fetchOrders()
       clearRequestOnClose()
     } catch (error) {

@@ -14,7 +14,7 @@ import {
   SkeletonText
 } from '@chakra-ui/react'
 
-import { getProducts } from '@/app/dashboard/products/useGetProduct'
+import { getProducts } from '@/app/dashboard/products/actions'
 
 import { CardProduct, Layout } from '@/components'
 
@@ -35,6 +35,11 @@ export default function ProductPage() {
       breadcrumbs={breadcrumbs}
       error={error as Error}
       isFetching={isFetching}
+      rightHeaderComponent={
+        <Button colorScheme="blue" size="sm" onClick={() => {}}>
+          Tambah Produk
+        </Button>
+      }
     >
       {isFetching && (
         <Box padding="6" boxShadow="lg" bg="white">
@@ -53,9 +58,6 @@ export default function ProductPage() {
                 onChange={(e) => setQuery(e.target.value)}
               />
             </Flex>
-            <Button colorScheme="blue" onClick={() => {}}>
-              Tambah Produk
-            </Button>
           </Flex>
           <Text fontSize="x-large" mb={4} fontWeight="bold">
             {products.length} produk ditemukan

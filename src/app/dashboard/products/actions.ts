@@ -2,9 +2,7 @@ import axios from 'axios'
 import { useQuery, useMutation, UseQueryResult } from '@tanstack/react-query'
 import {
   ICreateProductRequest,
-  IProduct,
   IProductResponse,
-  IProductsResponse,
 } from '@/interfaces/product'
 
 export const getProduct = (

@@ -56,6 +56,7 @@ const Sidebar = ({ ...rest }: Props) => {
       pos="fixed"
       h="100%"
       minH="100vh"
+      bg="white"
       zIndex={99}
       {...rest}
     >
@@ -67,22 +68,20 @@ const Sidebar = ({ ...rest }: Props) => {
       <Box>
         <List spacing={0} p="0.5">
           {listItems.map(({ icon, text, path }) => (
-            <ListItem
-              as={HStack}
-              spacing={0}
-              h="10"
-              pl="2.5"
-              cursor="pointer"
-              _hover={{ bg: useColorModeValue('gray.50', 'gray.700') }}
-              rounded="md"
-            >
-              <ListIcon boxSize={5} as={icon} />
-              {text && (
-                <Text>
-                  <Link href={path}>{text}</Link>
-                </Text>
-              )}
-            </ListItem>
+            <Link href={path}>
+              <ListItem
+                as={HStack}
+                spacing={0}
+                h="10"
+                pl="2.5"
+                cursor="pointer"
+                _hover={{ bg: useColorModeValue('gray.100', 'gray.700') }}
+                rounded="md"
+              >
+                <ListIcon boxSize={5} as={icon} />
+                {text && <Text>{text}</Text>}
+              </ListItem>
+            </Link>
           ))}
         </List>
       </Box>

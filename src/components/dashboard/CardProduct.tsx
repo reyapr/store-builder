@@ -12,12 +12,11 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 
-import { IProduct } from '@/interfaces/product'
+import { IProductResponse } from '@/interfaces/product'
 import { toIDRFormat } from '@/utils/idr-format'
 
 export default function ProductSimple({ product }: Props) {
-  const { id, name, price, stock, store, categories, imageUrl, description } =
-    product
+  const { id, name, price, store, imageUrl } = product
   return (
     <Center>
       <Box
@@ -63,5 +62,5 @@ export default function ProductSimple({ product }: Props) {
 }
 
 interface Props {
-  product: IProduct
+  product: IProductResponse
 }

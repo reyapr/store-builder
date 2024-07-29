@@ -1,45 +1,66 @@
-'use client';
-import StoreFormModal from "@/components/StoreModal";
-import Layout from "@/components/Layout";
-import { createClient } from "@/utils/supabase/client";
-import { Button, ButtonGroup, Grid, GridItem, Table, TableCaption, TableContainer, Tag, Tbody, Th, Thead, Tr, useToast } from "@chakra-ui/react";
-import { useEffect } from "react";
-import { DeleteAlert } from "@/components/DeleteAlert";
-import { useCreateStore } from "@/app/dashboard/stores/useCreateStore";
-import { useUpdateStore } from "@/app/dashboard/stores/useUpdateStore";
-import { useDeleteStore } from "@/app/dashboard/stores/useDeleteStore";
-import { useGetStore } from "@/app/dashboard/stores/useGetStore";
+'use client'
+import StoreFormModal from '@/components/StoreModal'
+import { createClient } from '@/utils/supabase/client'
+import {
+  Button,
+  ButtonGroup,
+  Grid,
+  GridItem,
+  Table,
+  TableContainer,
+  Tbody,
+  Th,
+  Thead,
+  Tr,
+  useToast
+} from '@chakra-ui/react'
+import { useEffect } from 'react'
+import { DeleteAlert, Layout } from '@/components'
+import { useCreateStore } from '@/app/dashboard/stores/useCreateStore'
+import { useUpdateStore } from '@/app/dashboard/stores/useUpdateStore'
+import { useDeleteStore } from '@/app/dashboard/stores/useDeleteStore'
+import { getStores } from '@/app/dashboard/stores/actions'
 
 export default function Store() {
-  const supabase = createClient();
-  const toast = useToast();
- 
-  const { stores, fetchStores } = useGetStore(toast);
-  const createStoreHook = useCreateStore(toast, fetchStores, supabase);
-  const updateStoreHook = useUpdateStore(toast, fetchStores, supabase);
-  const deleteStoreHook = useDeleteStore(toast, fetchStores, supabase);
-  
-  const sortByCreatedAt = (a: any, b: any) =>
-    new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1;
+  const supabase = createClient()
+  const toast = useToast()
 
-  useEffect(() => {
-    fetchStores();
-  }, []);
-  
+  const { data: stores, isFetching, error } = getStores()
+  // const createStoreHook = useCreateStore(toast, fetchStores, supabase)
+  // const updateStoreHook = useUpdateStore(toast, fetchStores, supabase)
+  // const deleteStoreHook = useDeleteStore(toast, fetchStores, supabase)
+
+  const sortByCreatedAt = (a: any, b: any) =>
+    new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1
+
+  const breadcrumbs = [
+    { label: 'Dashboard', path: '/dashboard' },
+    { label: 'Toko', path: '/dashboard/stores' }
+  ]
+
   return (
-    <Layout>
-      <StoreFormModal 
-        title="Create new store" 
-        isOpen={createStoreHook.isOpen} 
-        onClose={createStoreHook.onClose} 
-        onSubmit={createStoreHook.submitNewStore} 
+    <Layout
+      breadcrumbs={breadcrumbs}
+      isFetching={isFetching}
+      error={error as Error}
+      rightHeaderComponent={
+        <Button colorScheme="blue" size="sm" onClick={() => {}}>
+          Create Store
+        </Button>
+      }
+    >
+      {/* <StoreFormModal
+        title="Create new store"
+        isOpen={createStoreHook.isOpen}
+        onClose={createStoreHook.onClose}
+        onSubmit={createStoreHook.submitNewStore}
       />
-      <StoreFormModal 
-        title="Update store" 
-        isOpen={updateStoreHook.isOpen} 
-        onClose={updateStoreHook.handleEditClose} 
-        onSubmit={updateStoreHook.submitUpdateStore} 
-        data={updateStoreHook.currentEditForm} 
+      <StoreFormModal
+        title="Update store"
+        isOpen={updateStoreHook.isOpen}
+        onClose={updateStoreHook.handleEditClose}
+        onSubmit={updateStoreHook.submitUpdateStore}
+        data={updateStoreHook.currentEditForm}
       />
       <DeleteAlert
         isOpen={deleteStoreHook.isOpen}
@@ -47,17 +68,17 @@ export default function Store() {
         onSubmit={deleteStoreHook.submitDeleteStore}
         title="Delete Store"
         id={deleteStoreHook.targetDeleteStoreId}
-      />
-       <Grid>
-        <GridItem justifySelf="end" colEnd={13} paddingTop={3} paddingRight={3}>
-          <Button colorScheme="blue" onClick={createStoreHook.onOpen}>
-            Create Store
-          </Button>
-        </GridItem>
+      /> */}
+      <Grid>
+        <GridItem
+          justifySelf="end"
+          colEnd={13}
+          paddingTop={3}
+          paddingRight={3}
+        ></GridItem>
       </Grid>
       <TableContainer>
-        <Table variant={"simple"}>
-          <TableCaption>Store</TableCaption>
+        <Table variant={'simple'}>
           <Thead>
             <Tr>
               <Th>ID</Th>
@@ -66,27 +87,28 @@ export default function Store() {
             </Tr>
           </Thead>
           <Tbody>
-            {stores.sort(sortByCreatedAt).map((store) => {
-              return (
-                <Tr key={store.id}>
-                  <Th>{store.id}</Th>
-                  <Th>{store.name}</Th>
-                  <Th>
-                    <ButtonGroup gap={2}>
-                      <Button colorScheme="blue" onClick={() => updateStoreHook.handleEdit(store)}>
-                        Edit
-                      </Button>
-                      <Button colorScheme="red" onClick={() => deleteStoreHook.handleOpenDeleteModal(store.id)}>
-                        Delete
-                      </Button>
-                    </ButtonGroup>
-                  </Th>
-                </Tr>
-              );
-            })}
+            {!!stores?.length &&
+              stores.sort(sortByCreatedAt).map((store) => {
+                return (
+                  <Tr key={store.id}>
+                    <Th>{store.id}</Th>
+                    <Th>{store.name}</Th>
+                    <Th>
+                      <ButtonGroup gap={2}>
+                        <Button colorScheme="blue" size="sm" onClick={() => {}}>
+                          Edit
+                        </Button>
+                        <Button colorScheme="red" size="sm" onClick={() => {}}>
+                          Delete
+                        </Button>
+                      </ButtonGroup>
+                    </Th>
+                  </Tr>
+                )
+              })}
           </Tbody>
         </Table>
       </TableContainer>
     </Layout>
-  );
+  )
 }

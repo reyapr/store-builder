@@ -8,9 +8,9 @@ import { cartStore } from '@/stores/useCart'
 import { Box, FormControl, FormLabel, Grid, useToast } from '@chakra-ui/react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { useGetCateogries } from '@/app/dashboard/categories/actions'
+import { getCategories } from '@/app/dashboard/categories/actions'
 import { Select as MultiSelect } from 'chakra-react-select'
-import { ICategory, IProduct } from '@/interfaces'
+import { IProduct } from '@/interfaces'
 import { createQueryString } from '@/utils/url-params'
 
 export default function Stores({ params }: { params: { storeName: string } }) {
@@ -21,6 +21,9 @@ export default function Stores({ params }: { params: { storeName: string } }) {
   const cart = useStore(cartStore, (state) => state, params.storeName)
   const categoryIds = searchParams.get('categories')?.split(',')
   const searchInput = searchParams.get('search') || ''
+  const [categoryOptions, setCategoryOptions] = useState<
+    IProduct.ICategoryInput[]
+  >([])
 
   const { validateCurrentPage } = useProductList(
     toast,
@@ -28,16 +31,16 @@ export default function Stores({ params }: { params: { storeName: string } }) {
     params.storeName
   )
 
-  const { categories, fetchCategories } = useGetCateogries(
-    toast,
-    params.storeName
-  )
-  const categoryOptions = categories
-    .filter(
-      (category: ICategory.ICategory) =>
-        category.store?.name === params.storeName
-    )
-    .map((category) => ({ label: category.name, value: category.id }))
+  const { data: categories } = getCategories(params)
+
+  useEffect(() => {
+    if (!!categories?.length) {
+      const options: IProduct.ICategoryInput[] = categories
+        .filter((category) => category.store?.name === params.storeName)
+        .map((category) => ({ label: category.name, value: category.id }))
+      setCategoryOptions(options)
+    }
+  }, [categories])
 
   const initInputCategories = categoryIds
     ? categoryOptions.filter((category) =>
@@ -50,7 +53,6 @@ export default function Stores({ params }: { params: { storeName: string } }) {
 
   useEffect(() => {
     validateCurrentPage()
-    fetchCategories()
   }, [])
 
   useEffect(() => {

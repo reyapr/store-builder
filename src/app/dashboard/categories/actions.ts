@@ -16,37 +16,6 @@ export const getCategories = (
     }
   })
 
-export function useGetCateogries(
-  toast: CreateToastFnReturn,
-  storeName?: string
-) {
-  const [categories, setCategories] = useState<ICategory[]>([] as ICategory[])
-
-  const fetchCategories = async () => {
-    try {
-      const { data } = await axios.get('/api/categories', {
-        params: { storeName }
-      })
-      setCategories(data.categories)
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: (error as Error).message,
-        status: 'error',
-        duration: 2500,
-        isClosable: true
-      })
-    }
-  }
-
-
-
-  return {
-    categories,
-    fetchCategories
-  }
-}
-
 export interface IFetchCategoriesRequest {
-  storename?: string
+  storeName?: string
 }

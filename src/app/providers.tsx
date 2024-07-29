@@ -1,15 +1,16 @@
-import React from 'react'
+'use client'
 
-import { Box, ChakraBaseProvider, Container } from '@chakra-ui/react'
+import React, { useState } from 'react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+import { ChakraProvider } from '@chakra-ui/react'
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  const [queryClient] = useState(() => new QueryClient())
+
   return (
-    <ChakraBaseProvider>
-      <Container maxW="100%" color="white" centerContent>
-        <Box padding="4" bg="blue.400" color="black" w="2xl">
-          {children}
-        </Box>
-      </Container>
-    </ChakraBaseProvider>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider>{children}</ChakraProvider>
+    </QueryClientProvider>
   )
 }

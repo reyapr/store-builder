@@ -1,40 +1,39 @@
-import { IProduct } from '@/interfaces/product'
-import { CreateToastFnReturn } from '@chakra-ui/react'
 import axios from 'axios'
-import { useState } from 'react'
+import { useQuery, useMutation, UseQueryResult } from '@tanstack/react-query'
+import {
+  ICreateProductRequest,
+  IProduct
+} from '@/interfaces/product'
+
+export const getProducts = (
+  params?: IFetchProductRequest
+): UseQueryResult<IProduct[], Error> =>
+  useQuery<IProduct[], Error>({
+    queryKey: ['products'],
+    queryFn: async () => {
+      const { data } = await axios.get('/api/products', { params })
+      return data.products
+    }
+  })
+
+export const deleteProducts = (id?: string) =>
+  useMutation({
+    mutationKey: ['delete', 'products'],
+    mutationFn: async () => {
+      return await axios.delete(`/api/products/${id}`)
+    }
+  })
+
+export const createProducts = (product?: ICreateProductRequest) =>
+  useMutation({
+    mutationKey: ['delete', 'products'],
+    mutationFn: async () => {
+      const { data } = await axios.post(`/api/products`, product)
+      return data.products
+    }
+  })
 
 export interface IFetchProductRequest {
   categoryIds?: string[]
   query?: string
-}
-
-export function useGetProducts(
-  toast: CreateToastFnReturn,
-  storeName?: string,
-  isStockAvailable?: boolean
-) {
-  const [products, setProducts] = useState([] as IProduct[])
-  const fetchProducts = async (req?: IFetchProductRequest) => {
-    try {
-      const { data } = await axios.get('/api/products', {
-        params: {
-          storeName,
-          isStockAvailable,
-          categories: req?.categoryIds?.join(','),
-          q: req?.query
-        }
-      })
-      setProducts(data.products)
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: (error as Error).message,
-        status: 'error',
-        duration: 2500,
-        isClosable: true
-      })
-    }
-  }
-
-  return { products, fetchProducts }
 }

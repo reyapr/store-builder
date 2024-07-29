@@ -4,15 +4,14 @@ import { Layout } from '@/app/s/[storeName]/components/Layout'
 import { useProductList } from '@/app/s/[storeName]/use-product-list'
 import { useStore } from '@/app/s/[storeName]/useStore'
 import { useGetProducts } from '@/app/dashboard/products/useGetProduct'
-import { ProductCard } from '@/components/ProductCard'
+import { ProductCard } from '@/components'
 import { cartStore } from '@/stores/useCart'
 import { Box, FormControl, FormLabel, Grid, useToast } from '@chakra-ui/react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useGetCateogries } from '@/app/dashboard/categories/useGetCategory'
 import { Select as MultiSelect } from 'chakra-react-select'
-import { ICategory } from '@/interfaces/category'
-import { ICategoryInput } from '@/interfaces/product'
+import { ICategory, IProduct } from '@/interfaces'
 import { createQueryString } from '@/utils/url-params'
 
 export default function StoreProductList({
@@ -39,7 +38,10 @@ export default function StoreProductList({
     params.storeName
   )
   const categoryOptions = categories
-    .filter((category: ICategory) => category.store?.name === params.storeName)
+    .filter(
+      (category: ICategory.ICategory) =>
+        category.store?.name === params.storeName
+    )
     .map((category) => ({ label: category.name, value: category.id }))
 
   const initInputCategories = categoryIds
@@ -55,7 +57,7 @@ export default function StoreProductList({
   )
 
   const [inputCategories, setInputCategories] =
-    useState<ICategoryInput[]>(initInputCategories)
+    useState<IProduct.ICategoryInput[]>(initInputCategories)
 
   useEffect(() => {
     validateCurrentPage()
@@ -96,7 +98,9 @@ export default function StoreProductList({
           <MultiSelect
             isMulti
             placeholder="Select Categories"
-            onChange={(value) => setInputCategories(value as ICategoryInput[])}
+            onChange={(value) =>
+              setInputCategories(value as IProduct.ICategoryInput[])
+            }
             value={inputCategories}
             options={categoryOptions}
           />

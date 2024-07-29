@@ -1,24 +1,22 @@
-import Navbar from '@/components/Navbar'
+import { type PropsWithChildren } from 'react'
+import { Box, HStack, useColorModeValue } from '@chakra-ui/react'
+
 import Sidebar from '@/components/Sidebar'
-import { Flex } from '@chakra-ui/react'
-import { PropsWithChildren } from 'react'
 
 export default function Layout({ children }: PropsWithChildren) {
   return (
-    <Flex flexDirection="column" height="100vh">
-      <Navbar />
-      <Flex flexGrow={1}>
-        <Sidebar />
-        <Flex
-          py="16px"
-          px="32px"
-          flexDirection="column"
-          overflow="auto"
-          flexGrow={1}
-        >
-          {children}
-        </Flex>
-      </Flex>
-    </Flex>
+    <HStack align="start" spacing={0}>
+      <Sidebar />
+      <Box
+        p={3}
+        as="main"
+        ml={{ base: 0, lg: '60' }}
+        w="full"
+        minH="90vh"
+        bg={useColorModeValue('gray.50', 'gray.900')}
+      >
+        {children}
+      </Box>
+    </HStack>
   )
 }

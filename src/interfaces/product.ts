@@ -11,6 +11,10 @@ export interface ICreateProductRequest {
   image: File
 }
 
+export interface ICreateProductsResponse {
+  products: IProduct[]
+}
+
 export interface ICategoryInput {
   label: string
   value: string

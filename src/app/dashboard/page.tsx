@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Box, Button, Flex, Select } from '@chakra-ui/react'
 import axios from 'axios'
 
-import Layout from '@/components/Layout'
+import { Layout } from '@/components'
 import { ETimeFrame } from '@/constants/order'
 import {
   Chart as ChartJS,

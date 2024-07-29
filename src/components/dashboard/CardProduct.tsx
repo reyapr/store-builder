@@ -6,27 +6,18 @@ import {
   ButtonGroup,
   Center,
   useColorModeValue,
-  Heading,
   Text,
   Stack,
   Image
 } from '@chakra-ui/react'
-import { PhoneIcon, AddIcon, WarningIcon } from '@chakra-ui/icons'
+import Link from 'next/link'
 
-import { IStore } from '@/interfaces/store'
-import { ICategory } from '@/interfaces/category'
+import { IProduct } from '@/interfaces/product'
+import { toIDRFormat } from '@/utils/idr-format'
 
-export default function ProductSimple({
-  name,
-  price,
-  stock,
-  store,
-  categories,
-  imageUrl,
-  description,
-  onEdit,
-  onDelete
-}: Props) {
+export default function ProductSimple({ product }: Props) {
+  const { id, name, price, stock, store, categories, imageUrl, description } =
+    product
   return (
     <Center>
       <Box
@@ -54,14 +45,14 @@ export default function ProductSimple({
           <Text fontSize="md" fontFamily="body">
             {name}
           </Text>
-          <Text fontSize="sm">{price}</Text>
+          <Text fontSize="sm">{toIDRFormat(price)}</Text>
         </Stack>
         <Stack px={6} pb={3}>
           <ButtonGroup gap={2}>
-            <Button size="sm" colorScheme="blue" onClick={onEdit}>
-              Edit
+            <Button size="sm" colorScheme="blue">
+              <Link href={`/dashboard/products/${id}/edit`}>Edit</Link>
             </Button>
-            <Button size="sm" colorScheme="red" onClick={onDelete}>
+            <Button size="sm" colorScheme="red">
               Delete
             </Button>
           </ButtonGroup>
@@ -72,13 +63,5 @@ export default function ProductSimple({
 }
 
 interface Props {
-  name: string
-  price: string
-  stock: number
-  store: IStore
-  categories: ICategory[]
-  imageUrl: string
-  description: string
-  onEdit: () => void
-  onDelete: () => void
+  product: IProduct
 }

@@ -2,8 +2,6 @@ import React from 'react'
 
 import { Inter } from 'next/font/google'
 
-import { Navbar } from '@/components/homepage'
-
 import './globals.css'
 import { Providers } from './providers'
 

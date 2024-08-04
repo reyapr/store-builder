@@ -1,7 +1,9 @@
 'use client'
 
 import React from 'react'
+
 import { Stack, Text } from '@chakra-ui/react'
+
 import { Layout } from '@/components/homepage'
 
 export default function ErrorPage() {

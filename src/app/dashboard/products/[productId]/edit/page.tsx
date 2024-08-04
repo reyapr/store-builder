@@ -3,6 +3,7 @@
 import React from 'react'
 
 import { useToast } from '@chakra-ui/react'
+
 import { getProduct, updateProducts } from '@/app/dashboard/products/actions'
 import { Layout, ProductForm } from '@/components'
 

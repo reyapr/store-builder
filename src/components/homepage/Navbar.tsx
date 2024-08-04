@@ -2,8 +2,6 @@
 
 import React from 'react'
 
-import Link from 'next/link'
-
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 import {
   Box,
@@ -14,6 +12,7 @@ import {
   useColorModeValue,
   Stack
 } from '@chakra-ui/react'
+import Link from 'next/link'
 
 interface navLinkProps {
   children: React.ReactNode

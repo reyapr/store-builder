@@ -23,7 +23,11 @@ import { getCategories } from '@/app/dashboard/categories/actions'
 import { getStores } from '@/app/dashboard/stores/actions'
 import { IEditProductRequest, ICategoryInput } from '@/interfaces/product'
 
-export default function ProductFormModal({ onSubmit, product }: Props) {
+export default function ProductFormModal({
+  onSubmit,
+  product,
+  isPending = false
+}: Props) {
   const [input, setInput] = useState<IEditProductRequest>(product)
   const [categoryOptions, setCategoryOptions] = useState<ICategoryInput[]>([])
 
@@ -169,9 +173,10 @@ export default function ProductFormModal({ onSubmit, product }: Props) {
       <FormControl mt={6}>
         <Button
           w="full"
+          mr={3}
+          isLoading={isPending}
           isDisabled={!request.storeId}
           colorScheme="blue"
-          mr={3}
           onClick={() => onSubmit(request)}
         >
           Simpan
@@ -186,6 +191,7 @@ export interface Props {
   onSubmit: (request: IEditProductRequest) => void
   product: IEditProductRequest
   title: string
+  isPending: boolean
 }
 
 type InputElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement

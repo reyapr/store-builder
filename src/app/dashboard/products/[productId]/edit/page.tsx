@@ -2,12 +2,33 @@
 
 import React from 'react'
 
+import { useToast } from '@chakra-ui/react'
 import { getProduct, updateProducts } from '@/app/dashboard/products/actions'
 import { Layout, ProductForm } from '@/components'
 
 export default function Edit({ params }: Props) {
-  const { data, isFetching, error } = getProduct(params.productId)
-  const { mutate } = updateProducts()
+  const { data, isFetching, error, refetch } = getProduct(params.productId)
+
+  const toast = useToast()
+  const { mutate, isPending } = updateProducts({
+    onSuccess() {
+      toast({
+        title: 'Berhasil',
+        description: 'produk berhasil diupdate',
+        status: 'success',
+        isClosable: true
+      })
+      refetch()
+    },
+    onError() {
+      toast({
+        title: 'Gagal',
+        description: 'produk gagal diupdate',
+        status: 'error',
+        isClosable: true
+      })
+    }
+  })
 
   const breadcrumbs = [
     { label: 'dashboard', path: '/dashboard' },
@@ -23,6 +44,7 @@ export default function Edit({ params }: Props) {
     >
       {data && (
         <ProductForm
+          isPending={isPending}
           product={{
             id: params.productId,
             name: data?.name,

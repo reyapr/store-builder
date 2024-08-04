@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 
-import { Box, Button, Flex, Select } from '@chakra-ui/react'
+import { Box, Button, Flex, Select, HStack } from '@chakra-ui/react'
 import axios from 'axios'
 import {
   Chart as ChartJS,
@@ -120,16 +120,28 @@ export default function HomeDashboard() {
   return (
     <Layout>
       <Flex>
-        <Box>
-          <Button onClick={() => setTimeFrame(ETimeFrame.DAILY)}>Daily</Button>
-          <Button onClick={() => setTimeFrame(ETimeFrame.WEEKLY)}>
+        <HStack gap={3}>
+          <Button
+            px={6}
+            colorScheme="blue"
+            onClick={() => setTimeFrame(ETimeFrame.DAILY)}
+          >
+            Daily
+          </Button>
+          <Button
+            colorScheme="blue"
+            px={6}
+            onClick={() => setTimeFrame(ETimeFrame.WEEKLY)}
+          >
             Weekly
           </Button>
-          <Button onClick={() => setTimeFrame(ETimeFrame.MONTHLY)}>
+          <Button
+            colorScheme="blue"
+            px={6}
+            onClick={() => setTimeFrame(ETimeFrame.MONTHLY)}
+          >
             Monthly
           </Button>
-        </Box>
-        <Box>
           <Select
             placeholder="Select option"
             value={year}
@@ -141,7 +153,7 @@ export default function HomeDashboard() {
               </option>
             ))}
           </Select>
-        </Box>
+        </HStack>
       </Flex>
       <div
         style={{

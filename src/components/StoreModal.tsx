@@ -51,7 +51,7 @@ export default function StoreFormModal(props: Props) {
             <Button
               colorScheme="blue"
               mr={3}
-              onClick={onSubmit({ name, id: data?.id })}
+              onClick={() => onSubmit({ name, id: data?.id })}
             >
               Save
             </Button>

@@ -44,7 +44,7 @@ export interface ICreateProductInput {
   imageUrl?: string
 }
 
-export interface IProduct {
+export type IProduct = {
   id: string
   name: string
   price: number
@@ -53,6 +53,19 @@ export interface IProduct {
   categories: ICategory[]
   description: string
   imageUrl: string
+}
+
+export const IProduct = {
+  fromData: (product: IProductResponse) => ({
+    id: product.id,
+  name: product.name,
+  price: product.price,
+  stock: product.stock,
+  store: product.store,
+  categories: [],
+  description: product.description,
+  imageUrl: product.imageUrl,
+  }) 
 }
 
 export interface IEditProductRequest {

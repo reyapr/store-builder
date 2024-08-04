@@ -27,9 +27,11 @@ const replaceImageInSupabase = async (
     }
   }
 
+  const uniqImageName = generateUniqImageName(image.name)
+
   const uploadResponse = await supabase.storage
     .from(process.env.BUCKET_NAME)
-    .upload(image.name, image)
+    .upload(uniqImageName, image)
 
   return uploadResponse as ISupabaseUploadResponse
 }
@@ -62,6 +64,7 @@ export async function PATCH(request: Request, context: { params: any }) {
 
   const { image, ...productRequest } = updateProductReq.data
   const { id } = context.params as { id: string }
+
   try {
     const currentProduct = await prisma.product.findUnique({ where: { id } })
     if (!currentProduct) {
@@ -155,4 +158,8 @@ export async function DELETE(_: Request, context: { params: any }) {
       { status: 400 }
     )
   }
+}
+
+const generateUniqImageName = (name: string) => {
+  return `${name}_${crypto.randomUUID()}`
 }

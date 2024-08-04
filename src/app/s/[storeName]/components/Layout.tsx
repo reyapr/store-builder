@@ -2,7 +2,8 @@ import React from 'react'
 
 import { Box } from '@chakra-ui/react'
 
-import { Navbar } from '@/app/s/[storeName]/components/Navbar'
+// import { Navbar } from '@/app/s/[storeName]/components/Navbar'
+import { Navbar } from '@/components/homepage'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -13,7 +14,7 @@ interface LayoutProps {
 export function Layout(props: LayoutProps) {
   return (
     <Box>
-      <Navbar storeName={props.storeName} home={props.home} />
+      <Navbar storeName={props.storeName} />
       <Box>{props.children}</Box>
     </Box>
   )

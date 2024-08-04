@@ -5,7 +5,6 @@ import {
   CardBody,
   Stack,
   Heading,
-  Divider,
   CardFooter,
   ButtonGroup,
   Button,
@@ -13,17 +12,17 @@ import {
   Text
 } from '@chakra-ui/react'
 
-import { IProduct } from '@/interfaces/product'
+import { IProduct } from '@/interfaces'
 import { toIDRFormat } from '@/utils/idr-format'
 
 interface ProductCardProps {
-  product: IProduct
+  product: IProduct.IProduct
   // eslint-disable-next-line no-unused-vars
-  addToCart: (product: IProduct) => void
+  addToCart: (product: IProduct.IProduct) => void
 }
 
 export default function ProductCard(props: ProductCardProps) {
-  const product: IProduct = props.product
+  const product: IProduct.IProduct = props.product
   const defaultImage =
     'https://qviqbtgkunhmasnzbmoh.supabase.co/storage/v1/object/public/storebuilder/store-builder-default.jpeg'
 
@@ -33,6 +32,8 @@ export default function ProductCard(props: ProductCardProps) {
         <Image
           src={product.imageUrl || defaultImage}
           width="100%"
+          objectFit="cover"
+          height={160}
           alt="Green double couch with wooden legs"
           borderRadius="lg"
         />
@@ -46,7 +47,6 @@ export default function ProductCard(props: ProductCardProps) {
           {toIDRFormat(product.price)}
         </Text>
       </CardFooter>
-      <Divider />
       <CardFooter>
         <ButtonGroup spacing="2">
           <Button

@@ -9,7 +9,6 @@ const filterStorePath = async (storeName: string) => {
   const stores = response.data.stores as IStore[]
   const storeNames = stores.map((store) => store.name)
   const isRegistered = storeNames.includes(storeName)
-
   return isRegistered
 }
 

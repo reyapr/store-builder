@@ -2,8 +2,9 @@ import React from 'react'
 
 import { Inter } from 'next/font/google'
 
-import './globals.css'
+import { Navbar } from '@/components/homepage'
 
+import './globals.css'
 import { Providers } from './providers'
 
 import type { Metadata } from 'next'

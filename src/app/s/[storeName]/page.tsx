@@ -2,18 +2,21 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 
-import { Box, FormControl, FormLabel, Grid, useToast } from '@chakra-ui/react'
+import { FormLabel, Grid, Stack, useToast } from '@chakra-ui/react'
 import { Select as MultiSelect } from 'chakra-react-select'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { getCategories } from '@/app/dashboard/categories/actions'
-import { Layout } from '@/app/s/[storeName]/components/Layout'
+// import { Layout } from '@/app/s/[storeName]/components/Layout'
 import { useProductList } from '@/app/s/[storeName]/use-product-list'
 import { useStore } from '@/app/s/[storeName]/useStore'
 import { ProductCard } from '@/components'
+import { Layout } from '@/components/homepage'
 import { IProduct } from '@/interfaces'
 import { cartStore } from '@/stores/useCart'
 import { createQueryString } from '@/utils/url-params'
+
+import { getProducts } from '@/app/dashboard/products/actions'
 
 export default function Stores({ params }: { params: { storeName: string } }) {
   const toast = useToast()
@@ -25,19 +28,22 @@ export default function Stores({ params }: { params: { storeName: string } }) {
   const [categoryOptions, setCategoryOptions] = useState<
     IProduct.ICategoryInput[]
   >([])
+  const [query, setQuery] = useState('')
+  const { data: products, isFetching, error } = getProducts({ query })
 
-  const { validateCurrentPage } = useProductList(
-    toast,
-    router,
-    params.storeName
-  )
+  const storeName = decodeURI(params.storeName)
 
-  const { data: categories } = getCategories(params)
+  const { validateCurrentPage } = useProductList(toast, router, storeName)
+
+  const { data: categories } = getCategories({
+    ...params,
+    storeName
+  })
 
   useEffect(() => {
     if (categories?.length) {
       const options: IProduct.ICategoryInput[] = categories
-        .filter((category) => category.store?.name === params.storeName)
+        .filter((category) => category.store?.name === storeName)
         .map((category) => ({ label: category.name, value: category.id }))
       setCategoryOptions(options)
     }
@@ -78,30 +84,31 @@ export default function Stores({ params }: { params: { storeName: string } }) {
   }, [searchParams.get('categories'), searchParams.get('search')])
 
   return (
-    <Layout storeName={params.storeName} home>
-      <Box m={3}>
-        <FormControl>
-          <FormLabel>Filter By Categories</FormLabel>
-          <MultiSelect
-            isMulti
-            placeholder="Select Categories"
-            onChange={(value) =>
-              setInputCategories(value as IProduct.ICategoryInput[])
-            }
-            value={inputCategories}
-            options={categoryOptions}
-          />
-        </FormControl>
-      </Box>
-      <Grid gap={4} templateColumns="repeat(4, 1fr)">
-        {[].map((product: IProduct.IProduct) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            addToCart={cart.addProduct}
-          />
-        ))}
-      </Grid>
+    <Layout storeName={storeName}>
+      <Stack gap={6}>
+        <FormLabel>Filter berdasarkan kategori</FormLabel>
+        <MultiSelect
+          isMulti
+          size="sm"
+          placeholder="Pilih kategori"
+          onChange={(value) =>
+            setInputCategories(value as IProduct.ICategoryInput[])
+          }
+          value={inputCategories}
+          options={categoryOptions}
+        />
+        {!!products?.length && !isFetching && (
+          <Grid gap={4} templateColumns="repeat(4, 1fr)">
+            {products.map((product: IProduct.IProductResponse) => (
+              <ProductCard
+                key={product.id}
+                product={IProduct.IProduct.fromData(product)}
+                addToCart={cart.addProduct}
+              />
+            ))}
+          </Grid>
+        )}
+      </Stack>
     </Layout>
   )
 }

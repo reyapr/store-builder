@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useQuery, useMutation, UseQueryResult } from '@tanstack/react-query'
 import axios from 'axios'
 
@@ -48,7 +49,7 @@ export const createProducts = (product: ICreateProductRequest) =>
   })
 
 export const updateProducts = () =>
-  useMutation<Awaited<IProduct.IProduct>, Error, ICategory.IEditProductRequest>(
+  useMutation<Awaited<IProduct.IProduct>, Error, IProduct.IEditProductRequest>(
     {
       mutationKey: ['products', 'update'],
       mutationFn: async (product: IEditProductRequest) => {

@@ -78,13 +78,15 @@ export default function HomeDashboard() {
         case ETimeFrame.DAILY:
           x = moment(item.time).format('DD MMMM YYYY')
           break
-        case ETimeFrame.WEEKLY:
+        case ETimeFrame.WEEKLY: {
           const startOfWeek = moment(moment().week(item.time))
             .startOf('month')
             .get('week')
+
           const weekInMonth = Number(item.time) - startOfWeek + 1
           x = moment().week(item.time).format('MMMM') + ' week ' + weekInMonth
           break
+        }
         case ETimeFrame.MONTHLY:
           x = moment(item.time, 'MM').format('MMMM')
           break

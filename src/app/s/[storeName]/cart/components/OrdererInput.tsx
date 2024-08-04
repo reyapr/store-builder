@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+/* eslint-disable no-unused-vars */
+import React from 'react'
 
 import { FormControl, FormLabel, Input, Textarea } from '@chakra-ui/react'
 

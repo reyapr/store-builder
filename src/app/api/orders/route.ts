@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client/extension'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
 import { prisma } from '@/app/api/config'
 import { createOrderSchema } from '@/app/api/validator'

@@ -18,6 +18,7 @@ import { toIDRFormat } from '@/utils/idr-format'
 
 interface ProductCardProps {
   product: IProduct
+  // eslint-disable-next-line no-unused-vars
   addToCart: (product: IProduct) => void
 }
 

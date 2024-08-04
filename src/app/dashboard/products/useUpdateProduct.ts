@@ -4,7 +4,6 @@ import { CreateToastFnReturn, useDisclosure } from '@chakra-ui/react'
 import axios from 'axios'
 
 import {
-  ICreateProductRequest,
   IEditProductRequest,
   IProduct
 } from '@/interfaces/product'
@@ -37,7 +36,9 @@ export function useUpdateProduct(
       form.append('storeId', request.storeId)
       form.append('categoryIds', JSON.stringify(request.categoryIds))
       form.append('description', request.description)
-      form.append('image', request?.image)
+      if(request?.image){
+        form.append('image', request?.image)
+      }
 
       await axios.patch(`/api/products/${currentEditForm.id}`, form)
       fetchProducts()
@@ -68,10 +69,7 @@ export function useUpdateProduct(
       stock: product.stock,
       price: product.price.toString(),
       storeId: product.store.id,
-      categories: product.categories.map((category) => ({
-        label: category.name,
-        value: category.id
-      })),
+      categoryIds: product.categories.map((category) => category.id),
       description: product.description,
       imageUrl: product.imageUrl
     }

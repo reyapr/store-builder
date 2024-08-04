@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
 import { CreateToastFnReturn, useDisclosure } from '@chakra-ui/react'
-import { SupabaseClient } from '@supabase/supabase-js'
 import axios from 'axios'
 
 import {
@@ -12,7 +11,6 @@ import {
 export function useUpdateStore(
   toast: CreateToastFnReturn,
   fetchStores: () => void,
-  supabase: SupabaseClient
 ) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [currentEditForm, setCurrentEditForm] = useState({

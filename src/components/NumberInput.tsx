@@ -5,6 +5,7 @@ import { HStack, Button, Input } from '@chakra-ui/react'
 interface INumberInputProps {
   quantity: number
   productId: string
+  // eslint-disable-next-line no-unused-vars
   updateProductQuantity: (productId: string, num: number) => void
 }
 

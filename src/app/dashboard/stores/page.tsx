@@ -15,9 +15,8 @@ import {
   Tr
 } from '@chakra-ui/react'
 
-import { Layout } from '@/components'
-i
 import { getStores } from '@/app/dashboard/stores/actions'
+import { Layout } from '@/components'
 
 export default function Store() {
   const { data: stores, isFetching, error } = getStores()
@@ -44,6 +43,26 @@ export default function Store() {
         </Button>
       }
     >
+      {/* <StoreFormModal
+        title="Create new store"
+        isOpen={createStoreHook.isOpen}
+        onClose={createStoreHook.onClose}
+        onSubmit={createStoreHook.submitNewStore}
+      />
+      <StoreFormModal
+        title="Update store"
+        isOpen={updateStoreHook.isOpen}
+        onClose={updateStoreHook.handleEditClose}
+        onSubmit={updateStoreHook.submitUpdateStore}
+        data={updateStoreHook.currentEditForm}
+      />
+      <DeleteAlert
+        isOpen={deleteStoreHook.isOpen}
+        onClose={deleteStoreHook.handleDeleteClose}
+        onSubmit={deleteStoreHook.submitDeleteStore}
+        title="Delete Store"
+        id={deleteStoreHook.targetDeleteStoreId}
+      /> */}
       <Grid>
         <GridItem
           justifySelf="end"

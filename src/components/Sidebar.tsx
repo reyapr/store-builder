@@ -69,14 +69,15 @@ const Sidebar = ({ ...rest }: Props) => {
       </Link>
       <Box>
         <List spacing={0} p="0.5">
-          {listItems.map(({ icon, text, path }) => (
-            <Link href={path}>
+          {listItems.map(({ id, icon, text, path }) => (
+            <Link href={path} key={id}>
               <ListItem
                 as={HStack}
                 spacing={0}
                 h="10"
                 pl="2.5"
                 cursor="pointer"
+                // eslint-disable-next-line react-hooks/rules-of-hooks
                 _hover={{ bg: useColorModeValue('gray.100', 'gray.700') }}
                 rounded="md"
               >

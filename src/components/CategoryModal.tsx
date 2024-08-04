@@ -21,6 +21,7 @@ import { IStore } from '@/interfaces/store'
 export interface MyModalProps {
   isOpen: boolean
   onClose: () => void
+  // eslint-disable-next-line no-unused-vars
   onSubmit: (request: ICreateCategoryRequest) => () => void
   data?: {
     name: string
@@ -44,7 +45,7 @@ export default function CategoryFormModal(props: MyModalProps) {
       name: data?.name || '',
       storeId: data?.storeId || ''
     })
-  }, [data?.name])
+  }, [data?.name, data?.storeId])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

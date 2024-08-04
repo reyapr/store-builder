@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import React, { useEffect, useState } from 'react'
 
@@ -21,7 +22,6 @@ export default function Stores({ params }: { params: { storeName: string } }) {
   const pathname = usePathname()
   const cart = useStore(cartStore, (state) => state, params.storeName)
   const categoryIds = searchParams.get('categories')?.split(',')
-  const searchInput = searchParams.get('search') || ''
   const [categoryOptions, setCategoryOptions] = useState<
     IProduct.ICategoryInput[]
   >([])
@@ -73,8 +73,8 @@ export default function Stores({ params }: { params: { storeName: string } }) {
   }, [inputCategories.length])
 
   useEffect(() => {
-    const categoryIds = searchParams.get('categories')?.split(',')
-    const searchQuery = searchParams.get('search') || undefined
+    // const categoryIds = searchParams.get('categories')?.split(',')
+    // const searchQuery = searchParams.get('search') || undefined
   }, [searchParams.get('categories'), searchParams.get('search')])
 
   return (

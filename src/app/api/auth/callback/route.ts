@@ -39,10 +39,9 @@ export async function GET(request: Request) {
 
     try {
       await axios.post(`${origin}/api/users`, createUserRequest)
-    } finally {
-      if (!error) {
-        return NextResponse.redirect(`${origin}/dashboard`)
-      }
+      return NextResponse.redirect(`${origin}/dashboard`)
+    }catch(err){
+        return NextResponse.json([err, error], {status: 500})
     }
   }
 

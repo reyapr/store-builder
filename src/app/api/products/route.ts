@@ -1,15 +1,12 @@
 import { Prisma } from '@prisma/client'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
-import { v5 as uuidv5 } from 'uuid'
 
 import { prisma } from '@/app/api/config'
 import { createProductSchema } from '@/app/api/validator'
 import { ISupabaseUploadResponse } from '@/interfaces/supabase'
 import { createClient } from '@/utils/supabase/server'
 
-
-const NAMESPACE = process.env.BUCKET_NAME;
 
 export async function GET(request: NextRequest) {
   const storeName = request.nextUrl.searchParams.get('storeName')

@@ -20,33 +20,15 @@ import { Select as MultiSelect, MultiValue } from 'chakra-react-select'
 import { NumericFormat } from 'react-number-format'
 
 import { getCategories } from '@/app/dashboard/categories/actions'
-import { updateProducts } from '@/app/dashboard/products/actions'
 import { getStores } from '@/app/dashboard/stores/actions'
-import { ICategory } from '@/interfaces'
-import { IEditProductRequest ,
-  ICategoryInput,
-  ICreateProductInput,
-  ICreateProductRequest
-} from '@/interfaces/product'
+import { IEditProductRequest, ICategoryInput } from '@/interfaces/product'
 
 export default function ProductFormModal({ onSubmit, product }: Props) {
   const [input, setInput] = useState<IEditProductRequest>(product)
   const [categoryOptions, setCategoryOptions] = useState<ICategoryInput[]>([])
 
-  const {
-    data: categories,
-    isFetching: isFetchingCategories,
-    error: errorCategories
-  } = getCategories()
-  const {
-    data: stores,
-    isFetching: isFetchingStores,
-    error: errorStores
-  } = getStores()
-
-  const unFormatPrice = (price: string) => {
-    return parseInt(price.replace(/Rp|\./g, '').replace(',', '.'))
-  }
+  const { data: categories } = getCategories()
+  const { data: stores } = getStores()
 
   const request = {
     ...input,
@@ -96,7 +78,7 @@ export default function ProductFormModal({ onSubmit, product }: Props) {
         .map((category) => ({ label: category.name, value: category.id }))
       setCategoryOptions(options)
     }
-  }, [categories])
+  }, [categories, input.storeId])
 
   return (
     <VStack gap={3}>
@@ -200,6 +182,7 @@ export default function ProductFormModal({ onSubmit, product }: Props) {
 }
 
 export interface Props {
+  // eslint-disable-next-line no-unused-vars
   onSubmit: (request: IEditProductRequest) => void
   product: IEditProductRequest
   title: string

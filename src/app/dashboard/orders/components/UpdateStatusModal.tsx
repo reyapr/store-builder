@@ -21,6 +21,7 @@ export interface IListOfProductModalProps {
   onClose: () => void
   statuses: string[]
   orderRequest: IUpdateOrderStatusRequest
+  // eslint-disable-next-line no-unused-vars
   onSubmit: (request: IUpdateOrderStatusRequest) => void
 }
 

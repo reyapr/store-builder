@@ -63,7 +63,7 @@ export default function ProductPage() {
           </Text>
           <Grid templateColumns="repeat(4, 1fr)" gap={6}>
             {products.sort(sortProducts).map((product) => (
-              <GridItem>
+              <GridItem key={product.id}>
                 <CardProduct product={product} />
               </GridItem>
             ))}

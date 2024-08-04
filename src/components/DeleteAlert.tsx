@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import React, { useRef } from 'react'
 
 import {
   Button,
@@ -13,7 +13,8 @@ import {
 export interface DeleteAlertProps {
   isOpen: boolean
   onClose: () => void
-  onSubmit: (id: string) => () => void
+  // eslint-disable-next-line no-unused-vars
+  onSubmit: (id: string) => void
   title: string
   id: string
 }
@@ -43,7 +44,7 @@ export default function DeleteAlert(props: DeleteAlertProps) {
               <Button onClick={onClose}>Cancel</Button>
               <Button
                 colorScheme="red"
-                onClick={props.onSubmit(props.id)}
+                onClick={() => props.onSubmit(props.id)}
                 ml={3}
               >
                 Delete

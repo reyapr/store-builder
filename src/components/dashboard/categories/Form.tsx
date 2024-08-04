@@ -62,6 +62,7 @@ type Props = {
   category: InputCategory
   stores: IStore.IStore[]
   onChange: (
+    // eslint-disable-next-line no-unused-vars
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void
   isLoading?: boolean

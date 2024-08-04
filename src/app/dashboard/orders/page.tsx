@@ -21,7 +21,7 @@ import { toIDRFormat } from '@/utils/idr-format'
 import { sortByCreatedAt } from '@/utils/sort'
 
 export default function Home() {
-  const { data: orders, isFetching, error } = getOrders()
+  const { data: orders, error } = getOrders()
   const viewProductOrdersHook = useViewProductOrders()
   // const updateOrderStatusHook = useUpdateOrderStatus(toast, fetchOrders)
 

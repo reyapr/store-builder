@@ -1,5 +1,6 @@
-import axios from 'axios'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
+import axios from 'axios'
+
 import { IOrder } from '@/interfaces'
 
 export const getOrders = (): UseQueryResult<IOrder.IOrder[], Error> =>

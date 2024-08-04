@@ -61,7 +61,7 @@ export interface IEditProductRequest {
   price: string
   stock: number
   storeId: string
-  categories: ICategoryInput[]
+  categoryIds: string[]
   description: string
   image?: File
   imageUrl?: string

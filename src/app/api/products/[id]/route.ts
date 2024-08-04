@@ -1,9 +1,10 @@
+import { cookies } from 'next/headers'
+import { NextResponse } from 'next/server'
+
 import { prisma } from '@/app/api/config'
 import { updateProductSchema } from '@/app/api/validator'
 import { ISupabaseUploadResponse } from '@/interfaces/supabase'
 import { createClient } from '@/utils/supabase/server'
-import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
 
 const replaceImageInSupabase = async (
   image: File,
@@ -70,7 +71,7 @@ export async function PATCH(request: Request, context: { params: any }) {
       )
     }
     let newImageUrl
-    if (image.name) {
+    if (image?.name) {
       const { data, error } = await replaceImageInSupabase(
         image,
         currentProduct.imageUrl

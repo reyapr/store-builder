@@ -1,7 +1,8 @@
+import { NextResponse } from 'next/server'
+
 import { prisma } from '@/app/api/config'
 import { createStoreSchema } from '@/app/api/validator'
 import { ICreateStoreRequest } from '@/interfaces/store'
-import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   const requestJson = await request.json()
@@ -52,7 +53,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const stores = await prisma.store.findMany({
       where: {

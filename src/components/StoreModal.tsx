@@ -1,4 +1,5 @@
-import { ISubmitStoreFormRequest } from '@/interfaces/store'
+import React, { useEffect, useState } from 'react'
+
 import {
   Button,
   FormControl,
@@ -12,7 +13,8 @@ import {
   ModalHeader,
   ModalOverlay
 } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+
+import { ISubmitStoreFormRequest } from '@/interfaces/store'
 
 export default function StoreFormModal(props: Props) {
   const { isOpen, onClose, onSubmit, data } = props
@@ -64,7 +66,8 @@ export default function StoreFormModal(props: Props) {
 export interface Props {
   isOpen: boolean
   onClose: () => void
-  onSubmit: (request: ISubmitStoreFormRequest) => () => void
+  // eslint-disable-next-line no-unused-vars
+  onSubmit: (request: ISubmitStoreFormRequest) => void
   data?: {
     name: string
     id: string

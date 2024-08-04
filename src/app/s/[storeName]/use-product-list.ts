@@ -1,7 +1,8 @@
-import { IStore } from '@/interfaces/store'
 import { CreateToastFnReturn } from '@chakra-ui/react'
 import axios from 'axios'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
+
+import { IStore } from '@/interfaces/store'
 
 const filterStorePath = async (storeName: string) => {
   const response = await axios.get('/api/stores')

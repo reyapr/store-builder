@@ -1,6 +1,7 @@
-import { ICreateCategoryRequest } from '@/interfaces/category'
 import { CreateToastFnReturn, useDisclosure } from '@chakra-ui/react'
 import axios from 'axios'
+
+import { ICreateCategoryRequest } from '@/interfaces/category'
 
 export function useCreateCategory(
   toast: CreateToastFnReturn,

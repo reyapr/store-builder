@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 import {
   Box,
@@ -15,7 +15,6 @@ import {
 } from '@chakra-ui/react'
 
 import { getProducts } from '@/app/dashboard/products/actions'
-
 import { CardProduct, Layout } from '@/components'
 
 export default function ProductPage() {

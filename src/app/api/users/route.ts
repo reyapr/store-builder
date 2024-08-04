@@ -1,6 +1,7 @@
-import { prisma } from '@/app/api/config'
 import { User } from '@prisma/client'
 import { NextResponse } from 'next/server'
+
+import { prisma } from '@/app/api/config'
 
 export async function POST(request: Request) {
   const user: User = await request.json()

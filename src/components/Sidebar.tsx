@@ -1,4 +1,5 @@
 import React from 'react'
+
 import {
   Box,
   HStack,
@@ -10,7 +11,6 @@ import {
   useColorModeValue
 } from '@chakra-ui/react'
 import Link from 'next/link'
-
 import {
   AiOutlineShop,
   AiOutlineShopping,
@@ -60,11 +60,13 @@ const Sidebar = ({ ...rest }: Props) => {
       zIndex={99}
       {...rest}
     >
-      <HStack p="2.5" h="10vh" justify="space-between">
-        <Heading as="h1" size="md">
-          Admin Dashboard
-        </Heading>
-      </HStack>
+      <Link href="/dashboard">
+        <HStack p="2.5" h="57px" justify="space-between">
+          <Heading as="h1" size="md">
+            Admin Dashboard
+          </Heading>
+        </HStack>
+      </Link>
       <Box>
         <List spacing={0} p="0.5">
           {listItems.map(({ icon, text, path }) => (

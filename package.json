@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "next lint --watch",
     "postinstall": "prisma generate",
     "format": "prettier --config .prettierrc.json --write './src/**/*.{js,ts,json,yml,yaml}'"
   },

@@ -1,6 +1,7 @@
-import { ICreateProductRequest } from '@/interfaces/product'
 import { CreateToastFnReturn, useDisclosure } from '@chakra-ui/react'
 import axios from 'axios'
+
+import { ICreateProductRequest } from '@/interfaces/product'
 
 export function useCreateProduct(
   toast: CreateToastFnReturn,

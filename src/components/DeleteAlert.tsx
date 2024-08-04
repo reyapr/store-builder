@@ -1,3 +1,5 @@
+import { useRef } from 'react'
+
 import {
   Button,
   AlertDialog,
@@ -7,7 +9,6 @@ import {
   AlertDialogBody,
   AlertDialogFooter
 } from '@chakra-ui/react'
-import { useRef } from 'react'
 
 export interface DeleteAlertProps {
   isOpen: boolean

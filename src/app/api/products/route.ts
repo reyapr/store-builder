@@ -1,11 +1,13 @@
-import { prisma } from '@/app/api/config'
-import { NextRequest, NextResponse } from 'next/server'
 import { Prisma } from '@prisma/client'
-import { createProductSchema } from '@/app/api/validator'
 import { cookies } from 'next/headers'
-import { createClient } from '@/utils/supabase/server'
-import { ISupabaseUploadResponse } from '@/interfaces/supabase'
+import { NextRequest, NextResponse } from 'next/server'
 import { v5 as uuidv5 } from 'uuid'
+
+import { prisma } from '@/app/api/config'
+import { createProductSchema } from '@/app/api/validator'
+import { ISupabaseUploadResponse } from '@/interfaces/supabase'
+import { createClient } from '@/utils/supabase/server'
+
 
 const NAMESPACE = process.env.BUCKET_NAME;
 

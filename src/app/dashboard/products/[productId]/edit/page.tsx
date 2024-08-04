@@ -1,12 +1,13 @@
 'use client'
 
 import React from 'react'
-import { Layout, ProductForm } from '@/components'
 
-import { getProduct } from '@/app/dashboard/products/actions'
+import { getProduct, updateProducts } from '@/app/dashboard/products/actions'
+import { Layout, ProductForm } from '@/components'
 
 export default function Edit({ params }: Props) {
   const { data, isFetching, error } = getProduct(params.productId)
+  const { mutate } = updateProducts()
 
   const breadcrumbs = [
     { label: 'dashboard', path: '/dashboard' },
@@ -23,16 +24,16 @@ export default function Edit({ params }: Props) {
       {data && (
         <ProductForm
           product={{
+            id: params.productId,
             name: data?.name,
             price: String(data?.price),
             stock: data?.stock,
             storeId: data?.storeId,
-            categories: [],
+            categoryIds: [],
             description: data?.description,
-            image: null,
             imageUrl: data.imageUrl
           }}
-          onSubmit={() => {}}
+          onSubmit={(product) => mutate(product)}
           title="Tambah Produk"
         />
       )}

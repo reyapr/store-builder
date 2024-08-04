@@ -1,7 +1,6 @@
 'use client'
-import { getCategories } from '@/app/dashboard/categories/actions'
-import { Layout } from '@/components'
-import { ICategory } from '@/interfaces/category'
+import React from 'react'
+
 import {
   Button,
   ButtonGroup,
@@ -12,12 +11,15 @@ import {
   Tbody,
   Th,
   Thead,
-  Tr,
-  useToast
+  Tr
 } from '@chakra-ui/react'
+import Link from 'next/link'
+
+import { getCategories } from '@/app/dashboard/categories/actions'
+import { Layout } from '@/components'
+import { ICategory } from '@/interfaces/category'
 
 export default function Categories() {
-  const toast = useToast()
   const {
     data: categories,
     isFetching: isFetchingCategories,
@@ -38,33 +40,13 @@ export default function Categories() {
       isFetching={isFetchingCategories}
       error={errorCategories as Error}
       rightHeaderComponent={
-        <Button colorScheme="blue" size="sm" onClick={() => {}}>
-          Create Category
-        </Button>
+        <Link href="/dashboard/categories/new">
+          <Button colorScheme="blue" size="sm" onClick={() => {}}>
+            Create Category
+          </Button>
+        </Link>
       }
     >
-      {/* <CategoryFormModal
-        title="Create new category"
-        isOpen={createCategoryHook.isOpen}
-        onClose={createCategoryHook.onClose}
-        onSubmit={createCategoryHook.handleCreateNewCategory}
-        stores={stores}
-      />
-      <CategoryFormModal
-        title="Update category"
-        isOpen={editCategoryHook.isOpen}
-        onClose={editCategoryHook.onClose}
-        onSubmit={editCategoryHook.handleSubmit}
-        stores={stores}
-        data={editCategoryHook.currentEditForm}
-      />
-      <DeleteAlert
-        isOpen={deleteCategoryHook.isOpen}
-        onClose={deleteCategoryHook.onClose}
-        onSubmit={deleteCategoryHook.handleDeleteCategory}
-        title="Delete Category"
-        id={deleteCategoryHook.targetDeleteCategoryId}
-      /> */}
       <Grid>
         <GridItem
           justifySelf="end"
@@ -77,8 +59,8 @@ export default function Categories() {
         <Table variant={'simple'}>
           <Thead>
             <Tr>
-              <Th>ID</Th>
               <Th>Name</Th>
+              <Th>ID</Th>
               <Th>Store</Th>
               <Th>Actions</Th>
             </Tr>
@@ -88,15 +70,19 @@ export default function Categories() {
               categories.sort(sortCategories).map((category: ICategory) => {
                 return (
                   <Tr key={category.id}>
-                    <Th>{category.id}</Th>
                     <Th>{category.name}</Th>
+                    <Th>{category.id}</Th>
                     <Th>{category.store?.name}</Th>
                     <Th>
                       <ButtonGroup gap={2}>
-                        <Button colorScheme="blue" size="sm" onClick={() => {}}>
-                          Edit
-                        </Button>
-                        <Button colorScheme="red" size="sm" onClick={() => {}}>
+                        <Link
+                          href={`/dashboard/categories/${category.id}/edit`}
+                        >
+                          <Button colorScheme="blue" size="sm">
+                            Edit
+                          </Button>
+                        </Link>
+                        <Button colorScheme="red" size="sm">
                           Delete
                         </Button>
                       </ButtonGroup>

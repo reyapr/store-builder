@@ -1,11 +1,14 @@
+import { useState } from 'react'
+
+import { CreateToastFnReturn, useDisclosure } from '@chakra-ui/react'
+import axios from 'axios'
+
 import {
   ICreateProductRequest,
   IEditProductRequest,
   IProduct
 } from '@/interfaces/product'
-import { CreateToastFnReturn, useDisclosure } from '@chakra-ui/react'
-import axios from 'axios'
-import { useState } from 'react'
+
 
 export function useUpdateProduct(
   toast: CreateToastFnReturn,
@@ -18,14 +21,14 @@ export function useUpdateProduct(
     price: '',
     stock: 0,
     storeId: '',
-    categories: [],
+    categoryIds: [],
     description: '',
     imageUrl: ''
   } as IEditProductRequest
 
   const [currentEditForm, setCurrentEditForm] = useState(initForm)
 
-  const handleUpdateProduct = (request: ICreateProductRequest) => async () => {
+  const handleUpdateProduct = (request: IEditProductRequest) => async () => {
     try {
       const form = new FormData()
       form.append('name', request.name)
@@ -34,7 +37,7 @@ export function useUpdateProduct(
       form.append('storeId', request.storeId)
       form.append('categoryIds', JSON.stringify(request.categoryIds))
       form.append('description', request.description)
-      form.append('image', request.image)
+      form.append('image', request?.image)
 
       await axios.patch(`/api/products/${currentEditForm.id}`, form)
       fetchProducts()

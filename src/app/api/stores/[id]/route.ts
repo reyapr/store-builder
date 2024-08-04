@@ -1,7 +1,8 @@
+import { NextRequest, NextResponse } from 'next/server'
+
 import { prisma } from '@/app/api/config'
 import { updateStoreSchema } from '@/app/api/validator'
 import { IUpdateStoreRequest } from '@/interfaces/store'
-import { NextRequest, NextResponse } from 'next/server'
 
 export async function PATCH(request: Request, context: { params: any }) {
   const requestJson = await request.json()

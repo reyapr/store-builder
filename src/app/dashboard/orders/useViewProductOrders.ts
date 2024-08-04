@@ -1,6 +1,8 @@
-import { IProductOrder } from '@/interfaces/order'
-import { useDisclosure } from '@chakra-ui/react'
 import { useState } from 'react'
+
+import { useDisclosure } from '@chakra-ui/react'
+
+import { IProductOrder } from '@/interfaces/order'
 
 export function useViewProductOrders() {
   const { isOpen, onOpen, onClose } = useDisclosure()

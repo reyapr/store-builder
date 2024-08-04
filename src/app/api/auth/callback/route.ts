@@ -1,7 +1,7 @@
-import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
 import { type CookieOptions, createServerClient } from '@supabase/ssr'
 import axios from 'axios'
+import { cookies } from 'next/headers'
+import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
   const url = new URL(request.url)

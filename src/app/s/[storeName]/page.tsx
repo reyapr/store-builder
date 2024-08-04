@@ -1,16 +1,17 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+
+import { Box, FormControl, FormLabel, Grid, useToast } from '@chakra-ui/react'
+import { Select as MultiSelect } from 'chakra-react-select'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+
+import { getCategories } from '@/app/dashboard/categories/actions'
 import { Layout } from '@/app/s/[storeName]/components/Layout'
 import { useProductList } from '@/app/s/[storeName]/use-product-list'
 import { useStore } from '@/app/s/[storeName]/useStore'
 import { ProductCard } from '@/components'
-import { cartStore } from '@/stores/useCart'
-import { Box, FormControl, FormLabel, Grid, useToast } from '@chakra-ui/react'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { getCategories } from '@/app/dashboard/categories/actions'
-import { Select as MultiSelect } from 'chakra-react-select'
 import { IProduct } from '@/interfaces'
+import { cartStore } from '@/stores/useCart'
 import { createQueryString } from '@/utils/url-params'
 
 export default function Stores({ params }: { params: { storeName: string } }) {
@@ -34,7 +35,7 @@ export default function Stores({ params }: { params: { storeName: string } }) {
   const { data: categories } = getCategories(params)
 
   useEffect(() => {
-    if (!!categories?.length) {
+    if (categories?.length) {
       const options: IProduct.ICategoryInput[] = categories
         .filter((category) => category.store?.name === params.storeName)
         .map((category) => ({ label: category.name, value: category.id }))

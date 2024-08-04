@@ -1,6 +1,7 @@
+import { NextRequest, NextResponse } from 'next/server'
+
 import { prisma } from '@/app/api/config'
 import { ETimeFrame } from '@/constants/order'
-import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
   const timeFrame: ETimeFrame = request.nextUrl.searchParams.get(

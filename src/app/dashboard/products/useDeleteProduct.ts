@@ -1,6 +1,7 @@
+import { useState } from 'react'
+
 import { CreateToastFnReturn, useDisclosure } from '@chakra-ui/react'
 import axios from 'axios'
-import { useState } from 'react'
 
 export function useDeleteProduct(
   toast: CreateToastFnReturn,

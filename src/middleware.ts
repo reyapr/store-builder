@@ -1,6 +1,7 @@
-import { DASHBOARD_LOGIN_PATH } from '@/constants/auth'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+
+import { DASHBOARD_LOGIN_PATH } from '@/constants/auth'
 
 const initSupabase = (request: NextRequest, response: NextResponse) => {
   return createServerClient(

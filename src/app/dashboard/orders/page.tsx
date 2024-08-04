@@ -1,13 +1,6 @@
 'use client'
-import UpdateStatusModal from '@/app/dashboard/orders/components/UpdateStatusModal'
-import ListOfProductModal from '@/app/dashboard/orders/components/ListOfProductModal'
-import { getOrders } from '@/app/dashboard/orders/actions'
-import { useViewProductOrders } from '@/app/dashboard/orders/useViewProductOrders'
-import Layout from '@/components/Layout'
-import { EOrderStatus, mapOrderStatusToColor } from '@/constants/order'
-import { IProductOrder } from '@/interfaces/order'
-import { toIDRFormat } from '@/utils/idr-format'
-import { sortByCreatedAt } from '@/utils/sort'
+import React from 'react'
+
 import {
   Button,
   Table,
@@ -16,14 +9,18 @@ import {
   Th,
   Tbody,
   Tag,
-  ButtonGroup,
-  useToast
+  ButtonGroup
 } from '@chakra-ui/react'
-import { useEffect } from 'react'
-import { useUpdateOrderStatus } from '@/app/dashboard/orders/useUpdateStatus'
+
+import { getOrders } from '@/app/dashboard/orders/actions'
+import { useViewProductOrders } from '@/app/dashboard/orders/useViewProductOrders'
+import Layout from '@/components/Layout'
+import { mapOrderStatusToColor } from '@/constants/order'
+import { IProductOrder } from '@/interfaces/order'
+import { toIDRFormat } from '@/utils/idr-format'
+import { sortByCreatedAt } from '@/utils/sort'
 
 export default function Home() {
-  const toast = useToast()
   const { data: orders, isFetching, error } = getOrders()
   const viewProductOrdersHook = useViewProductOrders()
   // const updateOrderStatusHook = useUpdateOrderStatus(toast, fetchOrders)
@@ -49,18 +46,6 @@ export default function Home() {
 
   return (
     <Layout breadcrumbs={breadcrumbs} isFetching error={error as Error}>
-      {/* <ListOfProductModal
-        isOpen={viewProductOrdersHook.isOpen}
-        onClose={viewProductOrdersHook.onClose}
-        productOrders={viewProductOrdersHook.productOrders}
-      />
-      <UpdateStatusModal
-        isOpen={updateOrderStatusHook.isOpen}
-        onClose={updateOrderStatusHook.onClose}
-        statuses={Object.values(EOrderStatus)}
-        orderRequest={updateOrderStatusHook.request}
-        onSubmit={updateOrderStatusHook.onSubmit}
-      /> */}
       <Table variant={'simple'}>
         <Thead>
           <Tr>

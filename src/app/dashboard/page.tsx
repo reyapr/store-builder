@@ -1,10 +1,9 @@
 'use client'
-import { useEffect, useState } from 'react'
+
+import React, { useEffect, useState } from 'react'
+
 import { Box, Button, Flex, Select } from '@chakra-ui/react'
 import axios from 'axios'
-
-import { Layout } from '@/components'
-import { ETimeFrame } from '@/constants/order'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -16,9 +15,11 @@ import {
   Legend,
   TimeScale
 } from 'chart.js'
-import { Line } from 'react-chartjs-2'
 import moment from 'moment'
-import { createClient } from '@/utils/supabase/client'
+import { Line } from 'react-chartjs-2'
+
+import { Layout } from '@/components'
+import { ETimeFrame } from '@/constants/order'
 
 ChartJS.register(
   TimeScale,

@@ -1,4 +1,5 @@
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
+
 import {
   Alert,
   AlertIcon,

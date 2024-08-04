@@ -1,7 +1,10 @@
-import { IUpdateOrderStatusRequest } from '@/interfaces/order'
+import { useState } from 'react'
+
 import { CreateToastFnReturn, useDisclosure } from '@chakra-ui/react'
 import axios from 'axios'
-import { useState } from 'react'
+
+import { IUpdateOrderStatusRequest } from '@/interfaces/order'
+
 
 export function useUpdateOrderStatus(
   toast: CreateToastFnReturn,

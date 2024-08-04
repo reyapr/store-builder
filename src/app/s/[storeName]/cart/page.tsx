@@ -1,11 +1,6 @@
 'use client'
-import OrdererInput from '@/app/s/[storeName]/cart/components/OrdererInput'
-import { Layout } from '@/app/s/[storeName]/components/Layout'
-import { useStore } from '@/app/s/[storeName]/useStore'
-import NumberInput from '@/components/NumberInput'
-import { IOrderRequest } from '@/interfaces/order'
-import { cartStore } from '@/stores/useCart'
-import { toIDRFormat } from '@/utils/idr-format'
+import React, { useState } from 'react'
+
 import {
   Box,
   Button,
@@ -24,7 +19,14 @@ import {
   useToast
 } from '@chakra-ui/react'
 import axios from 'axios'
-import { useState } from 'react'
+
+import OrdererInput from '@/app/s/[storeName]/cart/components/OrdererInput'
+import { Layout } from '@/app/s/[storeName]/components/Layout'
+import { useStore } from '@/app/s/[storeName]/useStore'
+import NumberInput from '@/components/NumberInput'
+import { IOrderRequest } from '@/interfaces/order'
+import { cartStore } from '@/stores/useCart'
+import { toIDRFormat } from '@/utils/idr-format'
 
 export default function CartPage({
   params

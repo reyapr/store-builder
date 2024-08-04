@@ -1,19 +1,19 @@
-import { FormControl, FormLabel, Input, Textarea } from "@chakra-ui/react";
-import { useState } from "react";
+import React, { useState } from 'react'
+
+import { FormControl, FormLabel, Input, Textarea } from '@chakra-ui/react'
 
 interface IOrdererInputProps {
   input: {
-    name: string;
-    phoneNumber: string;
-    address: string;
-  };
+    name: string
+    phoneNumber: string
+    address: string
+  }
   handleChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
+  ) => void
 }
 
 export default function OrdererInput(props: IOrdererInputProps) {
-
   return (
     <FormControl>
       <FormLabel>Nama:</FormLabel>
@@ -43,5 +43,5 @@ export default function OrdererInput(props: IOrdererInputProps) {
         onChange={props.handleChange}
       />
     </FormControl>
-  );
+  )
 }

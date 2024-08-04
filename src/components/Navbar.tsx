@@ -1,8 +1,11 @@
+import React from 'react'
+
 import { Box, Flex, Button, useColorModeValue, Stack } from '@chakra-ui/react'
-import { createClient } from '@/utils/supabase/client'
-import { useRouter } from 'next/navigation'
-import { DASHBOARD_LOGIN_PATH } from '@/constants/auth'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+
+import { DASHBOARD_LOGIN_PATH } from '@/constants/auth'
+import { createClient } from '@/utils/supabase/client'
 
 export default function Navbar() {
   const supabase = createClient()

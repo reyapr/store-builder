@@ -1,5 +1,5 @@
-import { IProduct } from '@/interfaces/product'
-import { toIDRFormat } from '@/utils/idr-format'
+import React from 'react'
+
 import {
   Card,
   CardBody,
@@ -12,6 +12,9 @@ import {
   Image,
   Text
 } from '@chakra-ui/react'
+
+import { IProduct } from '@/interfaces/product'
+import { toIDRFormat } from '@/utils/idr-format'
 
 interface ProductCardProps {
   product: IProduct

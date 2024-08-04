@@ -1,7 +1,5 @@
-import React from 'react'
-import { useStore } from '@/app/s/[storeName]/useStore'
-import { cartStore } from '@/stores/useCart'
-import { createQueryString } from '@/utils/url-params'
+import React, { useState } from 'react'
+
 import {
   Badge,
   Box,
@@ -17,8 +15,11 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useState } from 'react'
 import { MdOutlineShoppingCart } from 'react-icons/md'
+
+import { useStore } from '@/app/s/[storeName]/useStore'
+import { cartStore } from '@/stores/useCart'
+import { createQueryString } from '@/utils/url-params'
 
 interface NavbarProps {
   storeName: string

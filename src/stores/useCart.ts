@@ -1,6 +1,7 @@
-import { IProduct, IProductCart } from '@/interfaces/product'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+
+import { IProduct, IProductCart } from '@/interfaces/product'
 
 export interface IState {
   products: IProductCart[]

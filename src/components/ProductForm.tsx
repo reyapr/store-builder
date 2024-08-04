@@ -1,8 +1,5 @@
-import {
-  ICategoryInput,
-  ICreateProductInput,
-  ICreateProductRequest
-} from '@/interfaces/product'
+import React, { useEffect, useState } from 'react'
+
 import {
   Button,
   Flex,
@@ -17,18 +14,23 @@ import {
   NumberInputStepper,
   Select,
   Textarea,
-  useToast,
   VStack
 } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
-import { NumericFormat } from 'react-number-format'
 import { Select as MultiSelect, MultiValue } from 'chakra-react-select'
+import { NumericFormat } from 'react-number-format'
 
 import { getCategories } from '@/app/dashboard/categories/actions'
+import { updateProducts } from '@/app/dashboard/products/actions'
 import { getStores } from '@/app/dashboard/stores/actions'
+import { ICategory } from '@/interfaces'
+import { IEditProductRequest ,
+  ICategoryInput,
+  ICreateProductInput,
+  ICreateProductRequest
+} from '@/interfaces/product'
 
 export default function ProductFormModal({ onSubmit, product }: Props) {
-  const [input, setInput] = useState(product)
+  const [input, setInput] = useState<IEditProductRequest>(product)
   const [categoryOptions, setCategoryOptions] = useState<ICategoryInput[]>([])
 
   const {
@@ -48,22 +50,24 @@ export default function ProductFormModal({ onSubmit, product }: Props) {
 
   const request = {
     ...input,
-    price: unFormatPrice(input.price),
-    categoryIds: input.categories.map((category) => category.value)
-  } as ICreateProductRequest
+    price: input.price,
+    categoryIds: input.categoryIds
+  } as IEditProductRequest
 
   const handleChange = (e: React.ChangeEvent<InputElement>): void => {
     setInput({
       ...input,
       [e.target.name]: e.target.value,
-      categories: e.target.name === 'storeId' ? [] : input.categories
+      categoryIds: e.target.name === 'storeId' ? [] : input.categoryIds
     })
   }
 
-  const handleCategoriesChange = (value: MultiValue<ICategoryInput>) => {
+  const handleCategoriesChange = (
+    inputCategories: MultiValue<ICategoryInput>
+  ) => {
     setInput({
       ...input,
-      categories: value as ICategoryInput[]
+      categoryIds: inputCategories.map(({ value }) => value)
     })
   }
 
@@ -86,7 +90,7 @@ export default function ProductFormModal({ onSubmit, product }: Props) {
   }
 
   useEffect(() => {
-    if (!!categories?.length) {
+    if (categories?.length) {
       const options: ICategoryInput[] = categories
         .filter((category) => category.storeId === input.storeId)
         .map((category) => ({ label: category.name, value: category.id }))
@@ -152,7 +156,7 @@ export default function ProductFormModal({ onSubmit, product }: Props) {
           isMulti
           placeholder="Select Categories"
           onChange={handleCategoriesChange}
-          value={input.categories}
+          value={categoryOptions}
           options={categoryOptions}
           isDisabled={!input.storeId}
         />
@@ -186,7 +190,7 @@ export default function ProductFormModal({ onSubmit, product }: Props) {
           isDisabled={!request.storeId}
           colorScheme="blue"
           mr={3}
-          onClick={onSubmit(request)}
+          onClick={() => onSubmit(request)}
         >
           Simpan
         </Button>
@@ -196,8 +200,8 @@ export default function ProductFormModal({ onSubmit, product }: Props) {
 }
 
 export interface Props {
-  onSubmit: (request: ICreateProductRequest) => () => void
-  product: ICreateProductInput
+  onSubmit: (request: IEditProductRequest) => void
+  product: IEditProductRequest
   title: string
 }
 

@@ -1,10 +1,11 @@
+import { PrismaClient } from '@prisma/client/extension'
+import { NextRequest, NextResponse } from 'next/server'
+
 import { prisma } from '@/app/api/config'
 import { createOrderSchema } from '@/app/api/validator'
 import { EOrderStatus } from '@/constants/order'
 import { IOrderRequest } from '@/interfaces/order'
 import { IProductCart } from '@/interfaces/product'
-import { PrismaClient } from '@prisma/client/extension'
-import { NextRequest, NextResponse } from 'next/server'
 
 const promiseUpdateStock = (trx: PrismaClient, items: IProductCart[]) =>
   Promise.all(

@@ -1,5 +1,7 @@
+/* eslint-disable no-unused-vars */
 import React, { ReactNode } from 'react'
 
+import { Search2Icon } from '@chakra-ui/icons'
 import {
   Alert,
   AlertIcon,
@@ -14,12 +16,10 @@ import {
   InputLeftElement,
   Spinner,
   Stack,
-  useColorModeValue,
   VStack
 } from '@chakra-ui/react'
 
 import { Navbar } from '@/components/homepage'
-import { Search2Icon } from '@chakra-ui/icons'
 
 export default function Layout({
   storeName,

@@ -4,8 +4,8 @@ import React, { useState } from 'react'
 
 import { SimpleGrid } from '@chakra-ui/react'
 
-import { CardProduct, Layout } from '@/components/homepage'
 import { getProducts } from '@/app/dashboard/products/actions'
+import { CardProduct, Layout } from '@/components/homepage'
 
 export default function Home() {
   const [query, setQuery] = useState('')

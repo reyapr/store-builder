@@ -8,6 +8,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { getCategories } from '@/app/dashboard/categories/actions'
 // import { Layout } from '@/app/s/[storeName]/components/Layout'
+import { getProducts } from '@/app/dashboard/products/actions'
 import { useProductList } from '@/app/s/[storeName]/use-product-list'
 import { useStore } from '@/app/s/[storeName]/useStore'
 import { ProductCard } from '@/components'
@@ -15,8 +16,6 @@ import { Layout } from '@/components/homepage'
 import { IProduct } from '@/interfaces'
 import { cartStore } from '@/stores/useCart'
 import { createQueryString } from '@/utils/url-params'
-
-import { getProducts } from '@/app/dashboard/products/actions'
 
 export default function Stores({ params }: { params: { storeName: string } }) {
   const toast = useToast()
@@ -28,7 +27,7 @@ export default function Stores({ params }: { params: { storeName: string } }) {
   const [categoryOptions, setCategoryOptions] = useState<
     IProduct.ICategoryInput[]
   >([])
-  const [query, setQuery] = useState('')
+  const [query] = useState('')
   const { data: products, isFetching, error } = getProducts({ query })
 
   const storeName = decodeURI(params.storeName)
@@ -84,7 +83,7 @@ export default function Stores({ params }: { params: { storeName: string } }) {
   }, [searchParams.get('categories'), searchParams.get('search')])
 
   return (
-    <Layout storeName={storeName}>
+    <Layout storeName={storeName} error={error as Error}>
       <Stack gap={6}>
         <FormLabel>Filter berdasarkan kategori</FormLabel>
         <MultiSelect

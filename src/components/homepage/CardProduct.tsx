@@ -8,8 +8,8 @@ import Link from 'next/link'
 import { IProductResponse } from '@/interfaces/product'
 import { toIDRFormat } from '@/utils/idr-format'
 
-export default function CardProduct({ product, editable = false }: Props) {
-  const { id, name, price, store, imageUrl } = product
+export default function CardProduct({ product }: Props) {
+  const { name, price, store, imageUrl } = product
   return (
     <Center>
       <Box
@@ -49,5 +49,4 @@ export default function CardProduct({ product, editable = false }: Props) {
 
 interface Props {
   product: IProductResponse
-  editable?: boolean
 }

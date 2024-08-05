@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 import {
   Box,
@@ -24,6 +24,7 @@ import OrdererInput from '@/app/s/[storeName]/cart/components/OrdererInput'
 import { useStore } from '@/app/s/[storeName]/useStore'
 import { Layout } from '@/components/homepage'
 import NumberInput from '@/components/NumberInput'
+import { IProduct } from '@/interfaces'
 import { IOrderRequest } from '@/interfaces/order'
 import { cartStore } from '@/stores/useCart'
 import { toIDRFormat } from '@/utils/idr-format'
@@ -34,7 +35,7 @@ export default function CartPage({
   params: { storeName: string }
 }) {
   const toast = useToast()
-  const cart = useStore(cartStore, (state) => state, params.storeName)
+  const cart = useStore(cartStore, (state) => state, 'app')
   const items = (cart.getProducts && cart.getProducts()) || []
   const totalCartPrice = cart.getTotalPrice && cart.getTotalPrice()
 
@@ -113,6 +114,20 @@ export default function CartPage({
     }
   }
 
+  const handleAddQty = useCallback(
+    (product: IProduct.IProductCart) => {
+      cart.addProduct(product)
+    },
+    [cart]
+  )
+
+  const handleRemoveQty = useCallback(
+    (productId: string) => {
+      cart.reduceQuantity(productId)
+    },
+    [cart]
+  )
+
   return (
     <Layout storeName={params.storeName}>
       <SimpleGrid margin={3} spacing={4}>
@@ -123,41 +138,40 @@ export default function CartPage({
           <Divider color="gray.300" />
           <CardBody>
             <Stack divider={<StackDivider />} spacing="4">
-              {items
-                .filter((p) => p.quantity > 0)
-                .map((product) => (
-                  <Flex
-                    key={product.id}
-                    flex={1}
-                    w="full"
-                    justifyContent="space-between"
-                    direction={['column', 'row']}
-                    align="center"
-                  >
-                    <Flex alignSelf={['start']}>
-                      <Box boxSize={20} marginRight={5}>
-                        <Image
-                          src={product.imageUrl}
-                          alt="Green double couch with wooden legs"
-                          sizes="sm"
-                        />
-                      </Box>
-                      <Box>
-                        <Heading size="md">{product.name}</Heading>
-                        <Text>Price: {toIDRFormat(product.price)}</Text>
-                        <Text>Quantity: {product.quantity}</Text>
-                      </Box>
-                    </Flex>
-
-                    <Box alignSelf={['end', 'center']}>
-                      <NumberInput
-                        quantity={product.quantity}
-                        productId={product.id}
-                        updateProductQuantity={cart.updateProductQuantity}
+              {items.map((product) => (
+                <Flex
+                  key={product.id}
+                  flex={1}
+                  w="full"
+                  justifyContent="space-between"
+                  direction={['column', 'row']}
+                  align="center"
+                >
+                  <Flex alignSelf={['start']}>
+                    <Box boxSize={20} marginRight={5}>
+                      <Image
+                        src={product.imageUrl}
+                        alt={product.description}
+                        sizes="sm"
                       />
                     </Box>
+                    <Box>
+                      <Heading size="md">{product.name}</Heading>
+                      <Text>Price: {toIDRFormat(product.price)}</Text>
+                      <Text>Quantity: {product.quantity}</Text>
+                    </Box>
                   </Flex>
-                ))}
+
+                  <Box alignSelf={['end', 'center']}>
+                    <NumberInput
+                      quantity={product.quantity}
+                      productId={product.id}
+                      onAddQty={() => handleAddQty(product)}
+                      onRemoveQty={() => handleRemoveQty(product.id)}
+                    />
+                  </Box>
+                </Flex>
+              ))}
             </Stack>
           </CardBody>
         </Card>

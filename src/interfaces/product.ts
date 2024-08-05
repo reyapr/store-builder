@@ -22,7 +22,7 @@ export interface IProductResponse {
   stock: number
   description: string
   imageUrl: string
-  storeId: string,
+  storeId: string
   createdAt: string
   updatedAt: string
   store: IStore
@@ -58,14 +58,14 @@ export type IProduct = {
 export const IProduct = {
   fromData: (product: IProductResponse) => ({
     id: product.id,
-  name: product.name,
-  price: product.price,
-  stock: product.stock,
-  store: product.store,
-  categories: [],
-  description: product.description,
-  imageUrl: product.imageUrl,
-  }) 
+    name: product.name,
+    price: product.price,
+    stock: product.stock,
+    store: product.store,
+    categories: [],
+    description: product.description,
+    imageUrl: product.imageUrl
+  })
 }
 
 export interface IEditProductRequest {

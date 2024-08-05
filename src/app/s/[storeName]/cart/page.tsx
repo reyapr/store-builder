@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 import {
   Box,
@@ -24,6 +24,7 @@ import OrdererInput from '@/app/s/[storeName]/cart/components/OrdererInput'
 import { useStore } from '@/app/s/[storeName]/useStore'
 import { Layout } from '@/components/homepage'
 import NumberInput from '@/components/NumberInput'
+import { IProduct } from '@/interfaces'
 import { IOrderRequest } from '@/interfaces/order'
 import { cartStore } from '@/stores/useCart'
 import { toIDRFormat } from '@/utils/idr-format'
@@ -113,6 +114,20 @@ export default function CartPage({
     }
   }
 
+  const handleAddQty = useCallback(
+    (product: IProduct.IProductCart) => {
+      cart.addProduct(product)
+    },
+    [cart]
+  )
+
+  const handleRemoveQty = useCallback(
+    (productId: string) => {
+      cart.reduceQuantity(productId)
+    },
+    [cart]
+  )
+
   return (
     <Layout storeName={params.storeName}>
       <SimpleGrid margin={3} spacing={2}>
@@ -144,7 +159,8 @@ export default function CartPage({
                       <NumberInput
                         quantity={product.quantity}
                         productId={product.id}
-                        updateProductQuantity={cart.updateProductQuantity}
+                        onAddQty={() => handleAddQty(product)}
+                        onRemoveQty={() => handleRemoveQty(product.id)}
                       />
                     </Box>
                   </Flex>

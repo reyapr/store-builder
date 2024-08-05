@@ -45,7 +45,7 @@ export default function Home() {
       onSearch={(keyword) => setQuery(keyword)}
     >
       {!!products?.length && !isFetching && (
-        <SimpleGrid columns={4} gap={6}>
+        <SimpleGrid columns={[1, 4]} gap={6}>
           {products.sort(sortProducts).map((product) => (
             <CardProduct
               qty={

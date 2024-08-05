@@ -51,12 +51,6 @@ export async function POST(request: Request) {
       }
     })
 
-    if (!store) {
-      return NextResponse.json(
-        { error: 'Store does not exist' },
-        { status: 400 }
-      )
-    }
 
     const order = await prisma.$transaction(async (trx) => {
       await promiseUpdateStock(trx, orderRequest.items)
@@ -100,7 +94,7 @@ export async function POST(request: Request) {
           status: EOrderStatus.PENDING,
           store: {
             connect: {
-              id: store.id
+              id: store?.id || "app"
             }
           }
         }

@@ -45,7 +45,7 @@ export const updateProductSchema = z.object({
 
 // Order
 export const createOrderSchema = z.object({
-  storeName: z.string(),
+  storeName: z.optional(z.string()),
   orderer: z.object({
     name: z.string(),
     phoneNumber: z.string(),

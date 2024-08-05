@@ -17,6 +17,7 @@ export interface IProductOrder {
   product: {
     id: string
     name: string
+    imageUrl: string
     price: number
   }
 }

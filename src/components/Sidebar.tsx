@@ -11,6 +11,8 @@ import {
   useColorModeValue
 } from '@chakra-ui/react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
 import {
   AiOutlineShop,
   AiOutlineShopping,
@@ -46,6 +48,7 @@ const listItems: ListItem[] = [
 ]
 
 const Sidebar = ({ ...rest }: Props) => {
+  const pathname = usePathname()
   return (
     <Box
       as="aside"
@@ -77,6 +80,7 @@ const Sidebar = ({ ...rest }: Props) => {
                 h="10"
                 pl="2.5"
                 cursor="pointer"
+                backgroundColor={pathname === path ? 'gray.200' : ''}
                 // eslint-disable-next-line react-hooks/rules-of-hooks
                 _hover={{ bg: useColorModeValue('gray.100', 'gray.700') }}
                 rounded="md"

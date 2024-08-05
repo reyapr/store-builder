@@ -1,20 +1,19 @@
 import React from 'react'
 
 import {
+  Image,
   Modal,
   ModalOverlay,
   ModalContent,
-  Table,
-  TableContainer,
-  Tbody,
-  Th,
-  Thead,
-  Tr,
-  Td,
   ModalBody,
   ModalHeader,
   Button,
-  ModalFooter
+  ModalFooter,
+  Box,
+  Flex,
+  Heading,
+  Text,
+  VStack
 } from '@chakra-ui/react'
 
 import { IProductOrder } from '@/interfaces/order'
@@ -34,30 +33,35 @@ export default function ListOfProductModal(props: IListOfProductModalProps) {
       <Modal isOpen={isOpen} onClose={onClose} size="full">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Products</ModalHeader>
+          <ModalHeader>List produk</ModalHeader>
           <ModalBody>
-            <TableContainer>
-              <Table variant={'simple'}>
-                <Thead>
-                  <Tr>
-                    <Th>Product ID</Th>
-                    <Th>Name</Th>
-                    <Th>Price</Th>
-                    <Th>Quantity</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {productOrders.map((productOrder, i) => (
-                    <Tr key={i}>
-                      <Td>{productOrder.product.id}</Td>
-                      <Td>{productOrder.product.name}</Td>
-                      <Td>{toIDRFormat(productOrder.product.price)}</Td>
-                      <Td>{productOrder.quantity}</Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </TableContainer>
+            <VStack gap={6}>
+              {productOrders.map(({ product, quantity }, i) => (
+                <Flex
+                  key={product.id}
+                  flex={1}
+                  w="full"
+                  justifyContent="space-between"
+                  direction={['column', 'row']}
+                  align="center"
+                >
+                  <Flex alignSelf={['start']}>
+                    <Box boxSize={20} marginRight={5}>
+                      <Image
+                        src={product.imageUrl}
+                        alt="Green double couch with wooden legs"
+                        sizes="sm"
+                      />
+                    </Box>
+                    <Box>
+                      <Heading size="md">{product.name}</Heading>
+                      <Text>Price: {toIDRFormat(product.price)}</Text>
+                      <Text>Quantity: {quantity}</Text>
+                    </Box>
+                  </Flex>
+                </Flex>
+              ))}
+            </VStack>
           </ModalBody>
           <ModalFooter>
             <Button onClick={onClose}>Close</Button>

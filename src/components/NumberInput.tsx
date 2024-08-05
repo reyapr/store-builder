@@ -15,13 +15,26 @@ export default function NumberInput(props: INumberInputProps) {
   }
 
   return (
-    <HStack maxW="140px">
-      <Button onClick={() => handleQuantity(1)} bgColor="cyan.200">
-        +
-      </Button>
-      <Input value={props.quantity} padding="0px" textAlign={'center'} />
-      <Button onClick={() => handleQuantity(-1)} bgColor="red.200">
+    <HStack maxW={['100px', '140px']} gap={[0, 2]}>
+      <Button
+        onClick={() => handleQuantity(-1)}
+        bgColor="red.200"
+        size={['sm', 'md']}
+      >
         -
+      </Button>
+      <Input
+        value={props.quantity}
+        padding="0px"
+        textAlign={'center'}
+        size={['sm', 'md']}
+      />
+      <Button
+        onClick={() => handleQuantity(1)}
+        bgColor="cyan.200"
+        size={['sm', 'md']}
+      >
+        +
       </Button>
     </HStack>
   )

@@ -48,56 +48,57 @@ export default function Navbar({ storeName }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
-    <>
-      <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
-        <Flex
-          h={16}
-          w={['100%', 1200]}
-          mx="auto"
-          alignItems={'center'}
-          justifyContent={'space-between'}
-        >
-          <IconButton
-            size={'md'}
-            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-            aria-label={'Open Menu'}
-            display={{ md: 'none' }}
-            onClick={isOpen ? onClose : onOpen}
-          />
-          <HStack spacing={8} alignItems={'center'}>
-            {storeName ? (
-              <Link href={`/s/${storeName}`}>
-                <Box>{storeName}</Box>
-              </Link>
-            ) : (
-              <Link href={`/`}>
-                <Box>BAF Kitchen</Box>
-              </Link>
-            )}
-          </HStack>
-          <Flex alignItems={'center'}>
-            <Flex position="relative">
+    <Box bg={useColorModeValue('white', 'white')} px={4} dropShadow="sm">
+      <Flex
+        h={16}
+        w={['100%', 1200]}
+        mx="auto"
+        alignItems={'center'}
+        justifyContent={'space-between'}
+      >
+        <IconButton
+          size={'md'}
+          icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+          aria-label={'Open Menu'}
+          display={{ md: 'none' }}
+          onClick={isOpen ? onClose : onOpen}
+        />
+        <HStack spacing={8} alignItems={'center'}>
+          {storeName ? (
+            <Link href={`/s/${storeName}`}>
+              <Box>{storeName}</Box>
+            </Link>
+          ) : (
+            <Link href={`/`}>
+              <Box>BAF Kitchen</Box>
+            </Link>
+          )}
+        </HStack>
+        <Flex alignItems={'center'}>
+          <Flex position="relative">
+            <Link href="/cart">
               <Tag
                 rounded="full"
-                colorScheme="green"
-                bottom={0}
-                left={2}
-                size="md"
+                colorScheme="red"
+                position="absolute"
+                top={-2}
+                right={-3}
+                size="sm"
               >
                 {cart.getTotalQuantity && cart.getTotalQuantity()}
               </Tag>
               <FaCartShopping color="green" size={24} />
-            </Flex>
+            </Link>
           </Flex>
         </Flex>
+      </Flex>
 
-        {isOpen ? (
-          <Box pb={4} display={{ md: 'none' }}>
-            <Stack as={'nav'} spacing={4}></Stack>
-          </Box>
-        ) : null}
-      </Box>
-    </>
+      {isOpen ? (
+        <Box pb={4} display={{ md: 'none' }}>
+          <Stack as={'nav'} spacing={4}></Stack>
+        </Box>
+      ) : null}
+    </Box>
   )
 }
 

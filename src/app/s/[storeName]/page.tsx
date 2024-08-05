@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { FormLabel, Grid, Stack, useToast } from '@chakra-ui/react'
 import { Select as MultiSelect } from 'chakra-react-select'
@@ -11,8 +11,8 @@ import { getCategories } from '@/app/dashboard/categories/actions'
 import { getProducts } from '@/app/dashboard/products/actions'
 import { useProductList } from '@/app/s/[storeName]/use-product-list'
 import { useStore } from '@/app/s/[storeName]/useStore'
-import { ProductCard } from '@/components'
-import { Layout } from '@/components/homepage'
+// import { ProductCard } from '@/components'
+import { CardProduct, Layout } from '@/components/homepage'
 import { IProduct } from '@/interfaces'
 import { cartStore } from '@/stores/useCart'
 import { createQueryString } from '@/utils/url-params'
@@ -82,6 +82,27 @@ export default function Stores({ params }: { params: { storeName: string } }) {
     // const searchQuery = searchParams.get('search') || undefined
   }, [searchParams.get('categories'), searchParams.get('search')])
 
+  const handleUpdateQty = useCallback(
+    (productId: string, qty: number) => {
+      cart.updateProductQuantity(productId, qty)
+    },
+    [cart]
+  )
+
+  const handleAddQty = useCallback(
+    (product: IProduct.IProductResponse) => {
+      cart.addProduct(IProduct.IProduct.fromData(product))
+    },
+    [cart]
+  )
+
+  const handleRemoveQty = useCallback(
+    (productId: string) => {
+      cart.reduceQuantity(productId)
+    },
+    [cart]
+  )
+
   return (
     <Layout storeName={storeName} error={error as Error}>
       <Stack gap={6}>
@@ -95,14 +116,24 @@ export default function Stores({ params }: { params: { storeName: string } }) {
           }
           value={inputCategories}
           options={categoryOptions}
+          chakraStyles={{
+            container(provided, state) {
+              return { ...provided, background: 'white' }
+            }
+          }}
         />
         {!!products?.length && !isFetching && (
           <Grid gap={4} templateColumns="repeat(4, 1fr)">
             {products.map((product: IProduct.IProductResponse) => (
-              <ProductCard
+              <CardProduct
+                qty={
+                  cart.getTotalQuantity ? cart.getTotalQuantity(product.id) : 0
+                }
                 key={product.id}
-                product={IProduct.IProduct.fromData(product)}
-                addToCart={cart.addProduct}
+                product={product}
+                onUpdateQty={(qty) => handleUpdateQty(product.id, qty)}
+                onAddQty={() => handleAddQty(product)}
+                onRemoveQty={() => handleRemoveQty(product.id)}
               />
             ))}
           </Grid>

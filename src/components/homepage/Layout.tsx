@@ -31,12 +31,12 @@ export default function Layout({
   onSearch
 }: Props) {
   return (
-    <>
+    <Box bg="gray.200" minH="100vh">
       <Navbar storeName={storeName} />
       <VStack gap={6} mt={6} w={['100%', 1200]} mx="auto" p={[3, 0]}>
         {onSearch && (
           <Stack spacing={4} w="full">
-            <InputGroup bg="gray.100" w="full" rounded="2xl">
+            <InputGroup bg="white" w="full" rounded="2xl" boxShadow="sm">
               <InputLeftElement pointerEvents="none">
                 <Search2Icon color="gray.700" />
               </InputLeftElement>
@@ -93,7 +93,7 @@ export default function Layout({
           )}
         </Box>
       </VStack>
-    </>
+    </Box>
   )
 }
 

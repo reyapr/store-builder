@@ -35,7 +35,7 @@ function CardProduct({
       <Box
         role="group"
         w="full"
-        bg="gray.100"
+        bg="white"
         boxShadow="md"
         rounded="lg"
         pos="relative"
@@ -63,7 +63,7 @@ function CardProduct({
           <Text fontSize="sm">{toIDRFormat(price)}</Text>
         </Stack>
         <Stack p={3} align="center" justify="center">
-          {cartState === 'default' && (
+          {cartState === 'default' && qty === 0 && (
             <Button
               w="50%"
               colorScheme="green"
@@ -72,7 +72,7 @@ function CardProduct({
               Tambah
             </Button>
           )}
-          {cartState === 'setQuantity' && (
+          {(cartState === 'setQuantity' || qty > 0) && (
             <InputGroup bg="gray.200" w="50%" rounded="2xl">
               <Button
                 bg="white"
@@ -82,7 +82,7 @@ function CardProduct({
                 borderColor="green"
                 onClick={onRemoveQty}
               >
-                <MinusIcon color="gray.700" />
+                <MinusIcon color="red.700" />
               </Button>
               <Input
                 onChange={(e) => onUpdateQty(Number(e.target.value))}
@@ -106,7 +106,7 @@ function CardProduct({
                 borderColor="green"
                 onClick={onAddQty}
               >
-                <AddIcon color="gray.700" />
+                <AddIcon color="green" />
               </Button>
             </InputGroup>
           )}

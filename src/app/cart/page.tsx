@@ -16,7 +16,8 @@ import {
   StackDivider,
   Text,
   SimpleGrid,
-  useToast
+  useToast,
+  VStack
 } from '@chakra-ui/react'
 import axios from 'axios'
 
@@ -115,10 +116,10 @@ export default function CartPage({
 
   return (
     <Layout storeName={params.storeName}>
-      <SimpleGrid margin={3} spacing={2}>
+      <SimpleGrid margin={3} spacing={4}>
         <Card>
           <CardHeader>
-            <Heading>Cart</Heading>
+            <Heading>Keranjang</Heading>
           </CardHeader>
           <Divider color="gray.300" />
           <CardBody>
@@ -126,21 +127,30 @@ export default function CartPage({
               {items
                 .filter((p) => p.quantity > 0)
                 .map((product) => (
-                  <Flex key={product.id}>
-                    <Box boxSize={20} marginRight={5}>
-                      <Image
-                        src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="
-                        alt="Green double couch with wooden legs"
-                        sizes="sm"
-                      />
-                    </Box>
-                    <Box>
-                      <Heading size="md">{product.name}</Heading>
-                      <Text>Price: {toIDRFormat(product.price)}</Text>
-                      <Text>Quantity: {product.quantity}</Text>
-                    </Box>
-                    <Spacer />
-                    <Box alignSelf="center">
+                  <Flex
+                    key={product.id}
+                    flex={1}
+                    w="full"
+                    justifyContent="space-between"
+                    direction={['column', 'row']}
+                    align="center"
+                  >
+                    <Flex alignSelf={['start']}>
+                      <Box boxSize={20} marginRight={5}>
+                        <Image
+                          src={product.imageUrl}
+                          alt="Green double couch with wooden legs"
+                          sizes="sm"
+                        />
+                      </Box>
+                      <Box>
+                        <Heading size="md">{product.name}</Heading>
+                        <Text>Price: {toIDRFormat(product.price)}</Text>
+                        <Text>Quantity: {product.quantity}</Text>
+                      </Box>
+                    </Flex>
+
+                    <Box alignSelf={['end', 'center']}>
                       <NumberInput
                         quantity={product.quantity}
                         productId={product.id}
@@ -162,27 +172,23 @@ export default function CartPage({
           </CardBody>
         </Card>
         <Card>
-          <CardHeader>
-            <Heading>Order Summary</Heading>
-          </CardHeader>
           <Divider color="gray.300" />
-          <CardBody>
-            <Flex>
-              <Box alignSelf="center">
-                <Text>Total: {toIDRFormat(totalCartPrice)}</Text>
-              </Box>
-              <Spacer />
-              <Box alignSelf="center">
-                <Button
-                  isDisabled={isSubmitDisabled}
-                  bgColor="blue.200"
-                  onClick={handleOrder}
-                >
-                  Pesan
-                </Button>
-              </Box>
-            </Flex>
-          </CardBody>
+          <VStack p={3}>
+            <Box alignSelf="center">
+              <Text fontSize="xx-large">
+                Total: <b>{toIDRFormat(totalCartPrice)}</b>
+              </Text>
+            </Box>
+            <Button
+              w="full"
+              py={6}
+              isDisabled={isSubmitDisabled}
+              bgColor="blue.200"
+              onClick={handleOrder}
+            >
+              <Text fontSize="xx-large">Pesan</Text>
+            </Button>
+          </VStack>
         </Card>
       </SimpleGrid>
     </Layout>

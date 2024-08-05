@@ -58,8 +58,10 @@ export const cartStore = create<IState & IActions>()(
       },
       reduceQuantity: (productId) => {
         set((state) => ({
-          products: state.products.map((p) =>
-            p.id === productId ? { ...p, quantity: p.quantity - 1 } : p
+          products: state.products.map((p) => {
+            const isMinus = p.quantity - 1 < 0
+            return p.id === productId !== isMinus ? { ...p, quantity: p.quantity - 1 } : p
+          }
           )
         }))
       }, 

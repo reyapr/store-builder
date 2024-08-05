@@ -36,7 +36,7 @@ export default function ListOfProductModal(props: IListOfProductModalProps) {
           <ModalHeader>List produk</ModalHeader>
           <ModalBody>
             <VStack gap={6}>
-              {productOrders.map(({ product, quantity }, i) => (
+              {productOrders.map(({ product, quantity }) => (
                 <Flex
                   key={product.id}
                   flex={1}

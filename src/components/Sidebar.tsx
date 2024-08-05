@@ -12,7 +12,6 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-
 import {
   AiOutlineShop,
   AiOutlineShopping,
@@ -73,7 +72,7 @@ const Sidebar = ({ ...rest }: Props) => {
       <Box>
         <List spacing={0} p="0.5">
           {listItems.map(({ id, icon, text, path }) => (
-            <Link href={path} key={id}>
+            <Link href={path} key={id} prefetch>
               <ListItem
                 as={HStack}
                 spacing={0}

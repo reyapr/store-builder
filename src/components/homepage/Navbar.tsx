@@ -7,6 +7,7 @@ import {
   Box,
   Flex,
   HStack,
+  Image,
   IconButton,
   useDisclosure,
   useColorModeValue,
@@ -70,7 +71,7 @@ export default function Navbar({ storeName }: Props) {
             </Link>
           ) : (
             <Link href={`/`}>
-              <Box>BAF Kitchen</Box>
+              <Image src="logo.png" alt="BAF Kitchen" height="56px" />
             </Link>
           )}
         </HStack>

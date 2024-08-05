@@ -21,8 +21,8 @@ import {
 import axios from 'axios'
 
 import OrdererInput from '@/app/s/[storeName]/cart/components/OrdererInput'
-import { Layout } from '@/components/homepage'
 import { useStore } from '@/app/s/[storeName]/useStore'
+import { Layout } from '@/components/homepage'
 import NumberInput from '@/components/NumberInput'
 import { IOrderRequest } from '@/interfaces/order'
 import { cartStore } from '@/stores/useCart'

@@ -117,7 +117,7 @@ export default function Stores({ params }: { params: { storeName: string } }) {
           value={inputCategories}
           options={categoryOptions}
           chakraStyles={{
-            container(provided, state) {
+            container(provided) {
               return { ...provided, background: 'white' }
             }
           }}

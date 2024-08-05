@@ -9,7 +9,6 @@ import {
   Th,
   Tbody,
   Tag,
-  ButtonGroup,
   useToast,
   VStack
 } from '@chakra-ui/react'
@@ -22,8 +21,8 @@ import { IProductOrder } from '@/interfaces/order'
 import { toIDRFormat } from '@/utils/idr-format'
 import { sortByCreatedAt } from '@/utils/sort'
 
-import UpdateStatusModal from './components/UpdateStatusModal'
 import ListOfProductModal from './components/ListOfProductModal'
+import UpdateStatusModal from './components/UpdateStatusModal'
 import { useUpdateOrderStatus } from './useUpdateStatus'
 
 export default function Home() {
@@ -111,7 +110,7 @@ export default function Home() {
                           viewProductOrdersHook.onOpen(order.products)
                         }
                       >
-                        Lihat produk
+                        Lihat detail
                       </Button>
                       <Button
                         colorScheme="blue"

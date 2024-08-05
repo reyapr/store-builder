@@ -84,7 +84,7 @@ export default function Layout({
             <>
               {isFetching && (
                 <Center>
-                  <Spinner size="xl" />
+                  <Spinner size="xl" color="green.300" />
                 </Center>
               )}
 

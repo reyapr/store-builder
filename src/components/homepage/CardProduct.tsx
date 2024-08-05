@@ -1,15 +1,35 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useMemo, memo } from 'react'
 
-import { Box, Center, Text, Stack, Image } from '@chakra-ui/react'
+import { AddIcon, MinusIcon } from '@chakra-ui/icons'
+import {
+  Box,
+  Button,
+  Center,
+  Text,
+  Stack,
+  Image,
+  Input,
+  InputGroup
+} from '@chakra-ui/react'
 import Link from 'next/link'
 
-import { IProductResponse } from '@/interfaces/product'
+import { IProduct } from '@/interfaces'
 import { toIDRFormat } from '@/utils/idr-format'
 
-export default function CardProduct({ product }: Props) {
+function CardProduct({
+  product,
+  qty,
+  onAddQty,
+  onRemoveQty,
+  onUpdateQty
+}: Props) {
   const { name, price, store, imageUrl } = product
+  const [cartState, setCartState] = useState<CartState>('default')
+
+  const cartQty = useMemo(() => qty, [qty])
+
   return (
     <Center>
       <Box
@@ -42,11 +62,69 @@ export default function CardProduct({ product }: Props) {
           </Text>
           <Text fontSize="sm">{toIDRFormat(price)}</Text>
         </Stack>
+        <Stack p={3} align="center" justify="center">
+          {cartState === 'default' && (
+            <Button
+              w="50%"
+              colorScheme="green"
+              onClick={() => setCartState('setQuantity')}
+            >
+              Tambah
+            </Button>
+          )}
+          {cartState === 'setQuantity' && (
+            <InputGroup bg="gray.200" w="50%" rounded="2xl">
+              <Button
+                bg="white"
+                roundedTopRight="0"
+                roundedBottomRight="0"
+                borderWidth="1px"
+                borderColor="green"
+                onClick={onRemoveQty}
+              >
+                <MinusIcon color="gray.700" />
+              </Button>
+              <Input
+                onChange={(e) => onUpdateQty(Number(e.target.value))}
+                textAlign="center"
+                maxLength={2}
+                value={cartQty}
+                px="4px"
+                rounded="0"
+                type="number"
+                bg="white"
+                borderTopWidth="1px"
+                borderBottomWidth="1px"
+                borderTopColor="green"
+                borderBottomColor="green"
+              />
+              <Button
+                bg="white"
+                roundedTopLeft="0"
+                roundedBottomLeft="0"
+                borderWidth="1px"
+                borderColor="green"
+                onClick={onAddQty}
+              >
+                <AddIcon color="gray.700" />
+              </Button>
+            </InputGroup>
+          )}
+        </Stack>
       </Box>
     </Center>
   )
 }
 
-interface Props {
-  product: IProductResponse
+type Props = {
+  product: IProduct.IProductResponse
+  qty: number
+  // eslint-disable-next-line no-unused-vars
+  onUpdateQty: (qty: number) => void
+  onAddQty: () => void
+  onRemoveQty: () => void
 }
+
+type CartState = 'default' | 'setQuantity'
+
+export default memo(CardProduct)

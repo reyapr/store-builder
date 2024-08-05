@@ -10,9 +10,14 @@ import {
   IconButton,
   useDisclosure,
   useColorModeValue,
-  Stack
+  Stack,
+  Tag
 } from '@chakra-ui/react'
 import Link from 'next/link'
+import { FaCartShopping } from 'react-icons/fa6'
+
+import { useStore } from '@/app/s/[storeName]/useStore'
+import { cartStore } from '@/stores/useCart'
 
 interface navLinkProps {
   children: React.ReactNode
@@ -39,6 +44,7 @@ const NavLink = (props: navLinkProps) => {
 }
 
 export default function Navbar({ storeName }: Props) {
+  const cart = useStore(cartStore, (state) => state, 'app')
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
@@ -69,7 +75,20 @@ export default function Navbar({ storeName }: Props) {
               </Link>
             )}
           </HStack>
-          <Flex alignItems={'center'}></Flex>
+          <Flex alignItems={'center'}>
+            <Flex position="relative">
+              <Tag
+                rounded="full"
+                colorScheme="green"
+                bottom={0}
+                left={2}
+                size="md"
+              >
+                {cart.getTotalQuantity && cart.getTotalQuantity()}
+              </Tag>
+              <FaCartShopping color="green" size={24} />
+            </Flex>
+          </Flex>
         </Flex>
 
         {isOpen ? (

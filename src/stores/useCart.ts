@@ -11,7 +11,8 @@ export interface IState {
 export interface IActions {
   addProduct: (product: IProduct) => void
   removeProduct: (productId: string) => void
-  getTotalQuantity: () => number
+  reduceQuantity: (productId: string) => void,
+  getTotalQuantity: (productId?: string) => number
   clearCart: () => void
   getProducts: () => IProductCart[]
   getTotalPrice: () => number
@@ -47,8 +48,21 @@ export const cartStore = create<IState & IActions>()(
         set((state) => ({
           products: state.products.filter((product) => product.id !== productId)
         })),
-      getTotalQuantity: () =>
-        get().products.reduce((acc, product) => acc + product.quantity, 0),
+      getTotalQuantity: (productId) => {
+        let products = get().products;
+        if(productId){
+          products = products.filter(product => product.id === productId)
+        }
+        
+        return products?.reduce((acc, product) => acc + product.quantity, 0)
+      },
+      reduceQuantity: (productId) => {
+        set((state) => ({
+          products: state.products.map((p) =>
+            p.id === productId ? { ...p, quantity: p.quantity - 1 } : p
+          )
+        }))
+      }, 
       clearCart: () => set({ products: [] }),
       getProducts: () => get().products,
       getTotalPrice: () =>
@@ -59,7 +73,7 @@ export const cartStore = create<IState & IActions>()(
       updateProductQuantity: (productId, num) => {
         set((state) => ({
           products: state.products.map((p: IProductCart) =>
-            p.id === productId ? { ...p, quantity: p.quantity + num } : p
+            p.id === productId ? { ...p, quantity: num } : p
           )
         }))
       }

@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useState } from 'react'
 
 import { Search2Icon } from '@chakra-ui/icons'
 import {
@@ -9,6 +9,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Button,
   Center,
   Flex,
   Input,
@@ -18,6 +19,7 @@ import {
   Stack,
   VStack
 } from '@chakra-ui/react'
+import { useDebouncedCallback } from 'use-debounce'
 
 import { Navbar } from '@/components/homepage'
 
@@ -30,20 +32,26 @@ export default function Layout({
   rightHeaderComponent,
   onSearch
 }: Props) {
+  const debounced = useDebouncedCallback((value) => {
+    onSearch?.(value)
+  }, 300)
+
   return (
     <Box bg="gray.200" minH="100vh">
       <Navbar storeName={storeName} />
       <VStack gap={6} mt={6} w={['100%', 1200]} mx="auto" p={[3, 0]}>
         {onSearch && (
           <Stack spacing={4} w="full">
-            <InputGroup bg="white" w="full" rounded="2xl" boxShadow="sm">
+            <InputGroup w="full" rounded="2xl" boxShadow="sm" bg="white">
               <InputLeftElement pointerEvents="none">
                 <Search2Icon color="gray.700" />
               </InputLeftElement>
               <Input
-                onChange={(e) => onSearch(e.target.value)}
+                onChange={(e) => {
+                  debounced(e.target.value)
+                }}
                 type="text"
-                placeholder="Cari makanan atau resto"
+                placeholder="Cari makanan atau vendor"
                 color="gray.700"
                 _placeholder={{ color: 'gray.700' }}
               />

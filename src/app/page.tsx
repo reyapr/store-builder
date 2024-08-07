@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { SimpleGrid } from '@chakra-ui/react'
 
@@ -11,8 +11,13 @@ import { IProduct } from '@/interfaces'
 import { cartStore } from '@/stores/useCart'
 
 export default function Home() {
-  const [query, setQuery] = useState('')
-  const { data: products, isFetching, error } = getProducts({ query })
+  const [query, setQuery] = useState<string>('')
+  const {
+    data: products,
+    isFetching,
+    error,
+    refetch
+  } = getProducts({ q: query })
   const cart = useStore(cartStore, (state) => state, 'app')
   const sortProducts = (a: any, b: any) =>
     new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1
@@ -23,6 +28,11 @@ export default function Home() {
     },
     [cart]
   )
+
+  useEffect(() => {
+    console.log('useEffect', { query })
+    refetch()
+  }, [query])
 
   const handleAddQty = useCallback(
     (product: IProduct.IProductResponse) => {
@@ -42,7 +52,10 @@ export default function Home() {
     <Layout
       isFetching={isFetching}
       error={error as Error}
-      onSearch={(keyword) => setQuery(keyword)}
+      onSearch={(keyword) => {
+        console.log({ keyword })
+        setQuery(keyword)
+      }}
     >
       {!!products?.length && !isFetching && (
         <SimpleGrid columns={[1, 4]} gap={6}>

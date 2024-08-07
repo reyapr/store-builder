@@ -16,7 +16,8 @@ import {
   AiOutlineShop,
   AiOutlineShopping,
   AiOutlineShoppingCart,
-  AiOutlineTags
+  AiOutlineTags,
+  AiOutlineCalendar
 } from 'react-icons/ai'
 
 const listItems: ListItem[] = [
@@ -43,6 +44,12 @@ const listItems: ListItem[] = [
     text: 'Kategori',
     path: '/dashboard/categories',
     icon: AiOutlineTags
+  },
+  {
+    id: 5,
+    text: 'Jadwal',
+    path: '/dashboard/schedules',
+    icon: AiOutlineCalendar
   }
 ]
 

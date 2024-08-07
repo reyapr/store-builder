@@ -32,7 +32,7 @@ export default function Home() {
   useEffect(() => {
     console.log('useEffect', { query })
     refetch()
-  }, [query])
+  }, [query, refetch])
 
   const handleAddQty = useCallback(
     (product: IProduct.IProductResponse) => {

@@ -51,6 +51,7 @@ model Product {
   categories    Category[]
   imageUrl      String?
   description   String?
+  schedules     ProductSchedule[]
 }
 
 model Customer {
@@ -98,4 +99,22 @@ model Category {
   storeId       String
   
   @@unique([name, storeId])
+}
+
+model Schedule {
+  id            String    @id @default(uuid())
+  date          DateTime    
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  products      ProductSchedule[] // Relation to the join table
+}
+
+model ProductSchedule {
+  id          String    @id @default(uuid())
+  product     Product   @relation(fields: [productId], references: [id])
+  productId   String
+  schedule    Schedule  @relation(fields: [scheduleId], references: [id])
+  scheduleId  String
+
+  @@unique([productId, scheduleId]) // Ensure each product-schedule pair is unique
 }

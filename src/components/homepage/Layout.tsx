@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react'
 import { useDebouncedCallback } from 'use-debounce'
 
-import { Navbar } from '@/components/homepage'
+import { Footer, Navbar } from '@/components/homepage'
 
 export default function Layout({
   storeName,
@@ -39,7 +39,14 @@ export default function Layout({
   return (
     <Box bg="gray.200" minH="100vh">
       <Navbar storeName={storeName} />
-      <VStack gap={6} mt={6} w={['100%', 1200]} mx="auto" p={[3, 0]}>
+      <VStack
+        gap={6}
+        mt={6}
+        w={['100%', 1200]}
+        minH={['auto', '100vh']}
+        mx="auto"
+        p={[3, 0]}
+      >
         {onSearch && (
           <Stack spacing={4} w="full">
             <InputGroup w="full" rounded="2xl" boxShadow="sm" bg="white">
@@ -101,6 +108,7 @@ export default function Layout({
           )}
         </Box>
       </VStack>
+      <Footer />
     </Box>
   )
 }

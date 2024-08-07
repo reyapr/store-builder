@@ -82,5 +82,5 @@ export const updateProducts = (
 
 export interface IFetchProductRequest {
   categoryIds?: string[]
-  query?: string
+  q?: string
 }

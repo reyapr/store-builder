@@ -84,3 +84,13 @@ export const createOrderSchema = z.object({
 export const updateOrderStatusSchema = z.object({
   status: z.string()
 })
+
+
+// Schedule
+
+export const createProductScheduleSchema = z.object({
+
+  productId: z.string(),
+  date: z.string()
+  
+})

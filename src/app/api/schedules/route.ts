@@ -50,14 +50,14 @@ export async function POST(request: Request) {
     const schedule = await prisma.schedule.create({
       data: {
         date: new Date(date),
-        products: {
+        productSchedules: {
           create: {
             productId: productId,
           },
         },
       },
       include: {
-        products: {
+        productSchedules: {
           include: {
             product: true, // This includes the full product details
           },

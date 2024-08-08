@@ -17,7 +17,8 @@ import Link from 'next/link'
 import { IProductResponse } from '@/interfaces/product'
 import { toIDRFormat } from '@/utils/idr-format'
 
-export default function ProductSimple({ product }: Props) {
+export default function CardProduct({ product }: Props) {
+  console.log(product)
   const { id, name, price, store, imageUrl } = product
   return (
     <Center>
@@ -41,7 +42,7 @@ export default function ProductSimple({ product }: Props) {
 
         <Stack align="left" p={6}>
           <Text color="gray.500" fontSize="sm" textTransform="uppercase">
-            {store.name}
+            {store?.name || product.storeId}
           </Text>
           <Text fontSize="md" fontFamily="body">
             {name}

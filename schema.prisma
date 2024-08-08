@@ -106,7 +106,7 @@ model Schedule {
   date          DateTime    
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  products      ProductSchedule[] // Relation to the join table
+  productSchedules      ProductSchedule[] // Relation to the join table
 }
 
 model ProductSchedule {

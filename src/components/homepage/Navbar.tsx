@@ -49,10 +49,20 @@ export default function Navbar({ storeName }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
-    <Box bg={useColorModeValue('white', 'white')} px={4} dropShadow="sm">
+    <Box
+      bg={useColorModeValue('white', 'white')}
+      px={4}
+      w="full"
+      boxShadow="sm"
+      position="fixed"
+      borderBottom="1px"
+      borderBottomColor="gray.300"
+      top="0"
+      zIndex={999}
+    >
       <Flex
         h={16}
-        w={['100%', 1200]}
+        w={['100%', 1180]}
         mx="auto"
         alignItems={'center'}
         justifyContent={'space-between'}

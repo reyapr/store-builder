@@ -41,14 +41,14 @@ export default function Layout({
       <Navbar storeName={storeName} />
       <VStack
         gap={6}
-        mt={6}
+        mt="64px"
         w={['100%', 1200]}
         minH={['auto', '100vh']}
         mx="auto"
         p={[3, 0]}
       >
         {onSearch && (
-          <Stack spacing={4} w="full">
+          <Stack spacing={4} w="full" mt={6}>
             <InputGroup w="full" rounded="2xl" boxShadow="sm" bg="white">
               <InputLeftElement pointerEvents="none">
                 <Search2Icon color="gray.700" />
@@ -96,7 +96,7 @@ export default function Layout({
             </Box>
           )}
           {!error && (
-            <>
+            <Box mt={6}>
               {isFetching && (
                 <Center>
                   <Spinner size="xl" color="green.300" />
@@ -104,7 +104,7 @@ export default function Layout({
               )}
 
               {!error && !isFetching && children}
-            </>
+            </Box>
           )}
         </Box>
       </VStack>

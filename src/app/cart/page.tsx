@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 
 import {
   Box,
@@ -16,9 +16,17 @@ import {
   Text,
   SimpleGrid,
   useToast,
-  VStack
+  VStack,
+  useDisclosure,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay
 } from '@chakra-ui/react'
 import axios from 'axios'
+import { FaTrash } from 'react-icons/fa6'
 
 import OrdererInput from '@/app/s/[storeName]/cart/components/OrdererInput'
 import { useStore } from '@/app/s/[storeName]/useStore'
@@ -29,12 +37,10 @@ import { IOrderRequest } from '@/interfaces/order'
 import { cartStore } from '@/stores/useCart'
 import { toIDRFormat } from '@/utils/idr-format'
 
-export default function CartPage({
-  params
-}: {
-  params: { storeName: string }
-}) {
+export default function CartPage({ params }: Props) {
   const toast = useToast()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const cancelRef = useRef(null)
   const cart = useStore(cartStore, (state) => state, 'app')
   const items = (cart.getProducts && cart.getProducts()) || []
   const totalCartPrice = cart.getTotalPrice && cart.getTotalPrice()
@@ -128,12 +134,57 @@ export default function CartPage({
     [cart]
   )
 
+  const clearCart = useCallback(() => {
+    cart.clearCart()
+    toast({
+      title: 'Berhasil mengosongkan keranjang',
+      status: 'success',
+      duration: 3000,
+      isClosable: true
+    })
+    onClose()
+  }, [cart, onClose])
+
   return (
     <Layout storeName={params.storeName}>
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Bersihkan keranjang
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Apakah anda yakin ingin menghapus semua item di keranjang?
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Batal
+              </Button>
+              <Button colorScheme="red" onClick={clearCart} ml={3}>
+                Hapus
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
       <SimpleGrid margin={3} spacing={4}>
         <Card>
           <CardHeader>
-            <Heading>Keranjang</Heading>
+            <Flex justify="space-between" align="center">
+              <Heading>Keranjang</Heading>
+              {!!items.length && (
+                <Button colorScheme="red" onClick={onOpen}>
+                  <FaTrash />
+                </Button>
+              )}
+            </Flex>
           </CardHeader>
           <Divider color="gray.300" />
           <CardBody>
@@ -206,4 +257,8 @@ export default function CartPage({
       </SimpleGrid>
     </Layout>
   )
+}
+
+type Props = {
+  params: { storeName: string }
 }

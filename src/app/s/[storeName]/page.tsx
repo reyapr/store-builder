@@ -27,8 +27,8 @@ export default function Stores({ params }: { params: { storeName: string } }) {
   const [categoryOptions, setCategoryOptions] = useState<
     IProduct.ICategoryInput[]
   >([])
-  const [query] = useState('')
-  const { data: products, isFetching, error } = getProducts({ query })
+  const [query] = useState<string>('')
+  const { data: products, isFetching, error } = getProducts({ q: query })
 
   const storeName = decodeURI(params.storeName)
 

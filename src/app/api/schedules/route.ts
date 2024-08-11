@@ -126,9 +126,13 @@ export async function GET(request: NextRequest) {
     const schedules = await prisma.schedule.findMany({
       where: whereQuery,
       include: {
-        products: {
+        productSchedules: {
           include: {
-            product: true,
+            product: {
+              include: {
+                store: true
+              }
+            },
           },
         },
       },

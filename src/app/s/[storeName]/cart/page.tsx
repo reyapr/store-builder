@@ -27,7 +27,7 @@ import NumberInput from '@/components/NumberInput'
 import { IProduct } from '@/interfaces'
 import { IOrderRequest } from '@/interfaces/order'
 import { cartStore } from '@/stores/useCart'
-import { toIDRFormat } from '@/utils/idr-format'
+import { currency } from '@/utils'
 
 export default function CartPage({
   params
@@ -64,11 +64,11 @@ export default function CartPage({
       .map((product, i) => {
         return `\n${i + 1}. *${product.name}*
       Quantity: ${product.quantity}
-      Harga (@): ${toIDRFormat(product.price)}
-      Total Harga: ${toIDRFormat(product.price * product.quantity)}`
+      Harga (@): ${currency.toIDRFormat(product.price)}
+      Total Harga: ${currency.toIDRFormat(product.price * product.quantity)}`
       })
       .join(' ')}` +
-      `\n\nTotal : *${toIDRFormat(totalCartPrice)}*` +
+      `\n\nTotal : *${currency.toIDRFormat(totalCartPrice)}*` +
       `\n\n*Pengiriman* : ${input.address}\n` +
       '--------------------------------' +
       '\n*Nama :*' +
@@ -151,7 +151,7 @@ export default function CartPage({
                     </Box>
                     <Box>
                       <Heading size="md">{product.name}</Heading>
-                      <Text>Price: {toIDRFormat(product.price)}</Text>
+                      <Text>Price: {currency.toIDRFormat(product.price)}</Text>
                       <Text>Quantity: {product.quantity}</Text>
                     </Box>
                     <Spacer />
@@ -185,7 +185,7 @@ export default function CartPage({
           <CardBody>
             <Flex>
               <Box alignSelf="center">
-                <Text>Total: {toIDRFormat(totalCartPrice)}</Text>
+                <Text>Total: {currency.toIDRFormat(totalCartPrice)}</Text>
               </Box>
               <Spacer />
               <Box alignSelf="center">

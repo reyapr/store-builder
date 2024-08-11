@@ -18,8 +18,7 @@ import { useViewProductOrders } from '@/app/dashboard/orders/useViewProductOrder
 import Layout from '@/components/Layout'
 import { EOrderStatus, mapOrderStatusToColor } from '@/constants/order'
 import { IProductOrder } from '@/interfaces/order'
-import { toIDRFormat } from '@/utils/idr-format'
-import { sortByCreatedAt } from '@/utils/sort'
+import { currency, sort } from '@/utils'
 
 import ListOfProductModal from './components/ListOfProductModal'
 import UpdateStatusModal from './components/UpdateStatusModal'
@@ -38,7 +37,7 @@ export default function Home() {
   }
 
   const getTotalPrice = (items: IProductOrder[]) => {
-    return toIDRFormat(
+    return currency.toIDRFormat(
       items.reduce((acc, item) => {
         return acc + item.quantity * item.product.price
       }, 0)
@@ -83,7 +82,7 @@ export default function Home() {
         </Thead>
         <Tbody>
           {!!orders?.length &&
-            orders.sort(sortByCreatedAt).map((order) => {
+            orders.sort(sort.sortByCreatedAt).map((order) => {
               return (
                 <Tr key={order.id}>
                   <Th>{order.id}</Th>

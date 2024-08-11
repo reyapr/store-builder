@@ -15,10 +15,9 @@ import {
 import Link from 'next/link'
 
 import { IProductResponse } from '@/interfaces/product'
-import { toIDRFormat } from '@/utils/idr-format'
+import { currency } from '@/utils'
 
-export default function CardProduct({ product }: Props) {
-  console.log(product)
+export default function CardProduct({ product, editable = true }: Props) {
   const { id, name, price, store, imageUrl } = product
   return (
     <Center>
@@ -47,18 +46,20 @@ export default function CardProduct({ product }: Props) {
           <Text fontSize="md" fontFamily="body">
             {name}
           </Text>
-          <Text fontSize="sm">{toIDRFormat(price)}</Text>
+          <Text fontSize="sm">{currency.toIDRFormat(price)}</Text>
         </Stack>
-        <Stack px={6} pb={3}>
-          <ButtonGroup gap={2}>
-            <Button size="sm" colorScheme="blue">
-              <Link href={`/dashboard/products/${id}/edit`}>Edit</Link>
-            </Button>
-            <Button size="sm" colorScheme="red">
-              Delete
-            </Button>
-          </ButtonGroup>
-        </Stack>
+        {editable && (
+          <Stack px={6} pb={3}>
+            <ButtonGroup gap={2}>
+              <Button size="sm" colorScheme="blue">
+                <Link href={`/dashboard/products/${id}/edit`}>Edit</Link>
+              </Button>
+              <Button size="sm" colorScheme="red">
+                Delete
+              </Button>
+            </ButtonGroup>
+          </Stack>
+        )}
       </Box>
     </Center>
   )
@@ -66,4 +67,5 @@ export default function CardProduct({ product }: Props) {
 
 interface Props {
   product: IProductResponse
+  editable?: boolean
 }

@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 
 import { IProduct } from '@/interfaces'
-import { toIDRFormat } from '@/utils/idr-format'
+import { currency } from '@/utils'
 
 interface ProductCardProps {
   product: IProduct.IProduct
@@ -44,7 +44,7 @@ export default function ProductCard(props: ProductCardProps) {
       </CardBody>
       <CardFooter paddingTop={0}>
         <Text color="blue.600" fontSize="xl">
-          {toIDRFormat(product.price)}
+          {currency.toIDRFormat(product.price)}
         </Text>
       </CardFooter>
       <CardFooter>

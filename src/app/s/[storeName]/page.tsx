@@ -15,7 +15,7 @@ import { useStore } from '@/app/s/[storeName]/useStore'
 import { CardProduct, Layout } from '@/components/homepage'
 import { IProduct } from '@/interfaces'
 import { cartStore } from '@/stores/useCart'
-import { createQueryString } from '@/utils/url-params'
+import { params as paramsUtils } from '@/utils'
 
 export default function Stores({ params }: { params: { storeName: string } }) {
   const toast = useToast()
@@ -69,7 +69,7 @@ export default function Stores({ params }: { params: { storeName: string } }) {
 
   useEffect(() => {
     const categoryIds = inputCategories.map((category) => category.value)
-    const query = createQueryString(searchParams, {
+    const query = paramsUtils.createQueryString(searchParams, {
       key: 'categories',
       value: categoryIds.join(',')
     })

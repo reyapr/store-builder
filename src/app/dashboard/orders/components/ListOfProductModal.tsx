@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 
 import { IProductOrder } from '@/interfaces/order'
-import { toIDRFormat } from '@/utils/idr-format'
+import { currency } from '@/utils'
 
 export interface IListOfProductModalProps {
   isOpen: boolean
@@ -55,7 +55,7 @@ export default function ListOfProductModal(props: IListOfProductModalProps) {
                     </Box>
                     <Box>
                       <Heading size="md">{product.name}</Heading>
-                      <Text>Price: {toIDRFormat(product.price)}</Text>
+                      <Text>Price: {currency.toIDRFormat(product.price)}</Text>
                       <Text>Quantity: {quantity}</Text>
                     </Box>
                   </Flex>

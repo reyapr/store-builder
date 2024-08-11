@@ -5,7 +5,7 @@ export interface ISchedule {
   date: string
   createdAt: string
   updatedAt: string
-  products: {
+  productSchedules: {
     productId: string
     scheduleId: string
     product: IProduct.IProductResponse

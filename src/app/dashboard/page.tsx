@@ -15,7 +15,14 @@ import {
   Legend,
   TimeScale
 } from 'chart.js'
-import moment from 'moment'
+import {
+  format,
+  startOfWeek,
+  getWeek,
+  getMonth,
+  setWeek,
+  setMonth
+} from 'date-fns'
 import { Line } from 'react-chartjs-2'
 
 import { Layout } from '@/components'
@@ -76,19 +83,24 @@ export default function HomeDashboard() {
       let x
       switch (item.time_frame) {
         case ETimeFrame.DAILY:
-          x = moment(item.time).format('DD MMMM YYYY')
+          x = format(new Date(item.time), 'dd MMMM yyyy')
           break
         case ETimeFrame.WEEKLY: {
-          const startOfWeek = moment(moment().week(item.time))
-            .startOf('month')
-            .get('week')
-
-          const weekInMonth = Number(item.time) - startOfWeek + 1
-          x = moment().week(item.time).format('MMMM') + ' week ' + weekInMonth
+          const currentDate = new Date()
+          const firstDayOfMonth = new Date(
+            currentDate.getFullYear(),
+            getMonth(currentDate),
+            1
+          )
+          const startOfWeekDate = startOfWeek(firstDayOfMonth)
+          const startOfWeekNumber = getWeek(startOfWeekDate)
+          const weekInMonth = Number(item.time) - startOfWeekNumber + 1
+          const targetDate = setWeek(currentDate, Number(item.time))
+          x = format(targetDate, 'MMMM') + ' week ' + weekInMonth
           break
         }
         case ETimeFrame.MONTHLY:
-          x = moment(item.time, 'MM').format('MMMM')
+          x = format(setMonth(new Date(), Number(item.time) - 1), 'MMMM')
           break
         default:
           break

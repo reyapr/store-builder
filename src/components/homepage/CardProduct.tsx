@@ -16,7 +16,7 @@ import {
 import Link from 'next/link'
 
 import { IProduct } from '@/interfaces'
-import { toIDRFormat } from '@/utils/idr-format'
+import { currency } from '@/utils'
 
 function CardProduct({
   product,
@@ -60,7 +60,7 @@ function CardProduct({
           <Text fontSize="md" fontFamily="body" noOfLines={1}>
             {name}
           </Text>
-          <Text fontSize="sm">{toIDRFormat(price)}</Text>
+          <Text fontSize="sm">{currency.toIDRFormat(price)}</Text>
         </Stack>
         <Stack p={3} align="center" justify="center">
           {cartState === 'default' && qty === 0 && (

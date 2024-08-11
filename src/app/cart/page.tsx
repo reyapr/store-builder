@@ -35,7 +35,7 @@ import NumberInput from '@/components/NumberInput'
 import { IProduct } from '@/interfaces'
 import { IOrderRequest } from '@/interfaces/order'
 import { cartStore } from '@/stores/useCart'
-import { toIDRFormat } from '@/utils/idr-format'
+import { currency } from '@/utils'
 
 export default function CartPage({ params }: Props) {
   const toast = useToast()
@@ -70,11 +70,11 @@ export default function CartPage({ params }: Props) {
       .map((product, i) => {
         return `\n${i + 1}. *${product.name}*
       Quantity: ${product.quantity}
-      Harga (@): ${toIDRFormat(product.price)}
-      Total Harga: ${toIDRFormat(product.price * product.quantity)}`
+      Harga (@): ${currency.toIDRFormat(product.price)}
+      Total Harga: ${currency.toIDRFormat(product.price * product.quantity)}`
       })
       .join(' ')}` +
-      `\n\nTotal : *${toIDRFormat(totalCartPrice)}*` +
+      `\n\nTotal : *${currency.toIDRFormat(totalCartPrice)}*` +
       `\n\n*Pengiriman* : ${input.address}\n` +
       '--------------------------------' +
       '\n*Nama :*' +
@@ -143,7 +143,7 @@ export default function CartPage({ params }: Props) {
       isClosable: true
     })
     onClose()
-  }, [cart, onClose])
+  }, [cart, onClose, toast])
 
   return (
     <Layout storeName={params.storeName}>
@@ -208,7 +208,7 @@ export default function CartPage({ params }: Props) {
                     </Box>
                     <Box>
                       <Heading size="md">{product.name}</Heading>
-                      <Text>Price: {toIDRFormat(product.price)}</Text>
+                      <Text>Price: {currency.toIDRFormat(product.price)}</Text>
                       <Text>Quantity: {product.quantity}</Text>
                     </Box>
                   </Flex>
@@ -240,7 +240,7 @@ export default function CartPage({ params }: Props) {
           <VStack p={3}>
             <Box alignSelf="center">
               <Text fontSize="xx-large">
-                Total: <b>{toIDRFormat(totalCartPrice)}</b>
+                Total: <b>{currency.toIDRFormat(totalCartPrice)}</b>
               </Text>
             </Box>
             <Button

@@ -30,7 +30,6 @@ export default function Home() {
   )
 
   useEffect(() => {
-    console.log('useEffect', { query })
     refetch()
   }, [query, refetch])
 

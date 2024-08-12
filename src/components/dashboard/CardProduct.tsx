@@ -16,7 +16,11 @@ import Link from 'next/link'
 import { IProductResponse } from '@/interfaces/product'
 import { currency } from '@/utils'
 
-export default function CardProduct({ product, editable = true }: Props) {
+export default function CardProduct({
+  product,
+  editable = true,
+  onDelete
+}: Props) {
   const { id, name, price, store, imageUrl } = product
   return (
     <Box
@@ -46,18 +50,24 @@ export default function CardProduct({ product, editable = true }: Props) {
         </Text>
         <Text fontSize="sm">{currency.toIDRFormat(price)}</Text>
       </Stack>
-      {editable && (
-        <Stack px={6} pb={3}>
-          <ButtonGroup gap={2}>
+      <Stack px={6} pb={3}>
+        <ButtonGroup gap={2}>
+          {editable && (
             <Button size="sm" colorScheme="blue">
               <Link href={`/dashboard/products/${id}/edit`}>Edit</Link>
             </Button>
-            <Button size="sm" colorScheme="red">
+          )}
+          {onDelete && (
+            <Button
+              size="sm"
+              colorScheme="red"
+              onClick={() => onDelete(product.id)}
+            >
               Delete
             </Button>
-          </ButtonGroup>
-        </Stack>
-      )}
+          )}
+        </ButtonGroup>
+      </Stack>
     </Box>
   )
 }
@@ -65,4 +75,6 @@ export default function CardProduct({ product, editable = true }: Props) {
 interface Props {
   product: IProductResponse
   editable?: boolean
+  // eslint-disable-next-line no-unused-vars
+  onDelete?: (productId: string) => void
 }

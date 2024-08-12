@@ -14,17 +14,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   useDisclosure,
-  FormControl,
-  FormLabel,
-  Select,
   VStack,
   useToast
 } from '@chakra-ui/react'
@@ -33,6 +23,7 @@ import { addWeeks, startOfWeek, subWeeks, format } from 'date-fns'
 import { getProducts } from '@/app/dashboard/products/actions'
 import { getSchedules, postSchedules } from '@/app/dashboard/schedules/actions'
 import { Layout, CardProduct } from '@/components'
+import ModalMenu from '@/components/dashboard/schedules/ModalMenu'
 import { date } from '@/utils'
 
 export default function Store() {
@@ -162,50 +153,21 @@ export default function Store() {
             />
           </Flex>
 
-          <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>
-                Tambah menu untuk tanggal {date.formatDate(selectedDay)}
-              </ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <FormControl>
-                  <FormLabel>Pilih menu</FormLabel>
-                  <Select
-                    placeholder="Pilih menu"
-                    onChange={(e) => setSelectedProductId(e.target.value)}
-                  >
-                    {products &&
-                      products.map((product) => (
-                        <option key={product.id} value={product.id}>
-                          {product.store.name} - {product.name}
-                        </option>
-                      ))}
-                  </Select>
-                </FormControl>
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  colorScheme="blue"
-                  mr={3}
-                  onClick={() =>
-                    mutate({
-                      productId: selectedProductId,
-                      date: format(selectedDay, 'yyyy-MM-dd')
-                    })
-                  }
-                  isDisabled={!selectedProductId}
-                  isLoading={isPending}
-                >
-                  Tambah
-                </Button>
-                <Button variant="ghost" onClick={onClose}>
-                  Batal
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
+          <ModalMenu
+            isOpen={isOpen}
+            date={date.formatDate(selectedDay)}
+            products={products || []}
+            onClose={onClose}
+            onChange={(productId) => setSelectedProductId(productId)}
+            onSubmit={() => {
+              mutate({
+                productId: selectedProductId,
+                date: format(selectedDay, 'yyyy-MM-dd')
+              })
+            }}
+            isLoading={isPending}
+            isDisabled={!selectedProductId}
+          />
         </>
       )}
     </Layout>

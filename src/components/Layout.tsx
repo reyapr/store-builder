@@ -1,18 +1,16 @@
 import React, { ReactNode } from 'react'
 
 import {
-  Alert,
-  AlertIcon,
   Box,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   Flex,
   HStack,
-  Spinner,
   useColorModeValue
 } from '@chakra-ui/react'
 
+import { Error, Loading } from '@/components/shared'
 import Sidebar from '@/components/Sidebar'
 
 export default function Layout({
@@ -53,14 +51,7 @@ export default function Layout({
           </Flex>
         )}
 
-        {error && (
-          <Box p={3} mb={3}>
-            <Alert status="error" mb={3} height="48px">
-              <AlertIcon />
-              {error.message}
-            </Alert>
-          </Box>
-        )}
+        {error && <Error error={error} />}
         {!error && (
           <Flex
             flex={1}
@@ -73,18 +64,7 @@ export default function Layout({
             borderRadius="md"
             overflowX="auto"
           >
-            {isFetching && (
-              <Flex
-                flex={1}
-                justify="center"
-                color="blue.400"
-                align="center"
-                minH="80vh"
-              >
-                <Spinner />
-              </Flex>
-            )}
-
+            {isFetching && <Loading />}
             {!error && !isFetching && children}
           </Flex>
         )}

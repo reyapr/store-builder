@@ -55,7 +55,7 @@ export default function ModalMenu({
             colorScheme="blue"
             mr={3}
             onClick={onSubmit}
-            isDisabled={!isDisabled}
+            isDisabled={isDisabled}
             isLoading={isLoading}
           >
             Tambah

@@ -8,7 +8,7 @@
 // Menonaktifkan aturan eslint untuk menghilangkan peringatan terkait penggunaan react-hooks
 
 import { useQuery, useMutation, UseQueryResult, MutateOptions } from '@tanstack/react-query'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 import { ISchedule } from '@/interfaces'
 
@@ -28,18 +28,21 @@ export const postSchedules = (options: MutateOptions<ISchedule.ISchedule, Error,
   return useMutation<ISchedule.ISchedule, Error, ISchedule.ICreateScheduleRequest>({
     mutationKey: ['schedules', 'create'],
     mutationFn: async (params: ISchedule.ICreateScheduleRequest ) => {
-      return axios.post('/api/schedules', params)
+      const response: AxiosResponse<ISchedule.IScheduleResponse, any> = await axios.post('/api/schedules', params)
+      return response.data.schedule
     },
     ...options
   })
 }
 
 // Fungsi untuk menghapus jadwal berdasarkan productId dan scheduleId menggunakan useMutation
-export const deleteSchedule = (params: ISchedule.IDeleteScheduleRequest) => {
-  return useMutation({
+export const deleteSchedule = (options: MutateOptions<ISchedule.IDeleteScheduleResponse, Error, ISchedule.IDeleteScheduleRequest>) => {
+  return useMutation<ISchedule.IDeleteScheduleResponse, Error, ISchedule.IDeleteScheduleRequest>({
     mutationKey: ['schedules', 'delete'],
-    mutationFn: async () => {
-      return axios.delete(`/api/schedules`, { data: params })
-    }
+    mutationFn: async (params: ISchedule.IDeleteScheduleRequest ) => {
+      const response: AxiosResponse<ISchedule.IDeleteScheduleResponse, any> = await axios.delete(`/api/schedules`, { data: params })
+      return response.data
+    },
+    ...options
   })
 }

@@ -12,9 +12,8 @@ export interface ISchedule {
   }[]
 }
 
-export interface IScheduleRespose {
-  productId: string
-  date: string
+export interface IScheduleResponse {
+  schedule: ISchedule
 }
 export interface ICreateScheduleRequest {
   productId: string
@@ -23,6 +22,15 @@ export interface ICreateScheduleRequest {
 export interface IDeleteScheduleRequest {
   productId: string
   scheduleId: string
+}
+
+export interface IDeleteScheduleResponse {
+  message: string
+  deletedProductSchedule: {
+    id: string
+    productId: string
+    scheduleId: string
+  }
 }
 
 export interface ISchedulesResponse {

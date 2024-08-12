@@ -19,7 +19,8 @@ import { currency } from '@/utils'
 export default function CardProduct({
   product,
   editable = true,
-  onDelete
+  onDelete,
+  isDeleting
 }: Props) {
   const { id, name, price, store, imageUrl } = product
   return (
@@ -62,8 +63,9 @@ export default function CardProduct({
               size="sm"
               colorScheme="red"
               onClick={() => onDelete(product.id)}
+              isLoading={isDeleting}
             >
-              Delete
+              Hapus
             </Button>
           )}
         </ButtonGroup>
@@ -77,4 +79,5 @@ interface Props {
   editable?: boolean
   // eslint-disable-next-line no-unused-vars
   onDelete?: (productId: string) => void
+  isDeleting?: boolean
 }

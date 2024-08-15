@@ -1,7 +1,7 @@
 import { type CookieOptions, createServerClient } from '@supabase/ssr'
-import axios from 'axios'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
+import { prisma } from '@/app/api/config'
 
 export async function GET(request: Request) {
   const url = new URL(request.url)
@@ -29,18 +29,21 @@ export async function GET(request: Request) {
     )
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     const { data } = await supabase.auth.getSession()
-    const createUserRequest = {
+    const customerParams = {
       name: data.session?.user?.user_metadata?.full_name,
       email: data.session?.user?.email,
-      role: 'admin',
       phoneNumber: data.session?.user?.user_metadata?.phone_number,
-      lastSignInAt: data.session?.user?.last_sign_in_at
     }
 
+    console.log({ customerParams})
+
     try {
-      await axios.post(`${origin}/api/users`, createUserRequest)
+      const newCustomer = await prisma.customer.create({
+        data: { ...customerParams }
+      })
       return NextResponse.redirect(`${origin}/dashboard`)
     }catch(err){
+        console.log({ err })
         return NextResponse.json([err, error], {status: 500})
     }
   }

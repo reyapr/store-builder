@@ -5,13 +5,10 @@ import React, { useEffect, useState } from 'react'
 import { useToast } from '@chakra-ui/react'
 import { useRouter } from 'next/navigation'
 
-import {
-  getCategory,
-  updateCategories
-} from '@/app/dashboard/categories/actions'
-import { getStores } from '@/app/dashboard/stores/actions'
+import { getCategory, updateCategories } from '@/app/admin/categories/actions'
+import { getStores } from '@/app/admin/stores/actions'
 import { Layout } from '@/components'
-import Form from '@/components/dashboard/categories/Form'
+import Form from '@/components/admin/categories/Form'
 import { IUpdateCategoryRequest } from '@/interfaces/category'
 
 export default function Edit({ params }: Props) {
@@ -66,7 +63,7 @@ export default function Edit({ params }: Props) {
           duration: 5000,
           isClosable: true
         })
-        router.push('/dashboard/categories')
+        router.push('/admin/categories')
       },
       onError(error) {
         console.log(error)
@@ -82,9 +79,9 @@ export default function Edit({ params }: Props) {
   }
 
   const breadcrumbs = [
-    { label: 'Dashboard', path: '/dashboard' },
-    { label: 'Kategori', path: '/dashboard/categories' },
-    { label: 'Edit', path: `/dashboard/categories/${params.categoryId}/edit` }
+    { label: 'Dashboard', path: '/admin' },
+    { label: 'Kategori', path: '/admin/categories' },
+    { label: 'Edit', path: `/admin/categories/${params.categoryId}/edit` }
   ]
 
   console.log({ input })

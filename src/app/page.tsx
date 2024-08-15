@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 
 import { SimpleGrid } from '@chakra-ui/react'
 
-import { getProducts } from '@/app/dashboard/products/actions'
+import { getProducts } from '@/app/admin/products/actions'
 import { useStore } from '@/app/s/[storeName]/useStore'
 import { CardProduct, Layout } from '@/components/homepage'
 import { IProduct } from '@/interfaces'

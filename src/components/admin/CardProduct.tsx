@@ -55,7 +55,7 @@ export default function CardProduct({
         <ButtonGroup gap={2}>
           {editable && (
             <Button size="sm" colorScheme="blue">
-              <Link href={`/dashboard/products/${id}/edit`}>Edit</Link>
+              <Link href={`/admin/products/${id}/edit`}>Edit</Link>
             </Button>
           )}
           {onDelete && (

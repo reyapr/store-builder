@@ -19,8 +19,8 @@ import {
 import { Select as MultiSelect, MultiValue } from 'chakra-react-select'
 import { NumericFormat } from 'react-number-format'
 
-import { getCategories } from '@/app/dashboard/categories/actions'
-import { getStores } from '@/app/dashboard/stores/actions'
+import { getCategories } from '@/app/admin/categories/actions'
+import { getStores } from '@/app/admin/stores/actions'
 import { IEditProductRequest, ICategoryInput } from '@/interfaces/product'
 
 export default function ProductFormModal({

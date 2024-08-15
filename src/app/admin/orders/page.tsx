@@ -13,8 +13,8 @@ import {
   VStack
 } from '@chakra-ui/react'
 
-import { getOrders } from '@/app/dashboard/orders/actions'
-import { useViewProductOrders } from '@/app/dashboard/orders/useViewProductOrders'
+import { getOrders } from '@/app/admin/orders/actions'
+import { useViewProductOrders } from '@/app/admin/orders/useViewProductOrders'
 import Layout from '@/components/Layout'
 import { EOrderStatus, mapOrderStatusToColor } from '@/constants/order'
 import { IProductOrder } from '@/interfaces/order'
@@ -45,8 +45,8 @@ export default function Home() {
   }
 
   const breadcrumbs = [
-    { label: 'Dashboard', path: '/dashboard' },
-    { label: 'Order', path: '/dashboard/orders' }
+    { label: 'Dashboard', path: '/admin' },
+    { label: 'Order', path: '/admin/orders' }
   ]
 
   return (

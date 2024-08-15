@@ -5,6 +5,7 @@ import React from 'react'
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 import {
   Box,
+  Button,
   Flex,
   HStack,
   Image,
@@ -101,6 +102,11 @@ export default function Navbar({ storeName }: Props) {
               <FaCartShopping color="green" size={24} />
             </Link>
           </Flex>
+          <Link href="/login">
+            <Button colorScheme="green" variant="outline" size="sm" ml={4}>
+              Login
+            </Button>
+          </Link>
         </Flex>
       </Flex>
 

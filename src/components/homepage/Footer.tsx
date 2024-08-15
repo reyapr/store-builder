@@ -28,7 +28,7 @@ export default function SmallWithLogoLeft() {
         align={{ base: 'center', md: 'center' }}
       >
         <Text>© 2024 BAF Kitchen</Text>
-        <Link href="/dashboard">
+        <Link href="/admin">
           <MdOutlineDashboard />
         </Link>
       </Container>

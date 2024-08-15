@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 
-import { getCategories } from '@/app/dashboard/categories/actions'
+import { getCategories } from '@/app/admin/categories/actions'
 import { Layout } from '@/components'
 import { ICategory } from '@/interfaces/category'
 
@@ -30,8 +30,8 @@ export default function Categories() {
     new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1
 
   const breadcrumbs = [
-    { label: 'Dashboard', path: '/dashboard' },
-    { label: 'Kategori', path: '/dashboard/categories' }
+    { label: 'Dashboard', path: '/admin' },
+    { label: 'Kategori', path: '/admin/categories' }
   ]
 
   return (
@@ -40,7 +40,7 @@ export default function Categories() {
       isFetching={isFetchingCategories}
       error={errorCategories as Error}
       rightHeaderComponent={
-        <Link href="/dashboard/categories/new">
+        <Link href="/admin/categories/new">
           <Button colorScheme="blue" size="sm" onClick={() => {}}>
             Create Category
           </Button>
@@ -75,9 +75,7 @@ export default function Categories() {
                     <Th>{category.store?.name}</Th>
                     <Th>
                       <ButtonGroup gap={2}>
-                        <Link
-                          href={`/dashboard/categories/${category.id}/edit`}
-                        >
+                        <Link href={`/admin/categories/${category.id}/edit`}>
                           <Button colorScheme="blue" size="sm">
                             Edit
                           </Button>

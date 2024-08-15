@@ -6,10 +6,10 @@ import { Button, useToast } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-import { createCategories } from '@/app/dashboard/categories/actions'
-import { getStores } from '@/app/dashboard/stores/actions'
+import { createCategories } from '@/app/admin/categories/actions'
+import { getStores } from '@/app/admin/stores/actions'
 import { Layout } from '@/components'
-import Form from '@/components/dashboard/categories/Form'
+import Form from '@/components/admin/categories/Form'
 import { ICreateCategoryRequest } from '@/interfaces/category'
 
 export default function Create() {
@@ -37,8 +37,8 @@ export default function Create() {
   }
 
   const breadcrumbs = [
-    { label: 'Dashboard', path: '/dashboard' },
-    { label: 'Kategori', path: '/dashboard/categories' }
+    { label: 'Dashboard', path: '/admin' },
+    { label: 'Kategori', path: '/admin/categories' }
   ]
 
   const onSubmit = (input: ICreateCategoryRequest): void => {
@@ -50,7 +50,7 @@ export default function Create() {
           duration: 5000,
           isClosable: true
         })
-        router.push('/dashboard/categories')
+        router.push('/admin/categories')
       },
       onError(error) {
         console.log(error)
@@ -71,7 +71,7 @@ export default function Create() {
       isFetching={isFetchingStores}
       error={errorStores as Error}
       rightHeaderComponent={
-        <Link href="/dashboard/categories/new">
+        <Link href="/admin/categories/new">
           <Button colorScheme="blue" size="sm" onClick={() => {}}>
             Create Category
           </Button>

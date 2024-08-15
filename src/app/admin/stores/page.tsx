@@ -15,7 +15,7 @@ import {
   Tr
 } from '@chakra-ui/react'
 
-import { getStores } from '@/app/dashboard/stores/actions'
+import { getStores } from '@/app/admin/stores/actions'
 import { Layout } from '@/components'
 
 export default function Store() {
@@ -28,8 +28,8 @@ export default function Store() {
     new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1
 
   const breadcrumbs = [
-    { label: 'Dashboard', path: '/dashboard' },
-    { label: 'Toko', path: '/dashboard/stores' }
+    { label: 'Dashboard', path: '/admin' },
+    { label: 'Toko', path: '/admin/stores' }
   ]
 
   return (

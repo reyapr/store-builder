@@ -33,7 +33,7 @@ export default function Navbar() {
     >
       <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
         <Box>
-          <Link href="/dashboard">Admin Dashboard</Link>
+          <Link href="/admin">Admin Dashboard</Link>
         </Box>
 
         <Flex alignItems={'center'}>

@@ -14,7 +14,7 @@ import {
   SkeletonText
 } from '@chakra-ui/react'
 
-import { getProducts } from '@/app/dashboard/products/actions'
+import { getProducts } from '@/app/admin/products/actions'
 import { CardProduct, Layout } from '@/components'
 
 export default function ProductPage() {
@@ -26,8 +26,8 @@ export default function ProductPage() {
     new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1
 
   const breadcrumbs = [
-    { label: 'dashboard', path: '/dashboard' },
-    { label: 'produk', path: '/dashboard/product' }
+    { label: 'dashboard', path: '/admin' },
+    { label: 'produk', path: '/admin/product' }
   ]
   return (
     <Layout

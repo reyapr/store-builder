@@ -4,7 +4,7 @@ import React from 'react'
 
 import { useToast } from '@chakra-ui/react'
 
-import { getProduct, updateProducts } from '@/app/dashboard/products/actions'
+import { getProduct, updateProducts } from '@/app/admin/products/actions'
 import { Layout, ProductForm } from '@/components'
 
 export default function Edit({ params }: Props) {
@@ -32,9 +32,9 @@ export default function Edit({ params }: Props) {
   })
 
   const breadcrumbs = [
-    { label: 'dashboard', path: '/dashboard' },
-    { label: 'produk', path: '/dashboard/products' },
-    { label: 'edit - ', path: '/dashboard/product' }
+    { label: 'dashboard', path: '/admin' },
+    { label: 'produk', path: '/admin/products' },
+    { label: 'edit - ', path: '/admin/product' }
   ]
 
   return (

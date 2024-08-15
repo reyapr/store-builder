@@ -15,12 +15,14 @@ model User {
   id            String    @id @default(uuid())
   name          String
   email         String    @unique
-  role          String
+  role          String     @default("user")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   phoneNumber   String?
   lastSignInAt  DateTime?
   stores        Store[]
+
+  @@unique([email, role])
 }
 
 model Store {
@@ -57,11 +59,11 @@ model Product {
 model Customer {
   id            String    @id @default(uuid())
   name          String
-  email         String?   @unique
-  phoneNumber   String    @unique
+  email         String   @unique
+  phoneNumber   String?    @unique
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  address       String
+  address       String?
   orders        Order[]
 }
 

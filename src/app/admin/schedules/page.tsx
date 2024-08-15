@@ -14,9 +14,9 @@ import {
 } from '@chakra-ui/react'
 import { addWeeks, differenceInDays, startOfWeek, subWeeks } from 'date-fns'
 
-import { getSchedules } from '@/app/dashboard/schedules/actions'
+import { getSchedules } from '@/app/admin/schedules/actions'
 import { Layout } from '@/components'
-import TabContent from '@/components/dashboard/schedules/TabContent'
+import TabContent from '@/components/admin/schedules/TabContent'
 import { date } from '@/utils'
 
 export default function Store() {
@@ -29,8 +29,8 @@ export default function Store() {
   const { data: schedules, isFetching, error } = getSchedules()
 
   const breadcrumbs = [
-    { label: 'Dashboard', path: '/dashboard' },
-    { label: 'Toko', path: '/dashboard/stores' }
+    { label: 'Dashboard', path: '/admin' },
+    { label: 'Toko', path: '/admin/stores' }
   ]
 
   const navigateWeek = (direction: 'prev' | 'next') => {

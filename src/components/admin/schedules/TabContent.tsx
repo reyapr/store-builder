@@ -11,11 +11,8 @@ import {
 } from '@chakra-ui/react'
 import { format } from 'date-fns'
 
-import { getProducts } from '@/app/dashboard/products/actions'
-import {
-  deleteSchedule,
-  postSchedules
-} from '@/app/dashboard/schedules/actions'
+import { getProducts } from '@/app/admin/products/actions'
+import { deleteSchedule, postSchedules } from '@/app/admin/schedules/actions'
 import { Error, Loading } from '@/components/shared'
 import { ISchedule } from '@/interfaces'
 import { date, useToastMessage } from '@/utils'

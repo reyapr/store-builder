@@ -10,8 +10,8 @@ import {
   useColorModeValue
 } from '@chakra-ui/react'
 
+import { Sidebar } from '@/components'
 import { Error, Loading } from '@/components/shared'
-import Sidebar from '@/components/Sidebar'
 
 export default function Layout({
   children,

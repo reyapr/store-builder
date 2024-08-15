@@ -1,1 +1,1 @@
-export const DASHBOARD_LOGIN_PATH = '/dashboard/login'
+export const DASHBOARD_LOGIN_PATH = '/admin/login'

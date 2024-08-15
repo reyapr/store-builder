@@ -71,12 +71,12 @@ export async function middleware(request: NextRequest) {
   }
 
   if (data.session && path === DASHBOARD_LOGIN_PATH) {
-    response = NextResponse.redirect(new URL('/dashboard', request.url))
+    response = NextResponse.redirect(new URL('/admin', request.url))
   }
 
   return response
 }
 
 export const config = {
-  matcher: '/dashboard/:path*'
+  matcher: '/admin/:path*'
 }

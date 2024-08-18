@@ -2,11 +2,7 @@ import { IProductCart } from '@/interfaces/product'
 
 export interface IOrderRequest {
   storeName?: string
-  orderer: {
-    name: string
-    phoneNumber: string
-    address: string
-  }
+  orderer: IOrdererInputForm
   items: IProductCart[]
   totalPrice: number
 }
@@ -27,11 +23,7 @@ export interface IOrder {
   total: number
   createdAt: string
   updatedAt: string
-  customer: {
-    name: string
-    phoneNumber: string
-    address: string
-  }
+  customer: IOrdererInputForm
   products: IProductOrder[]
   store: {
     name: string

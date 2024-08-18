@@ -28,6 +28,7 @@ import {
 import axios from 'axios'
 import { useFormik } from 'formik'
 import { FaTrash } from 'react-icons/fa6'
+import { toFormikValidationSchema } from 'zod-formik-adapter'
 
 import OrdererInput from '@/app/s/[storeName]/cart/components/OrdererInput'
 import { useStore } from '@/app/s/[storeName]/useStore'
@@ -46,7 +47,7 @@ export default function CartPage({ params }: Props) {
   const items = (cart.getProducts && cart.getProducts()) || []
   const totalCartPrice = cart.getTotalPrice && cart.getTotalPrice()
 
-  const { values, setFieldValue, isValid } =
+  const { errors, dirty, values, setFieldValue, isValid } =
     useFormik<IOrder.IOrdererInputForm>({
       initialValues: {
         name: '',
@@ -54,7 +55,8 @@ export default function CartPage({ params }: Props) {
         email: '',
         address: ''
       },
-      validationSchema: schema.orderInputForm,
+      validateOnChange: true,
+      validationSchema: toFormikValidationSchema(schema.orderInputForm),
       onSubmit: async () => {
         try {
           await createOrder()
@@ -198,13 +200,13 @@ export default function CartPage({ params }: Props) {
           <CardHeader>
             <Heading>Data Pemesan</Heading>
           </CardHeader>
+
           <Divider color="gray.300" />
           <CardBody>
             <OrdererInput
-              input={values}
-              handleChange={(
-                e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => setFieldValue(e.target.name, e.target.value)}
+              order={values}
+              errors={errors}
+              onChange={(e) => setFieldValue(e.target.name, e.target.value)}
             />
           </CardBody>
         </Card>
@@ -219,7 +221,7 @@ export default function CartPage({ params }: Props) {
             <Button
               w="full"
               py={6}
-              isDisabled={isValid}
+              isDisabled={!dirty || !isValid}
               bgColor="blue.200"
               type="submit"
             >

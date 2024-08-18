@@ -6,6 +6,7 @@ import { createOrderSchema } from '@/app/api/validator'
 import { EOrderStatus } from '@/constants/order'
 import { IOrderRequest } from '@/interfaces/order'
 import { IProductCart } from '@/interfaces/product'
+import { generateOrderText, sendEmail } from '@/utils/order'
 
 const promiseUpdateStock = (trx: PrismaClient, items: IProductCart[]) =>
   Promise.all(
@@ -42,45 +43,46 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: createOrderReq.error }, { status: 400 })
   }
 
-  const orderRequest: IOrderRequest = createOrderReq.data
+  const { storeName, orderer, items, totalPrice }: IOrderRequest =
+    createOrderReq.data
   try {
     const store = await prisma.store.findFirst({
       where: {
-        name: orderRequest.storeName,
+        name: storeName,
         isDeleted: false
       }
     })
 
-
     const order = await prisma.$transaction(async (trx) => {
-      await promiseUpdateStock(trx, orderRequest.items)
+      await promiseUpdateStock(trx, items)
 
       let customer = await trx.customer.findUnique({
         where: {
-          phoneNumber: orderRequest.orderer.phoneNumber
+          phoneNumber: orderer.phoneNumber
         }
       })
 
       if (!customer) {
         customer = await trx.customer.create({
           data: {
-            name: orderRequest.orderer.name,
-            phoneNumber: orderRequest.orderer.phoneNumber,
-            address: orderRequest.orderer.address
+            name: orderer.name,
+            email: orderer.email,
+            phoneNumber: orderer.phoneNumber,
+            address: orderer.address
           }
         })
       }
 
       return trx.order.create({
         data: {
-          total: orderRequest.totalPrice,
+          total: totalPrice,
           customer: {
             connect: {
               id: customer!.id
             }
           },
           products: {
-            create: orderRequest.items.map((item) => {
+            create: items.map((item) => {
               return {
                 product: {
                   connect: {
@@ -94,12 +96,24 @@ export async function POST(request: Request) {
           status: EOrderStatus.PENDING,
           store: {
             connect: {
-              id: store?.id || "app"
+              id: store?.id || 'app'
             }
           }
         }
       })
     })
+
+    console.log("------------------1")
+    sendEmail({
+      recipientEmail: orderer.email,
+      subject: 'Order berhasil dibuat',
+      text: generateOrderText({
+        totalPrice,
+        items,
+        customer: orderer
+      })
+    })
+    console.log("------------------2")
 
     return NextResponse.json(
       { order, message: 'Success to order' },

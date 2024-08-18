@@ -1,57 +1,78 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 
-import { FormControl, FormLabel, Input, Textarea } from '@chakra-ui/react'
+import {
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Input,
+  Textarea
+} from '@chakra-ui/react'
+import { FormikErrors } from 'formik'
 
 import { IOrder } from '@/interfaces'
 
-export default function OrdererInput(props: IOrdererInputProps) {
+export default function OrdererInput({
+  order,
+  onChange,
+  errors
+}: IOrdererInputProps) {
   return (
-    <FormControl>
-      <FormLabel>Nama:</FormLabel>
-      <Input
-        name="name"
-        value={props.input.name}
-        placeholder="Nama"
-        marginBottom={2}
-        onChange={props.handleChange}
-        type="text"
-      />
+    <>
+      <FormControl>
+        <FormLabel>Nama:</FormLabel>
+        <Input
+          name="name"
+          value={order.name}
+          placeholder="Nama"
+          marginBottom={2}
+          onChange={onChange}
+          type="text"
+        />
+        <FormErrorMessage>{errors?.name}</FormErrorMessage>
+      </FormControl>
 
-      <FormLabel>Nomor Handphone:</FormLabel>
-      <Input
-        name="phoneNumber"
-        value={props.input.phoneNumber}
-        placeholder="No. Handphone"
-        marginBottom={2}
-        onChange={props.handleChange}
-        type="number"
-      />
+      <FormControl>
+        <FormLabel>Nomor Handphone:</FormLabel>
+        <Input
+          name="phoneNumber"
+          value={order.phoneNumber}
+          placeholder="No. Handphone"
+          marginBottom={2}
+          onChange={onChange}
+          type="number"
+        />
+        <FormErrorMessage>{errors?.phoneNumber}</FormErrorMessage>
+      </FormControl>
 
-      <FormLabel>Email</FormLabel>
-      <Input
-        name="email"
-        value={props.input.email}
-        placeholder="Email"
-        marginBottom={2}
-        onChange={props.handleChange}
-        type="email"
-      />
+      <FormControl>
+        <FormLabel>Email</FormLabel>
+        <Input
+          name="email"
+          value={order.email}
+          placeholder="Email"
+          marginBottom={2}
+          onChange={onChange}
+          type="email"
+        />
+        <FormErrorMessage>{errors?.email}</FormErrorMessage>
 
-      <FormLabel>Alamat Lengkap/Pengiriman:</FormLabel>
-      <Textarea
-        name="address"
-        value={props.input.address}
-        placeholder="Alamat Lengkap/Pengiriman"
-        onChange={props.handleChange}
-      />
-    </FormControl>
+        <FormLabel>Alamat Lengkap/Pengiriman:</FormLabel>
+        <Textarea
+          name="address"
+          value={order.address}
+          placeholder="Alamat Lengkap/Pengiriman"
+          onChange={onChange}
+        />
+      </FormControl>
+    </>
   )
 }
 
 interface IOrdererInputProps {
-  input: IOrder.IOrdererInputForm
-  handleChange: (
+  order: IOrder.IOrdererInputForm
+  errors: FormikErrors<IOrder.IOrdererInputForm>
+  onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void
 }

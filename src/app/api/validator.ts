@@ -48,6 +48,7 @@ export const createOrderSchema = z.object({
   storeName: z.optional(z.string()),
   orderer: z.object({
     name: z.string(),
+    email: z.string(),
     phoneNumber: z.string(),
     address: z.string()
   }),

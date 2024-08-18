@@ -1,6 +1,7 @@
 import { type CookieOptions, createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
+
 import { prisma } from '@/app/api/config'
 
 export async function GET(request: Request) {
@@ -31,14 +32,12 @@ export async function GET(request: Request) {
     const { data } = await supabase.auth.getSession()
     const customerParams = {
       name: data.session?.user?.user_metadata?.full_name,
-      email: data.session?.user?.email,
+      email: data.session?.user?.email || "",
       phoneNumber: data.session?.user?.user_metadata?.phone_number,
     }
 
-    console.log({ customerParams})
-
     try {
-      const newCustomer = await prisma.customer.create({
+      await prisma.customer.create({
         data: { ...customerParams }
       })
       return NextResponse.redirect(`${origin}/dashboard`)

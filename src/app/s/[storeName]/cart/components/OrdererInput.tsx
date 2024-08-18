@@ -23,7 +23,7 @@ export default function OrdererInput({
         <FormLabel>Nama:</FormLabel>
         <Input
           name="name"
-          value={order.name}
+          defaultValue={order.name}
           placeholder="Nama"
           marginBottom={2}
           onChange={onChange}
@@ -36,7 +36,7 @@ export default function OrdererInput({
         <FormLabel>Nomor Handphone:</FormLabel>
         <Input
           name="phoneNumber"
-          value={order.phoneNumber}
+          defaultValue={order.phoneNumber}
           placeholder="No. Handphone"
           marginBottom={2}
           onChange={onChange}
@@ -49,7 +49,7 @@ export default function OrdererInput({
         <FormLabel>Email</FormLabel>
         <Input
           name="email"
-          value={order.email}
+          defaultValue={order.email}
           placeholder="Email"
           marginBottom={2}
           onChange={onChange}
@@ -60,7 +60,7 @@ export default function OrdererInput({
         <FormLabel>Alamat Lengkap/Pengiriman:</FormLabel>
         <Textarea
           name="address"
-          value={order.address}
+          defaultValue={order.address}
           placeholder="Alamat Lengkap/Pengiriman"
           onChange={onChange}
         />

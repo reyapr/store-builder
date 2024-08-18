@@ -47,7 +47,7 @@ export default function CartPage({ params }: Props) {
   const items = (cart.getProducts && cart.getProducts()) || []
   const totalCartPrice = cart.getTotalPrice && cart.getTotalPrice()
 
-  const { errors, dirty, values, setFieldValue, isValid } =
+  const { dirty, errors, isValid, handleSubmit, values, setFieldValue } =
     useFormik<IOrder.IOrdererInputForm>({
       initialValues: {
         name: '',
@@ -196,39 +196,42 @@ export default function CartPage({ params }: Props) {
             </Stack>
           </CardBody>
         </Card>
-        <Card>
-          <CardHeader>
-            <Heading>Data Pemesan</Heading>
-          </CardHeader>
 
-          <Divider color="gray.300" />
-          <CardBody>
-            <OrdererInput
-              order={values}
-              errors={errors}
-              onChange={(e) => setFieldValue(e.target.name, e.target.value)}
-            />
-          </CardBody>
-        </Card>
-        <Card>
-          <Divider color="gray.300" />
-          <VStack p={3}>
-            <Box alignSelf="center">
-              <Text fontSize="xx-large">
-                Total: <b>{currency.toIDRFormat(totalCartPrice)}</b>
-              </Text>
-            </Box>
-            <Button
-              w="full"
-              py={6}
-              isDisabled={!dirty || !isValid}
-              bgColor="blue.200"
-              type="submit"
-            >
-              <Text fontSize="xx-large">Pesan</Text>
-            </Button>
-          </VStack>
-        </Card>
+        <form onSubmit={handleSubmit}>
+          <Card>
+            <CardHeader>
+              <Heading>Data Pemesan</Heading>
+            </CardHeader>
+
+            <Divider color="gray.300" />
+            <CardBody>
+              <OrdererInput
+                order={values}
+                errors={errors}
+                onChange={(e) => setFieldValue(e.target.name, e.target.value)}
+              />
+            </CardBody>
+          </Card>
+          <Card>
+            <Divider color="gray.300" />
+            <VStack p={3}>
+              <Box alignSelf="center">
+                <Text fontSize="xx-large">
+                  Total: <b>{currency.toIDRFormat(totalCartPrice)}</b>
+                </Text>
+              </Box>
+              <Button
+                w="full"
+                py={6}
+                isDisabled={!dirty || !isValid}
+                bgColor="blue.200"
+                type="submit"
+              >
+                <Text fontSize="xx-large">Pesan</Text>
+              </Button>
+            </VStack>
+          </Card>
+        </form>
       </SimpleGrid>
     </Layout>
   )

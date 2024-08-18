@@ -6,7 +6,7 @@ import { createOrderSchema } from '@/app/api/validator'
 import { EOrderStatus } from '@/constants/order'
 import { IOrderRequest } from '@/interfaces/order'
 import { IProductCart } from '@/interfaces/product'
-import { generateOrderText, sendEmail } from '@/utils/order'
+import { generateOrderText, sendGmail } from '@/utils/order'
 
 const promiseUpdateStock = (trx: PrismaClient, items: IProductCart[]) =>
   Promise.all(
@@ -72,8 +72,8 @@ export async function POST(request: Request) {
           }
         })
       }
-
-      return trx.order.create({
+      
+      const order = trx.order.create({
         data: {
           total: totalPrice,
           customer: {
@@ -96,24 +96,25 @@ export async function POST(request: Request) {
           status: EOrderStatus.PENDING,
           store: {
             connect: {
-              id: store?.id || 'app'
+              id: store?.id
             }
           }
         }
       })
+
+      return order
     })
 
-    console.log("------------------1")
-    sendEmail({
+    await sendGmail({
       recipientEmail: orderer.email,
-      subject: 'Order berhasil dibuat',
+      subject: `Order berhasil dibuat - order #${order.number}`,
       text: generateOrderText({
         totalPrice,
         items,
-        customer: orderer
+        customer: orderer,
+        orderId: order.id
       })
     })
-    console.log("------------------2")
 
     return NextResponse.json(
       { order, message: 'Success to order' },

@@ -25,7 +25,6 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay
 } from '@chakra-ui/react'
-import axios from 'axios'
 import { useFormik } from 'formik'
 import { FaTrash } from 'react-icons/fa6'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
@@ -35,9 +34,10 @@ import { useStore } from '@/app/s/[storeName]/useStore'
 import { Layout } from '@/components/homepage'
 import NumberInput from '@/components/NumberInput'
 import { IProduct, IOrder } from '@/interfaces'
-import { IOrderRequest } from '@/interfaces/order'
 import { cartStore } from '@/stores/useCart'
 import { currency, schema } from '@/utils'
+
+import { useCreateOrders } from './actions'
 
 export default function CartPage({ params }: Props) {
   const toast = useToast()
@@ -47,48 +47,60 @@ export default function CartPage({ params }: Props) {
   const items = (cart.getProducts && cart.getProducts()) || []
   const totalCartPrice = cart.getTotalPrice && cart.getTotalPrice()
 
-  const { dirty, errors, isValid, handleSubmit, values, setFieldValue } =
-    useFormik<IOrder.IOrdererInputForm>({
-      initialValues: {
-        name: '',
-        phoneNumber: '',
-        email: '',
-        address: ''
-      },
-      validateOnChange: true,
-      validationSchema: toFormikValidationSchema(schema.orderInputForm),
-      onSubmit: async () => {
-        try {
-          await createOrder()
-          cart.clearCart()
-        } catch (error) {
-          let errorMessage = 'Gagal membuat pesanan. Silahkan coba lagi.'
+  const { mutate: createOrder } = useCreateOrders({
+    onSuccess() {
+      cart.clearCart()
+      toast({
+        title: 'Berhasil',
+        description: 'Order berhasil dibuat',
+        status: 'success',
+        duration: 9000,
+        isClosable: true
+      })
+    },
+    onError(error) {
+      let errorMessage = 'Gagal membuat pesanan. Silahkan coba lagi.'
 
-          if ((error as any).response.data.error.includes('out of stock')) {
-            errorMessage = (error as any).response.data.error
-          }
-
-          toast({
-            title: 'Error',
-            description: errorMessage,
-            status: 'error',
-            duration: 9000,
-            isClosable: true
-          })
-        }
+      if ((error as any).response.data.error.includes('out of stock')) {
+        errorMessage = (error as any).response.data.error
       }
-    })
 
-  const createOrder = async () => {
-    const request: IOrderRequest = {
-      storeName: params.storeName,
-      items: items,
-      totalPrice: totalCartPrice,
-      orderer: values
+      toast({
+        title: 'Error',
+        description: errorMessage,
+        status: 'error',
+        duration: 9000,
+        isClosable: true
+      })
     }
+  })
 
-    await axios.post(`/api/orders`, request)
-  }
+  const {
+    dirty,
+    errors,
+    isValid,
+    handleSubmit,
+    values,
+    setFieldValue,
+    isSubmitting
+  } = useFormik<IOrder.IOrdererInputForm>({
+    initialValues: {
+      name: '',
+      phoneNumber: '',
+      email: '',
+      address: ''
+    },
+    validateOnChange: true,
+    validationSchema: toFormikValidationSchema(schema.orderInputForm),
+    onSubmit: async () => {
+      await createOrder({
+        storeName: params.storeName,
+        items: items,
+        totalPrice: totalCartPrice,
+        orderer: values
+      })
+    }
+  })
 
   const handleAddQty = useCallback(
     (product: IProduct.IProductCart) => {
@@ -223,9 +235,10 @@ export default function CartPage({ params }: Props) {
               <Button
                 w="full"
                 py={6}
-                isDisabled={!dirty || !isValid}
+                isDisabled={!dirty || !isValid || items.length < 1}
                 bgColor="blue.200"
                 type="submit"
+                isLoading={isSubmitting}
               >
                 <Text fontSize="xx-large">Pesan</Text>
               </Button>

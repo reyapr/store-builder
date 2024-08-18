@@ -32,3 +32,25 @@ export async function PATCH(request: Request, context: { params: any }) {
     { status: 200 }
   )
 }
+
+export async function GET(request: Request, context: { params: any }) {
+  const { id } = context.params as { id: string }
+
+  const order = await prisma.order.findUnique({ where: { id }, include: {
+    products: {
+      include: {
+        product: true
+      }
+    },
+    store: true,
+    customer: true
+  } })
+  if (!order) {
+    return NextResponse.json(
+      { error: 'Order does not exist' },
+      { status: 400 }
+    )
+  }
+
+  return NextResponse.json(order, { status: 200})
+}

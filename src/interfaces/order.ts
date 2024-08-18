@@ -1,4 +1,5 @@
-import { IProductCart } from '@/interfaces/product'
+import { IProduct, IProductCart } from '@/interfaces/product'
+import { IStore } from "@/interfaces/store"
 
 export interface IOrderRequest {
   storeName?: string
@@ -47,3 +48,28 @@ export interface IOrdererInputForm {
     address: string
 }
 
+
+export interface IProductOrderResponse {
+    id: string;
+    number: number;
+    total: number;
+    createdAt: Date;
+    updatedAt: Date;
+    customerId: string;
+    status: string;
+    storeId: string;
+    store: IStore;
+    products: {
+      id: string,
+      quantity: number,
+      product: IProduct;
+    }[];
+    customer: {
+      id: string,
+      name: string
+      phoneNumber: string
+      email: string
+      address: string
+    }
+
+}

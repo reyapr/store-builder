@@ -35,7 +35,7 @@ export const generateOrderText = ({
     '\n\n*Alamat :*' +
     `\n${customer.address}` +
     '--------------------------------' +
-    `\nHalaman order: https://https://bafkitchen.posku.online/orders/${orderId}`
+    `\nHalaman order: https://bafkitchen.posku.online/orders/${orderId}`
 
   return text  
 }

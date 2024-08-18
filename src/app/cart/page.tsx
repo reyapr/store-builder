@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useRef } from 'react'
 
 import {
   Box,
@@ -26,16 +26,17 @@ import {
   AlertDialogOverlay
 } from '@chakra-ui/react'
 import axios from 'axios'
+import { useFormik } from 'formik'
 import { FaTrash } from 'react-icons/fa6'
 
 import OrdererInput from '@/app/s/[storeName]/cart/components/OrdererInput'
 import { useStore } from '@/app/s/[storeName]/useStore'
 import { Layout } from '@/components/homepage'
 import NumberInput from '@/components/NumberInput'
-import { IProduct } from '@/interfaces'
+import { IProduct, IOrder } from '@/interfaces'
 import { IOrderRequest } from '@/interfaces/order'
 import { cartStore } from '@/stores/useCart'
-import { currency } from '@/utils'
+import { currency, schema } from '@/utils'
 
 export default function CartPage({ params }: Props) {
   const toast = useToast()
@@ -45,79 +46,46 @@ export default function CartPage({ params }: Props) {
   const items = (cart.getProducts && cart.getProducts()) || []
   const totalCartPrice = cart.getTotalPrice && cart.getTotalPrice()
 
-  const [input, setInput] = useState({
-    name: '',
-    phoneNumber: '',
-    address: ''
-  })
+  const { values, setFieldValue, isValid } =
+    useFormik<IOrder.IOrdererInputForm>({
+      initialValues: {
+        name: '',
+        phoneNumber: '',
+        email: '',
+        address: ''
+      },
+      validationSchema: schema.orderInputForm,
+      onSubmit: async () => {
+        try {
+          await createOrder()
+          cart.clearCart()
+        } catch (error) {
+          let errorMessage = 'Gagal membuat pesanan. Silahkan coba lagi.'
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setInput({
-      ...input,
-      [e.target.name]: e.target.value
+          if ((error as any).response.data.error.includes('out of stock')) {
+            errorMessage = (error as any).response.data.error
+          }
+
+          toast({
+            title: 'Error',
+            description: errorMessage,
+            status: 'error',
+            duration: 9000,
+            isClosable: true
+          })
+        }
+      }
     })
-  }
-
-  const isSubmitDisabled =
-    !input.name || !input.phoneNumber || !input.address || !items.length
-
-  const redirectToWA = () => {
-    const text =
-      `Assalamualaikum, saya mau order.
-    ${items
-      .map((product, i) => {
-        return `\n${i + 1}. *${product.name}*
-      Quantity: ${product.quantity}
-      Harga (@): ${currency.toIDRFormat(product.price)}
-      Total Harga: ${currency.toIDRFormat(product.price * product.quantity)}`
-      })
-      .join(' ')}` +
-      `\n\nTotal : *${currency.toIDRFormat(totalCartPrice)}*` +
-      `\n\n*Pengiriman* : ${input.address}\n` +
-      '--------------------------------' +
-      '\n*Nama :*' +
-      `\n${input.name} ( ${input.phoneNumber} )` +
-      '\n\n*Alamat :*' +
-      `\n${input.address}` +
-      `\nVia ${location.origin}`
-
-    const waUrl = `https://wa.me/+6285723087803?text=${encodeURI(text)}`
-    window.location.replace(waUrl)
-  }
 
   const createOrder = async () => {
     const request: IOrderRequest = {
       storeName: params.storeName,
       items: items,
       totalPrice: totalCartPrice,
-      orderer: input
+      orderer: values
     }
 
     await axios.post(`/api/orders`, request)
-  }
-
-  const handleOrder = async () => {
-    try {
-      await createOrder()
-      cart.clearCart()
-      redirectToWA()
-    } catch (error) {
-      let errorMessage = 'Gagal membuat pesanan. Silahkan coba lagi.'
-
-      if ((error as any).response.data.error.includes('out of stock')) {
-        errorMessage = (error as any).response.data.error
-      }
-
-      toast({
-        title: 'Error',
-        description: errorMessage,
-        status: 'error',
-        duration: 9000,
-        isClosable: true
-      })
-    }
   }
 
   const handleAddQty = useCallback(
@@ -232,7 +200,12 @@ export default function CartPage({ params }: Props) {
           </CardHeader>
           <Divider color="gray.300" />
           <CardBody>
-            <OrdererInput input={input} handleChange={handleChange} />
+            <OrdererInput
+              input={values}
+              handleChange={(
+                e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+              ) => setFieldValue(e.target.name, e.target.value)}
+            />
           </CardBody>
         </Card>
         <Card>
@@ -246,9 +219,9 @@ export default function CartPage({ params }: Props) {
             <Button
               w="full"
               py={6}
-              isDisabled={isSubmitDisabled}
+              isDisabled={isValid}
               bgColor="blue.200"
-              onClick={handleOrder}
+              type="submit"
             >
               <Text fontSize="xx-large">Pesan</Text>
             </Button>

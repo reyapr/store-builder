@@ -3,16 +3,7 @@ import React from 'react'
 
 import { FormControl, FormLabel, Input, Textarea } from '@chakra-ui/react'
 
-interface IOrdererInputProps {
-  input: {
-    name: string
-    phoneNumber: string
-    address: string
-  }
-  handleChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void
-}
+import { IOrder } from '@/interfaces'
 
 export default function OrdererInput(props: IOrdererInputProps) {
   return (
@@ -24,6 +15,7 @@ export default function OrdererInput(props: IOrdererInputProps) {
         placeholder="Nama"
         marginBottom={2}
         onChange={props.handleChange}
+        type="text"
       />
 
       <FormLabel>Nomor Handphone:</FormLabel>
@@ -36,6 +28,16 @@ export default function OrdererInput(props: IOrdererInputProps) {
         type="number"
       />
 
+      <FormLabel>Email</FormLabel>
+      <Input
+        name="email"
+        value={props.input.email}
+        placeholder="Email"
+        marginBottom={2}
+        onChange={props.handleChange}
+        type="email"
+      />
+
       <FormLabel>Alamat Lengkap/Pengiriman:</FormLabel>
       <Textarea
         name="address"
@@ -45,4 +47,11 @@ export default function OrdererInput(props: IOrdererInputProps) {
       />
     </FormControl>
   )
+}
+
+interface IOrdererInputProps {
+  input: IOrder.IOrdererInputForm
+  handleChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void
 }

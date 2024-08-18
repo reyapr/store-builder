@@ -47,3 +47,11 @@ export interface IUpdateOrderStatusRequest {
 export interface IUpdateOrderStatusApiRequest {
   status: string
 }
+
+export interface IOrdererInputForm {
+    name: string
+    phoneNumber: string
+    email: string
+    address: string
+}
+

@@ -81,7 +81,7 @@ export async function POST(request: Request) {
               id: customer!.id
             }
           },
-          products: {
+          productOrders: {
             create: items.map((item) => {
               return {
                 product: {
@@ -132,7 +132,7 @@ export async function GET() {
   const orders = await prisma.order.findMany({
     include: {
       customer: true,
-      products: {
+      productOrders: {
         include: {
           product: true
         }

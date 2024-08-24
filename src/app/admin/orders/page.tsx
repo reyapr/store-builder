@@ -89,8 +89,8 @@ export default function Home() {
                   <Th>{order.store.name}</Th>
                   <Th>{order.customer.name}</Th>
                   <Th>{order.customer.phoneNumber}</Th>
-                  <Th>{getTotalQuantity(order.products)}</Th>
-                  <Th>{getTotalPrice(order.products)}</Th>
+                  <Th>{getTotalQuantity(order.productOrders)}</Th>
+                  <Th>{getTotalPrice(order.productOrders)}</Th>
                   <Th>
                     <Tag
                       size="xs"
@@ -106,7 +106,7 @@ export default function Home() {
                         colorScheme="cyan"
                         size="xs"
                         onClick={() =>
-                          viewProductOrdersHook.onOpen(order.products)
+                          viewProductOrdersHook.onOpen(order.productOrders)
                         }
                       >
                         Lihat detail

@@ -25,7 +25,7 @@ export interface IOrder {
   createdAt: string
   updatedAt: string
   customer: IOrdererInputForm
-  products: IProductOrder[]
+  productOrders: IProductOrder[]
   store: {
     name: string
   }
@@ -58,7 +58,7 @@ export interface IProductOrderResponse {
   status: string
   storeId: string
   store: IStore
-  products: {
+  productOrders: {
     id: string
     quantity: number
     product: IProduct

@@ -4,11 +4,11 @@ import { persist } from 'zustand/middleware'
 
 import { IProduct, IProductCart } from '@/interfaces/product'
 
-interface CartState {
+export interface CartState {
   products: IProductCart[]
 }
 
-interface CartActions {
+export interface CartActions {
   addProduct: (product: IProduct) => void
   removeProduct: (productId: string) => void
   reduceQuantity: (productId: string) => void

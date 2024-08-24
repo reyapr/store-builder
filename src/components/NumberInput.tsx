@@ -13,7 +13,7 @@ export default function NumberInput({
         -
       </Button>
       <Input
-        defaultValue={quantity}
+        value={quantity}
         padding="0px"
         textAlign={'center'}
         size={['sm', 'md']}

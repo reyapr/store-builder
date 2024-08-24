@@ -63,11 +63,11 @@ export default function OrderDetailPage({
             </CardBody>
           </Card>
           <Divider color="gray.300" />
-          {order?.products && (
+          {order?.productOrders && (
             <Card>
               <CardBody>
                 <Stack divider={<StackDivider />} spacing="4">
-                  {order?.products.map(({ id, quantity, product }) => (
+                  {order?.productOrders.map(({ id, quantity, product }) => (
                     <Flex
                       key={id}
                       flex={1}

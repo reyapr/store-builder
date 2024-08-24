@@ -14,6 +14,7 @@ import {
   Thead,
   Tr
 } from '@chakra-ui/react'
+import Link from 'next/link'
 
 import { getStores } from '@/app/admin/stores/actions'
 import { Layout } from '@/components'
@@ -89,9 +90,15 @@ export default function Store() {
                     <Th>{store.name}</Th>
                     <Th>
                       <ButtonGroup gap={2}>
-                        <Button colorScheme="blue" size="sm" onClick={() => {}}>
-                          Edit
-                        </Button>
+                        <Link href={`/admin/stores/${store.id}/edit`}>
+                          <Button
+                            colorScheme="blue"
+                            size="sm"
+                            onClick={() => {}}
+                          >
+                            Edit
+                          </Button>
+                        </Link>
                         <Button colorScheme="red" size="sm" onClick={() => {}}>
                           Delete
                         </Button>

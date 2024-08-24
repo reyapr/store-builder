@@ -44,7 +44,7 @@ export default function TabContent({
         </SimpleGrid>
       ) : (
         <VStack align="start" gap={6}>
-          <Text w="full">Tidak ada menu untuk tanggal ini</Text>
+          <Text w="full">Tidak ada menu untuk tanggal ini`</Text>
         </VStack>
       )}
     </Box>

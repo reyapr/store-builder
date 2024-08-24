@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use client'
 
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
@@ -20,7 +21,6 @@ import { CardProduct, Layout } from '@/components/homepage'
 import TabContent from '@/components/homepage/TabContent'
 import { IProduct } from '@/interfaces'
 import { cartStore } from '@/stores/useCart'
-import { date as dateUtils } from '@/utils'
 
 export default function Home() {
   const [query, setQuery] = useState<string>('')

@@ -19,7 +19,8 @@ export const createStoreSchema = z.object({
 
 export const updateStoreSchema = z.object({
   id: z.string(),
-  name: z.string()
+  name: z.string(),
+  userId: z.string(),
 })
 
 // Product

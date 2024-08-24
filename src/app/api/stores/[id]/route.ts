@@ -68,3 +68,38 @@ export async function DELETE(_: NextRequest, context: { params: any }) {
     )
   }
 }
+
+export async function GET(_: NextRequest, context: { params: any }) {
+  const { id } = context.params as { id: string }
+  try {
+    const store = await prisma.store.findUnique({
+      where: {
+        id,
+        isDeleted: false
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
+    })
+
+    if (!store) {
+      return NextResponse.json(
+        { error: 'Store not found' },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json({ store }, { status: 200 })
+  } catch (error) {
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 }
+    )
+  }
+}

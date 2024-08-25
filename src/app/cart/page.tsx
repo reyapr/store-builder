@@ -181,11 +181,12 @@ export default function CartPage({ params }: Props) {
                   align="center"
                 >
                   <Flex alignSelf={['start']}>
-                    <Box boxSize={20} marginRight={5}>
+                    <Box width="100px" height="100px" overflow="hidden" mr={3}>
                       <Image
                         src={product.imageUrl}
                         alt={product.description}
-                        sizes="sm"
+                        objectFit="cover"
+                        boxSize="100%"
                       />
                     </Box>
                     <Box>

@@ -24,7 +24,11 @@ export default function EditStore({ params }: Props) {
 
   useEffect(() => {
     if (store) {
-      setInput(store)
+      setInput((prev) => ({
+        ...prev,
+        name: store.name,
+        userId: store.userId || ''
+      }))
     }
   }, [store])
 

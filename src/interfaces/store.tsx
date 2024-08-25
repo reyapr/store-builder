@@ -17,7 +17,7 @@ export interface ISubmitStoreFormRequest {
 export interface IStore {
   id: string
   name: string
-  userId: string
+  userId?: string
   isDeleted: boolean
   createdAt: string
   updatedAt: string

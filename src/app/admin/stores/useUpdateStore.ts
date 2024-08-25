@@ -41,7 +41,7 @@ export function useUpdateStore(
   }
 
   const handleEditClose = () => {
-    setCurrentEditForm({ id: '', name: '' })
+    setCurrentEditForm({ id: '', name: '', userId: '' })
     onClose()
   }
 

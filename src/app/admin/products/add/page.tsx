@@ -38,20 +38,7 @@ export default function Edit({ params }: Props) {
     <Layout breadcrumbs={breadcrumbs}>
       <ProductForm
         isPending={isPending}
-        product={{
-          id: params.productId,
-          name: '',
-          price: '',
-          stock: 0,
-          storeId: '',
-          categoryIds: [],
-          description: '',
-          imageUrl: ''
-        }}
-        onSubmit={(product) => {
-          console.log(product)
-          // mutate(product)
-        }}
+        onSubmit={mutate}
         title="Tambah Produk"
       />
     </Layout>

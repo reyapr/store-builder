@@ -11,7 +11,7 @@ import {
   TabPanel,
   SimpleGrid
 } from '@chakra-ui/react'
-import { startOfWeek, addDays, isSameDay, format } from 'date-fns'
+import { startOfWeek, endOfWeek, addDays, isSameDay, format } from 'date-fns'
 import { id } from 'date-fns/locale'
 
 import { getProducts } from '@/app/admin/products/actions'
@@ -25,7 +25,15 @@ import { cartStore } from '@/stores/useCart'
 export default function Home() {
   const [query, setQuery] = useState<string>('')
   const [_, setSelectedDate] = useState(new Date())
-  const { data: schedules, isFetching, error } = getSchedules()
+
+  const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 })
+  const weekEnd = endOfWeek(new Date(), { weekStartsOn: 1 })
+
+  const {
+    data: schedules,
+    isFetching,
+    error
+  } = getSchedules(weekStart, weekEnd)
 
   const cart = useStore(cartStore, (state) => state, 'app')
 
@@ -60,7 +68,6 @@ export default function Home() {
   } = getProducts({ q: query })
 
   const weekDates = useMemo(() => {
-    const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 })
     return Array(7)
       .fill(0)
       .map((_, i) => addDays(weekStart, i))
@@ -77,6 +84,10 @@ export default function Home() {
   const getDefaultIndex = () => {
     const today = new Date()
     return weekDates.findIndex((date) => isSameDay(date, today))
+  }
+
+  const isDateScheduled = (date: Date, schedules: Schedule[]) => {
+    return schedules.some((schedule) => isSameDay(schedule.date, date))
   }
 
   return (
@@ -108,17 +119,28 @@ export default function Home() {
           defaultIndex={getDefaultIndex()}
           flex={1}
           variant="soft-rounded"
-          colorScheme="green"
         >
           <TabList flexWrap="wrap">
-            {weekDates.map((date) => (
-              <Tab key={date.toISOString()} color="gray.400">
-                {format(date, 'EEEE', { locale: id }).replace(
-                  /minggu/i,
-                  'Ahad'
-                )}
-              </Tab>
-            ))}
+            {schedules &&
+              weekDates.map((date) => (
+                <Tab
+                  key={date.toISOString()}
+                  color={
+                    isDateScheduled(date, schedules) ? 'green.700' : 'gray.400'
+                  }
+                  _selected={{
+                    bg: isDateScheduled(date, schedules)
+                      ? 'green.600'
+                      : 'gray.500',
+                    color: 'white'
+                  }}
+                >
+                  {format(date, 'EEEE', { locale: id }).replace(
+                    /minggu/i,
+                    'Ahad'
+                  )}
+                </Tab>
+              ))}
           </TabList>
           <TabPanels>
             {weekDates.map((date) => (

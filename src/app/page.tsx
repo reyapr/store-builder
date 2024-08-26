@@ -110,7 +110,7 @@ export default function Home() {
           variant="soft-rounded"
           colorScheme="green"
         >
-          <TabList>
+          <TabList flexWrap="wrap">
             {weekDates.map((date) => (
               <Tab key={date.toISOString()} color="gray.400">
                 {format(date, 'EEEE', { locale: id }).replace(

@@ -47,7 +47,7 @@ export default function CartPage({ params }: Props) {
   const items = (cart.getProducts && cart.getProducts()) || []
   const totalCartPrice = cart.getTotalPrice && cart.getTotalPrice()
 
-  const { mutate: createOrder } = useCreateOrders({
+  const { mutate: createOrder, isPending } = useCreateOrders({
     onSuccess() {
       cart.clearCart()
       toast({
@@ -239,7 +239,7 @@ export default function CartPage({ params }: Props) {
                 isDisabled={!dirty || !isValid || items.length < 1}
                 bgColor="blue.200"
                 type="submit"
-                isLoading={isSubmitting}
+                isLoading={isSubmitting || isPending}
               >
                 <Text fontSize="xx-large">Pesan</Text>
               </Button>

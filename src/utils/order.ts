@@ -86,7 +86,7 @@ export async function sendGmail({
     service: 'gmail',
     auth: {
       user: "bafkitchen.notification",
-      pass: "hjkv efvx dqbg cjox",
+      pass: "uism tcci ggim ukmo",
     },
   });
 

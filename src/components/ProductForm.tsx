@@ -1,3 +1,5 @@
+'use-client'
+
 import React, { useEffect, useState } from 'react'
 
 import {
@@ -21,17 +23,28 @@ import { NumericFormat } from 'react-number-format'
 
 import { getCategories } from '@/app/admin/categories/actions'
 import { getStores } from '@/app/admin/stores/actions'
-import { IEditProductRequest, ICategoryInput } from '@/interfaces/product'
+import {
+  IEditProductRequest,
+  IProductResponse,
+  ICategoryInput
+} from '@/interfaces/product'
 
 export default function ProductFormModal({
   onSubmit,
   product,
   isPending = false
 }: Props) {
-  const [input, setInput] = useState<IEditProductRequest>(product)
+  const [input, setInput] = useState<IEditProductRequest>({
+    ...product,
+    price: String(product.price),
+    categoryIds: product.categories.map(({ id }) => id)
+  })
   const [categoryOptions, setCategoryOptions] = useState<ICategoryInput[]>([])
+  const [selectedCategories, setSelectedCategories] = useState<
+    ICategoryInput[]
+  >(product.categories.map(({ name, id }) => ({ label: name, value: id })))
 
-  const { data: categories } = getCategories()
+  const { data: dataCategories } = getCategories()
   const { data: stores } = getStores()
 
   const request = {
@@ -51,10 +64,19 @@ export default function ProductFormModal({
   const handleCategoriesChange = (
     inputCategories: MultiValue<ICategoryInput>
   ) => {
+    const categoryIds = inputCategories.map(({ value }) => value)
     setInput({
       ...input,
-      categoryIds: inputCategories.map(({ value }) => value)
+      categoryIds
     })
+
+    if (dataCategories) {
+      setSelectedCategories(
+        dataCategories
+          .filter((cat) => categoryIds.includes(cat.id))
+          .map((category) => ({ label: category.name, value: category.id }))
+      )
+    }
   }
 
   const handleStockChange = (value: string) => {
@@ -76,13 +98,13 @@ export default function ProductFormModal({
   }
 
   useEffect(() => {
-    if (categories?.length) {
-      const options: ICategoryInput[] = categories
+    if (dataCategories?.length) {
+      const options: ICategoryInput[] = dataCategories
         .filter((category) => category.storeId === input.storeId)
         .map((category) => ({ label: category.name, value: category.id }))
       setCategoryOptions(options)
     }
-  }, [categories, input.storeId])
+  }, [dataCategories, input.storeId])
 
   return (
     <VStack gap={3}>
@@ -142,7 +164,7 @@ export default function ProductFormModal({
           isMulti
           placeholder="Select Categories"
           onChange={handleCategoriesChange}
-          value={categoryOptions}
+          value={selectedCategories}
           options={categoryOptions}
           isDisabled={!input.storeId}
         />
@@ -189,7 +211,7 @@ export default function ProductFormModal({
 export interface Props {
   // eslint-disable-next-line no-unused-vars
   onSubmit: (request: IEditProductRequest) => void
-  product: IEditProductRequest
+  product: IProductResponse
   title: string
   isPending: boolean
 }

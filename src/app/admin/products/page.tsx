@@ -13,6 +13,7 @@ import {
   SkeletonCircle,
   SkeletonText
 } from '@chakra-ui/react'
+import Link from 'next/link'
 
 import { getProducts } from '@/app/admin/products/actions'
 import { CardProduct, Layout } from '@/components'
@@ -35,9 +36,11 @@ export default function ProductPage() {
       error={error as Error}
       isFetching={isFetching}
       rightHeaderComponent={
-        <Button colorScheme="blue" size="sm" onClick={() => {}}>
-          Tambah Produk
-        </Button>
+        <Link href="/admin/products/add">
+          <Button colorScheme="blue" size="sm">
+            Tambah Produk
+          </Button>
+        </Link>
       }
     >
       {isFetching && (

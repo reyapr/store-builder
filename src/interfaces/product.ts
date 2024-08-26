@@ -26,6 +26,7 @@ export interface IProductResponse {
   createdAt: string
   updatedAt: string
   store: IStore
+  categories: ICategory[]
 }
 
 export interface ICategoryInput {

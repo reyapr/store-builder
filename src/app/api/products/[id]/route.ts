@@ -39,7 +39,13 @@ const replaceImageInSupabase = async (
 export async function GET(_: Request, context: { params: any }) {
   const { id } = context.params as { id: string }
 
-  const product = await prisma.product.findUnique({ where: { id } })
+  const product = await prisma.product.findUnique({
+    where: { id },
+    include: {
+      store: true,
+      categories: true
+    }
+  })
   if (!product) {
     return NextResponse.json(
       { error: 'Product does not exist' },
@@ -47,7 +53,7 @@ export async function GET(_: Request, context: { params: any }) {
     )
   }
 
-  return NextResponse.json(product, { status: 200})
+  return NextResponse.json(product, { status: 200 })
 }
 
 export async function PATCH(request: Request, context: { params: any }) {

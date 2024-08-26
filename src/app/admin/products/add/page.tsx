@@ -8,15 +8,8 @@ import { getProduct, updateProducts } from '@/app/admin/products/actions'
 import { Layout, ProductForm } from '@/components'
 
 export default function Edit({ params }: Props) {
-  const {
-    data: product,
-    isFetching,
-    error,
-    refetch
-  } = getProduct(params.productId)
-
   const toast = useToast()
-  const { mutate: updateProduct, isPending } = updateProducts({
+  const { mutate, isPending } = updateProducts({
     onSuccess() {
       toast({
         title: 'Berhasil',
@@ -24,7 +17,6 @@ export default function Edit({ params }: Props) {
         status: 'success',
         isClosable: true
       })
-      refetch()
     },
     onError() {
       toast({
@@ -43,19 +35,25 @@ export default function Edit({ params }: Props) {
   ]
 
   return (
-    <Layout
-      breadcrumbs={breadcrumbs}
-      error={error as Error}
-      isFetching={isFetching}
-    >
-      {product && (
-        <ProductForm
-          isPending={isPending}
-          product={product}
-          onSubmit={updateProduct}
-          title="Tambah Produk"
-        />
-      )}
+    <Layout breadcrumbs={breadcrumbs}>
+      <ProductForm
+        isPending={isPending}
+        product={{
+          id: params.productId,
+          name: '',
+          price: '',
+          stock: 0,
+          storeId: '',
+          categoryIds: [],
+          description: '',
+          imageUrl: ''
+        }}
+        onSubmit={(product) => {
+          console.log(product)
+          // mutate(product)
+        }}
+        title="Tambah Produk"
+      />
     </Layout>
   )
 }

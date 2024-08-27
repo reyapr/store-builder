@@ -4,9 +4,10 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/app/api/config'
 import { createOrderSchema } from '@/app/api/validator'
 import { EOrderStatus } from '@/constants/order'
+import { inngest } from '@/inngest/client'
 import { IOrderRequest } from '@/interfaces/order'
 import { IProductCart } from '@/interfaces/product'
-import { generateOrderText, sendGmail } from '@/utils/order'
+import { generateOrderText } from '@/utils/order'
 
 const promiseUpdateStock = (trx: PrismaClient, items: IProductCart[]) =>
   Promise.all(
@@ -105,16 +106,19 @@ export async function POST(request: Request) {
       return order
     })
 
-    await sendGmail({
-      recipientEmail: orderer.email,
-      subject: `Order berhasil dibuat - order #${order.number}`,
-      text: generateOrderText({
-        totalPrice,
-        items,
-        customer: orderer,
-        orderId: order.id
-      })
-    })
+    await inngest.send({
+      name: "email/send",
+      data: {
+        recipientEmail: orderer.email,
+        subject: `Order berhasil dibuat - order #${order.number}`,
+        text: generateOrderText({
+          totalPrice,
+          items,
+          customer: orderer,
+          orderId: order.id
+        })
+      },
+    });
 
     return NextResponse.json(
       { order, message: 'Success to order' },

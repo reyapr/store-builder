@@ -32,7 +32,6 @@ import {
   IProductResponse,
   ICategoryInput
 } from '@/interfaces/product'
-
 import { schema } from '@/utils'
 
 export default function ProductForm({

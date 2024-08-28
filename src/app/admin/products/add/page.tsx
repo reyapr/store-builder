@@ -4,10 +4,11 @@ import React from 'react'
 
 import { useToast } from '@chakra-ui/react'
 
-import { getProduct, updateProducts } from '@/app/admin/products/actions'
+import { updateProducts } from '@/app/admin/products/actions'
 import { Layout, ProductForm } from '@/components'
+import { IStore } from '@/interfaces'
 
-export default function Edit({ params }: Props) {
+export default function Edit() {
   const toast = useToast()
   const { mutate, isPending } = updateProducts({
     onSuccess() {
@@ -39,10 +40,21 @@ export default function Edit({ params }: Props) {
       <ProductForm
         isPending={isPending}
         onSubmit={mutate}
+        product={{
+          id: '',
+          storeId: '',
+          createdAt: '',
+          updatedAt: '',
+          name: '',
+          description: '',
+          imageUrl: '',
+          price: 0,
+          stock: 0,
+          store: {} as IStore.IStore,
+          categories: []
+        }}
         title="Tambah Produk"
       />
     </Layout>
   )
 }
-
-type Props = { params: { productId: string } }

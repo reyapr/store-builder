@@ -19,7 +19,7 @@ import { getSchedules } from '@/app/admin/schedules/actions'
 import { useStore } from '@/app/s/[storeName]/useStore'
 import { CardProduct, Layout } from '@/components/homepage'
 import TabContent from '@/components/homepage/TabContent'
-import { IProduct } from '@/interfaces'
+import { IProduct, ISchedule } from '@/interfaces'
 import { cartStore } from '@/stores/useCart'
 
 export default function Home() {
@@ -86,7 +86,7 @@ export default function Home() {
     return weekDates.findIndex((date) => isSameDay(date, today))
   }
 
-  const isDateScheduled = (date: Date, schedules: Schedule[]) => {
+  const isDateScheduled = (date: Date, schedules: ISchedule.ISchedule[]) => {
     return schedules.some((schedule) => isSameDay(schedule.date, date))
   }
 

@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client/extension'
 import { NextResponse } from 'next/server'
+import nodemailer from 'nodemailer'
 
 import { prisma } from '@/app/api/config'
 import { createOrderSchema } from '@/app/api/validator'
@@ -104,19 +105,16 @@ export async function POST(request: Request) {
           }
         })
 
-        // Now you can use the order object outside the transaction
-        await inngest.send({
-          name: 'email/send',
-          data: {
-            recipientEmail: orderer.email,
-            subject: `Order #${order.number} berhasil dibuat - order `,
-            html: generateOrderHtmlEmail({
-              totalPrice,
-              items,
-              customer: orderer,
-              orderId: order.id
-            })
-          }
+        sendWithGmail({
+          to: orderer.email,
+          from: process.env.GMAIL_USER,
+          subject: `Order #${order.number} berhasil dibuat - order `,
+          html: generateOrderHtmlEmail({
+            totalPrice,
+            items,
+            customer: orderer,
+            orderId: order.id
+          })
         })
 
         return order
@@ -128,7 +126,7 @@ export async function POST(request: Request) {
       name: 'email/send',
       data: {
         recipientEmail: orderer.email,
-        subject: `Order berhasil dibuat - order #${order.number}`,
+        subject: `Order #${order.number} berhasil dibuat`,
         html: generateOrderHtmlEmail({
           totalPrice,
           items,
@@ -168,4 +166,37 @@ export async function GET() {
     }
   })
   return NextResponse.json(orders, { status: 200 })
+}
+
+export async function sendWithGmail(mailOptions: MailOptions) {
+  const { NODE_ENV, BCC_EMAILS_DEV, BCC_EMAILS_PROD } = process.env
+
+  const bcc =
+    (NODE_ENV === 'production' ? BCC_EMAILS_PROD : BCC_EMAILS_DEV)?.split(
+      ','
+    ) || []
+
+  // Create a transporter object using SMTP transport
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'bafkitchen.notification',
+      pass: 'uism tcci ggim ukmo'
+    }
+  })
+
+  try {
+    await transporter.sendMail({ ...mailOptions, bcc })
+    return { message: 'Email sent successfully' }
+  } catch (error) {
+    console.error('Error sending email:', error)
+    return { message: 'Error sending email' }
+  }
+}
+
+type MailOptions = {
+  from: string | undefined // process.env.GMAIL_USER could be undefined, so we account for that
+  to: string
+  subject: string
+  html: string
 }

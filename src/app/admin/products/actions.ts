@@ -1,11 +1,9 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import {
   useQuery,
   useMutation,
   UseMutationOptions,
   UseQueryResult
 } from '@tanstack/react-query'
-import axios from 'axios'
 
 import { IProduct } from '@/interfaces'
 import {
@@ -14,46 +12,60 @@ import {
   ICreateProductRequest
 } from '@/interfaces/product'
 
-export const getProduct = (
+export const useGetProduct = (
   productId: String
 ): UseQueryResult<IProductResponse, Error> =>
   useQuery<IProductResponse, Error>({
     queryKey: ['product', productId],
     queryFn: async () => {
-      const { data } = await axios.get(`/api/products/${productId}`)
-      return data
+      const response = await fetch(`/api/products/${productId}`)
+      if (!response.ok) throw new Error('Network response was not ok')
+      return response.json()
     }
   })
 
-export const getProducts = (
+export const useGetProducts = (
   params?: IFetchProductRequest
 ): UseQueryResult<IProductResponse[], Error> =>
   useQuery<IProductResponse[], Error>({
     queryKey: ['products'],
     queryFn: async () => {
-      const { data } = await axios.get('/api/products', { params })
+      const queryString = params ? new URLSearchParams(params as any).toString() : ''
+      const response = await fetch(`/api/products?${queryString}`)
+      if (!response.ok) throw new Error('Network response was not ok')
+      const data = await response.json()
       return data.products
     }
   })
 
-export const deleteProducts = (id: string) =>
+export const useDeleteProducts = (id: string) =>
   useMutation({
     mutationKey: ['products', 'delete'],
     mutationFn: async () => {
-      return await axios.delete(`/api/products/${id}`)
+      const response = await fetch(`/api/products/${id}`, { method: 'DELETE' })
+      if (!response.ok) throw new Error('Network response was not ok')
+      return response.json()
     }
   })
 
-export const createProducts = (product: ICreateProductRequest) =>
+export const useCreateProducts = (product: ICreateProductRequest) =>
   useMutation({
     mutationKey: ['products', 'create'],
     mutationFn: async () => {
-      const { data } = await axios.post(`/api/products`, product)
+      const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(product)
+      })
+      if (!response.ok) throw new Error('Network response was not ok')
+      const data = await response.json()
       return data.products
     }
   })
 
-export const updateProducts = (
+export const useUpdateProducts = (
   options?: Omit<
     UseMutationOptions<IProduct.IProduct, Error, IProduct.IEditProductRequest>,
     'mutationFn'
@@ -73,12 +85,15 @@ export const updateProducts = (
         form.append('image', product.image)
       }
 
-      const { data } = await axios.patch(`/api/products/${product.id}`, form)
-      return data
+      const response = await fetch(`/api/products/${product.id}`, {
+        method: 'PATCH',
+        body: form
+      })
+      if (!response.ok) throw new Error('Network response was not ok')
+      return response.json()
     },
     ...options
   })
-
 
 export interface IFetchProductRequest {
   categoryIds?: string[]

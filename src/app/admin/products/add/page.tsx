@@ -4,13 +4,13 @@ import React from 'react'
 
 import { useToast } from '@chakra-ui/react'
 
-import { updateProducts } from '@/app/admin/products/actions'
+import { useUpdateProducts } from '@/app/admin/products/actions'
 import { Layout, ProductForm } from '@/components'
 import { IStore } from '@/interfaces'
 
 export default function Edit() {
   const toast = useToast()
-  const { mutate, isPending } = updateProducts({
+  const { mutate, isPending } = useUpdateProducts({
     onSuccess() {
       toast({
         title: 'Berhasil',

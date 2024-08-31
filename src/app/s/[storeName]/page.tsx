@@ -8,7 +8,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { getCategories } from '@/app/admin/categories/actions'
 // import { Layout } from '@/app/s/[storeName]/components/Layout'
-import { getProducts } from '@/app/admin/products/actions'
+import { useGetProducts } from '@/app/admin/products/actions'
 import { useProductList } from '@/app/s/[storeName]/use-product-list'
 import { useStore } from '@/app/s/[storeName]/useStore'
 // import { ProductCard } from '@/components'
@@ -28,7 +28,7 @@ export default function Stores({ params }: { params: { storeName: string } }) {
     IProduct.ICategoryInput[]
   >([])
   const [query] = useState<string>('')
-  const { data: products, isFetching, error } = getProducts({ q: query })
+  const { data: products, isFetching, error } = useGetProducts({ q: query })
 
   const storeName = decodeURI(params.storeName)
 

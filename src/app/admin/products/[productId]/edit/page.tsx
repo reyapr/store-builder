@@ -4,7 +4,7 @@ import React from 'react'
 
 import { useToast } from '@chakra-ui/react'
 
-import { getProduct, updateProducts } from '@/app/admin/products/actions'
+import { useGetProduct, useUpdateProducts } from '@/app/admin/products/actions'
 import { Layout, ProductForm } from '@/components'
 
 export default function Edit({ params }: Props) {
@@ -13,10 +13,10 @@ export default function Edit({ params }: Props) {
     isFetching,
     error,
     refetch
-  } = getProduct(params.productId)
+  } = useGetProduct(params.productId)
 
   const toast = useToast()
-  const { mutate: updateProduct, isPending } = updateProducts({
+  const { mutate: updateProduct, isPending } = useUpdateProducts({
     onSuccess() {
       toast({
         title: 'Berhasil',

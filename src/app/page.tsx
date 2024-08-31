@@ -14,7 +14,7 @@ import {
 import { startOfWeek, endOfWeek, addDays, isSameDay, format } from 'date-fns'
 import { id } from 'date-fns/locale'
 
-import { getProducts } from '@/app/admin/products/actions'
+import { useGetProducts } from '@/app/admin/products/actions'
 import { getSchedules } from '@/app/admin/schedules/actions'
 import { useStore } from '@/app/s/[storeName]/useStore'
 import { CardProduct, Layout } from '@/components/homepage'
@@ -65,7 +65,7 @@ export default function Home() {
     isFetching: isFetchingProducts,
     error: isErrorProducts,
     refetch: refetchProducts
-  } = getProducts({ q: query })
+  } = useGetProducts({ q: query })
 
   const weekDates = useMemo(() => {
     return Array(7)

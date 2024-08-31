@@ -8,7 +8,7 @@ import { Layout } from '@/components'
 import { createClient } from '@/utils/supabase/client'
 
 export default function HomeDashboard() {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<any | null>(null)
 
   useEffect(() => {
     const supabase = createClient()

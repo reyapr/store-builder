@@ -73,7 +73,7 @@ export default function Home() {
     return Array(7)
       .fill(0)
       .map((_, i) => addDays(weekStart, i))
-  }, [])
+  }, [weekStart])
 
   useEffect(() => {
     refetchProducts()

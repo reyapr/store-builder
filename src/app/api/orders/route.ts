@@ -73,8 +73,8 @@ export async function POST(request: Request) {
           }
         })
       }
-      
-      const order = trx.order.create({
+
+      const order = await trx.order.create({
         data: {
           total: totalPrice,
           customer: {
@@ -103,11 +103,26 @@ export async function POST(request: Request) {
         }
       })
 
+      // Now you can use the order object outside the transaction
+      await inngest.send({
+        name: 'email/send',
+        data: {
+          recipientEmail: orderer.email,
+          subject: `Order berhasil dibuat - order #${order.number}`,
+          text: generateOrderText({
+            totalPrice,
+            items,
+            customer: orderer,
+            orderId: order.id
+          })
+        }
+      })
+
       return order
     })
 
     await inngest.send({
-      name: "email/send",
+      name: 'email/send',
       data: {
         recipientEmail: orderer.email,
         subject: `Order berhasil dibuat - order #${order.number}`,
@@ -117,8 +132,8 @@ export async function POST(request: Request) {
           customer: orderer,
           orderId: order.id
         })
-      },
-    });
+      }
+    })
 
     return NextResponse.json(
       { order, message: 'Success to order' },

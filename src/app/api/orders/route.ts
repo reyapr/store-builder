@@ -108,7 +108,7 @@ export async function POST(request: Request) {
         sendWithGmail({
           to: orderer.email,
           from: process.env.GMAIL_USER,
-          subject: `Order #${order.number} berhasil dibuat - order `,
+          subject: `Order #${order.number} berhasil dibuat`,
           html: generateOrderHtmlEmail({
             totalPrice,
             items,
@@ -168,7 +168,7 @@ export async function GET() {
   return NextResponse.json(orders, { status: 200 })
 }
 
-export async function sendWithGmail(mailOptions: MailOptions) {
+async function sendWithGmail(mailOptions: MailOptions) {
   const { NODE_ENV, BCC_EMAILS_DEV, BCC_EMAILS_PROD } = process.env
 
   const bcc =

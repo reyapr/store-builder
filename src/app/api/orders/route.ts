@@ -54,72 +54,75 @@ export async function POST(request: Request) {
       }
     })
 
-    const order = await prisma.$transaction(async (trx) => {
-      await promiseUpdateStock(trx, items)
+    const order = await prisma.$transaction(
+      async (trx) => {
+        await promiseUpdateStock(trx, items)
 
-      let customer = await trx.customer.findUnique({
-        where: {
-          phoneNumber: orderer.phoneNumber
-        }
-      })
-
-      if (!customer) {
-        customer = await trx.customer.create({
-          data: {
-            name: orderer.name,
-            email: orderer.email,
-            phoneNumber: orderer.phoneNumber,
-            address: orderer.address
+        let customer = await trx.customer.findUnique({
+          where: {
+            phoneNumber: orderer.phoneNumber
           }
         })
-      }
 
-      const order = await trx.order.create({
-        data: {
-          total: totalPrice,
-          customer: {
-            connect: {
-              id: customer!.id
+        if (!customer) {
+          customer = await trx.customer.create({
+            data: {
+              name: orderer.name,
+              email: orderer.email,
+              phoneNumber: orderer.phoneNumber,
+              address: orderer.address
             }
-          },
-          productOrders: {
-            create: items.map((item) => {
-              return {
-                product: {
-                  connect: {
-                    id: item.id
-                  }
-                },
-                quantity: item.quantity
-              }
-            })
-          },
-          status: EOrderStatus.PENDING,
-          store: {
-            connect: {
-              id: store?.id
-            }
-          }
-        }
-      })
-
-      // Now you can use the order object outside the transaction
-      await inngest.send({
-        name: 'email/send',
-        data: {
-          recipientEmail: orderer.email,
-          subject: `Order berhasil dibuat - order #${order.number}`,
-          text: generateOrderText({
-            totalPrice,
-            items,
-            customer: orderer,
-            orderId: order.id
           })
         }
-      })
 
-      return order
-    })
+        const order = await trx.order.create({
+          data: {
+            total: totalPrice,
+            customer: {
+              connect: {
+                id: customer!.id
+              }
+            },
+            productOrders: {
+              create: items.map((item) => {
+                return {
+                  product: {
+                    connect: {
+                      id: item.id
+                    }
+                  },
+                  quantity: item.quantity
+                }
+              })
+            },
+            status: EOrderStatus.PENDING,
+            store: {
+              connect: {
+                id: store?.id
+              }
+            }
+          }
+        })
+
+        // Now you can use the order object outside the transaction
+        await inngest.send({
+          name: 'email/send',
+          data: {
+            recipientEmail: orderer.email,
+            subject: `Order berhasil dibuat - order #${order.number}`,
+            text: generateOrderText({
+              totalPrice,
+              items,
+              customer: orderer,
+              orderId: order.id
+            })
+          }
+        })
+
+        return order
+      },
+      { timeout: 20000, maxWait: 18000 }
+    )
 
     await inngest.send({
       name: 'email/send',

@@ -6,9 +6,9 @@ import { inngest } from './client'
 
 export const sendEmail = inngest.createFunction(
   { id: 'Send Email' },
-  { event: 'email/send' },
+  { event: 'send/gmail' },
   async ({ event, step }) => {
-    const { recipientEmail, subject, text } = event.data
+    const { recipientEmail, subject, html } = event.data
     const { NODE_ENV, BCC_EMAILS_DEV, BCC_EMAILS_PROD} = process.env
 
     const bcc = (NODE_ENV === "production" ? BCC_EMAILS_PROD : BCC_EMAILS_DEV)?.split(",") || []
@@ -18,7 +18,7 @@ export const sendEmail = inngest.createFunction(
       to: recipientEmail,
       bcc,
       subject,
-      text
+      html
     }
 
     await step.run('Send email', async () => {
@@ -68,5 +68,5 @@ type MailOptions = {
   to: string
   bcc: string[]
   subject: string
-  text: string
+  html: string
 }

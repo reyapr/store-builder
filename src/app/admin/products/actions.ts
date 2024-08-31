@@ -30,6 +30,7 @@ export const useGetProducts = (
   useQuery<IProductResponse[], Error>({
     queryKey: ['products'],
     queryFn: async () => {
+      console.log("------------_>")
       const queryString = params ? new URLSearchParams(params as any).toString() : ''
       const response = await fetch(`/api/products?${queryString}`)
       if (!response.ok) throw new Error('Network response was not ok')

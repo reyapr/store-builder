@@ -49,7 +49,7 @@ export default function CartPage({ params }: Props) {
 
   const { mutate: createOrder, isPending } = useCreateOrders({
     onSuccess() {
-      cart.clearCart()
+      // cart.clearCart()
       toast({
         title: 'Berhasil',
         description: 'Order berhasil dibuat',

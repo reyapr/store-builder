@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 'use client'
 
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
@@ -26,7 +25,7 @@ export const revalidate = 300
 
 export default function Home() {
   const [query, setQuery] = useState<string>('')
-  const [_, setSelectedDate] = useState(new Date())
+  const [, setSelectedDate] = useState(new Date())
 
   const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 })
   const weekEnd = endOfWeek(new Date(), { weekStartsOn: 1 })
@@ -62,12 +61,12 @@ export default function Home() {
 
   const sortProducts = (a: any, b: any) =>
     new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1
-  const {
-    data: products,
-    isFetching: isFetchingProducts,
-    error: isErrorProducts,
-    refetch: refetchProducts
-  } = useGetProducts({ q: query })
+
+  console.log('------------_>')
+
+  const { data: products, refetch: refetchProducts } = useGetProducts({
+    q: query
+  })
 
   const weekDates = useMemo(() => {
     return Array(7)

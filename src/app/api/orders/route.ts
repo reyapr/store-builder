@@ -7,7 +7,7 @@ import { EOrderStatus } from '@/constants/order'
 import { inngest } from '@/inngest/client'
 import { IOrderRequest } from '@/interfaces/order'
 import { IProductCart } from '@/interfaces/product'
-import { generateOrderText } from '@/utils/order'
+import { generateOrderHtmlEmail } from '@/utils/order'
 
 const promiseUpdateStock = (trx: PrismaClient, items: IProductCart[]) =>
   Promise.all(
@@ -109,8 +109,8 @@ export async function POST(request: Request) {
           name: 'email/send',
           data: {
             recipientEmail: orderer.email,
-            subject: `Order berhasil dibuat - order #${order.number}`,
-            text: generateOrderText({
+            subject: `Order #${order.number} berhasil dibuat - order `,
+            html: generateOrderHtmlEmail({
               totalPrice,
               items,
               customer: orderer,
@@ -129,7 +129,7 @@ export async function POST(request: Request) {
       data: {
         recipientEmail: orderer.email,
         subject: `Order berhasil dibuat - order #${order.number}`,
-        text: generateOrderText({
+        html: generateOrderHtmlEmail({
           totalPrice,
           items,
           customer: orderer,

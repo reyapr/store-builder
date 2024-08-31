@@ -33,12 +33,20 @@ export async function GET(request: Request) {
     const customerParams = {
       name: data.session?.user?.user_metadata?.full_name,
       email: data.session?.user?.email || "",
-      phoneNumber: data.session?.user?.user_metadata?.phone_number,
+      phoneNumber: data.session?.user?.user_metadata?.phone_number || "",
     }
 
     try {
-      await prisma.customer.create({
-        data: { ...customerParams }
+      await prisma.customer.upsert({
+        where: {
+          email: customerParams.email, // Assuming email is unique
+        },
+        update: {
+          ...customerParams,
+        },
+        create: {
+          ...customerParams,
+        },
       })
       return NextResponse.redirect(`${origin}/dashboard`)
     }catch(err){

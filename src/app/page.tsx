@@ -22,6 +22,8 @@ import TabContent from '@/components/homepage/TabContent'
 import { IProduct, ISchedule } from '@/interfaces'
 import { cartStore } from '@/stores/useCart'
 
+export const revalidate = 300
+
 export default function Home() {
   const [query, setQuery] = useState<string>('')
   const [_, setSelectedDate] = useState(new Date())

@@ -6,7 +6,7 @@ import { inngest } from './client'
 
 export const sendEmail = inngest.createFunction(
   { id: 'Send Email' },
-  { event: 'send/gmail' },
+  { event: 'email/send' },
   async ({ event, step }) => {
     const { recipientEmail, subject, html } = event.data
     const { NODE_ENV, BCC_EMAILS_DEV, BCC_EMAILS_PROD} = process.env

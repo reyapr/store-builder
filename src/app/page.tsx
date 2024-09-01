@@ -21,8 +21,6 @@ import TabContent from '@/components/homepage/TabContent'
 import { IProduct, ISchedule } from '@/interfaces'
 import { cartStore } from '@/stores/useCart'
 
-export const revalidate = 300
-
 export default function Home() {
   const [query, setQuery] = useState<string>('')
   const [, setSelectedDate] = useState(new Date())
@@ -61,8 +59,6 @@ export default function Home() {
 
   const sortProducts = (a: any, b: any) =>
     new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1
-
-  console.log('------------_>')
 
   const { data: products, refetch: refetchProducts } = useGetProducts({
     q: query

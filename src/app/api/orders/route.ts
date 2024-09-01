@@ -5,7 +5,6 @@ import nodemailer from 'nodemailer'
 import { prisma } from '@/app/api/config'
 import { createOrderSchema } from '@/app/api/validator'
 import { EOrderStatus } from '@/constants/order'
-import { inngest } from '@/inngest/client'
 import { IOrderRequest } from '@/interfaces/order'
 import { IProductCart } from '@/interfaces/product'
 import { generateOrderHtmlEmail } from '@/utils/order'
@@ -121,20 +120,6 @@ export async function POST(request: Request) {
       },
       { timeout: 20000, maxWait: 18000 }
     )
-
-    await inngest.send({
-      name: 'email/send',
-      data: {
-        recipientEmail: orderer.email,
-        subject: `Order #${order.number} berhasil dibuat`,
-        html: generateOrderHtmlEmail({
-          totalPrice,
-          items,
-          customer: orderer,
-          orderId: order.id
-        })
-      }
-    })
 
     return NextResponse.json(
       { order, message: 'Success to order' },

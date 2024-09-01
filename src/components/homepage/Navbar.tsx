@@ -82,7 +82,7 @@ export default function Navbar({ storeName }: Props) {
             </Link>
           ) : (
             <Link href={`/`}>
-              <Image src="logo.png" alt="BAF Kitchen" height="56px" />
+              <Image src="/logo.png" alt="BAF Kitchen" height="56px" />
             </Link>
           )}
         </HStack>

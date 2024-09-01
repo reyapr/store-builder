@@ -10,19 +10,20 @@ import {
   useColorModeValue
 } from '@chakra-ui/react'
 
-import { Sidebar } from '@/components'
+import { SidebarAdmin, SidebarCustomer } from '@/components'
 import { Error, Loading } from '@/components/shared'
 
 export default function Layout({
   children,
   breadcrumbs,
   error,
+  isAdmin = true,
   isFetching,
   rightHeaderComponent
 }: Props) {
   return (
     <HStack align="start" spacing={0}>
-      <Sidebar />
+      {isAdmin ? <SidebarAdmin /> : <SidebarCustomer />}
       <Box
         as="main"
         ml={{ base: 0, lg: '60' }}
@@ -78,6 +79,7 @@ type Props = {
   error?: Error
   isFetching?: boolean
   rightHeaderComponent?: ReactNode
+  isAdmin?: boolean
   breadcrumbs?: {
     label: string
     path: string

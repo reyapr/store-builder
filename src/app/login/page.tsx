@@ -1,57 +1,75 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 
 import {
   Flex,
   Stack,
   Heading,
-  Modal,
-  ModalOverlay,
-  ModalContent,
   useColorModeValue,
-  useDisclosure
+  Input,
+  Button,
+  Text,
+  Link
 } from '@chakra-ui/react'
+import { initializeApp } from 'firebase/app'
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider
+} from 'firebase/auth'
 
-import { createClient } from '@/utils/supabase/client'
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: 'AIzaSyC7zWfKjaT1kIiuzyU8SDXUmVC381oywXw',
+  authDomain: 'bafstore-f2842.firebaseapp.com',
+  projectId: 'bafstore-f2842',
+  storageBucket: 'bafstore-f2842.appspot.com',
+  messagingSenderId: '459650481467',
+  appId: '1:459650481467:web:c063c8973d303e2a7bcb1e',
+  measurementId: 'G-0EQKXM9ZY0'
+}
+// Initialize Firebase
+const app = initializeApp(firebaseConfig)
+const auth = getAuth(app)
 
 export default function SimpleCard() {
-  const { isOpen, onClose } = useDisclosure()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const [isSignUp, setIsSignUp] = useState(false)
 
-  const getURL = () => {
-    let url =
-      process?.env?.NEXT_PUBLIC_SITE_URL ?? // Set this to your site URL in production env.
-      process?.env?.NEXT_PUBLIC_VERCEL_URL ?? // Automatically set by Vercel.
-      'http://localhost:3000/'
-
-    // Make sure to include `https://` when not localhost.
-    url = url.includes('http') ? url : `https://${url}`
-    // Make sure to include a trailing `/api/auth/callback`.
-    url =
-      url.charAt(url.length - 1) === '/'
-        ? url + 'api/auth/callback'
-        : `${url}/api/auth/callback`
-    return url
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value)
   }
 
-  const supabase = createClient()
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value)
+  }
 
-  const handleGoogleLogin = async () => {
+  const handleEmailPasswordAuth = async () => {
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: getURL(),
-          queryParams: { role: 'customer' }
-        }
-      })
-      if (error) {
-        console.error('Error signing in with Google', error)
+      let userCredential
+      if (isSignUp) {
+        userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        )
+        console.log('User signed up:', userCredential.user)
       } else {
-        console.log('User:', data)
+        userCredential = await signInWithEmailAndPassword(auth, email, password)
+        console.log('User signed in:', userCredential.user)
       }
+      // Here you can redirect the user or update your app state
     } catch (error) {
-      console.log(error, 'error')
+      console.error(
+        `Error ${isSignUp ? 'signing up' : 'signing in'} with email/password`,
+        error
+      )
+      setError((error as Error).message)
     }
   }
 
@@ -62,17 +80,11 @@ export default function SimpleCard() {
       justify={'center'}
       bg={useColorModeValue('gray.50', 'gray.800')}
     >
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <Flex p={6}>
-            Harap hubungi admin bazaf untuk mendaftar sebagai vendor.
-          </Flex>
-        </ModalContent>
-      </Modal>
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
         <Stack align={'center'}>
-          <Heading fontSize={'4xl'}>Customer Login</Heading>
+          <Heading fontSize={'4xl'}>
+            Customer {isSignUp ? 'Sign Up' : 'Login'}
+          </Heading>
         </Stack>
         <Stack
           align={'center'}
@@ -81,13 +93,29 @@ export default function SimpleCard() {
           boxShadow={'lg'}
           p={8}
         >
-          <Stack spacing={4}>
-            <button
-              className="google-sign-in-button"
-              onClick={handleGoogleLogin}
-            >
-              Login dengan google
-            </button>
+          <Stack spacing={4} width="100%">
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={handleEmailChange}
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={handlePasswordChange}
+            />
+            <Button onClick={handleEmailPasswordAuth}>
+              {isSignUp ? 'Sign Up' : 'Login'}
+            </Button>
+            {error && <Text color="red.500">{error}</Text>}
+            <Text align="center">
+              {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
+              <Link color="blue.500" onClick={() => setIsSignUp(!isSignUp)}>
+                {isSignUp ? 'Login' : 'Sign Up'}
+              </Link>
+            </Text>
           </Stack>
         </Stack>
       </Stack>

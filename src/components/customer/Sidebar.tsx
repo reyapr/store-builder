@@ -24,10 +24,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import {
   AiOutlineLogout,
   AiOutlineShop,
-  AiOutlineShopping,
-  AiOutlineShoppingCart,
-  AiOutlineTags,
-  AiOutlineCalendar
+  AiOutlineShopping
 } from 'react-icons/ai'
 
 import { ADMIN_LOGIN_PATH } from '@/constants/auth'
@@ -57,33 +54,15 @@ const Sidebar = ({ ...rest }: Props) => {
   const listItems: SidebarMenuItem[] = [
     {
       id: 1,
-      text: 'Toko',
-      path: '/admin/stores',
+      text: 'Home',
+      path: '/dashboard',
       icon: AiOutlineShop
     },
     {
       id: 2,
-      text: 'Produk',
-      path: '/admin/products',
+      text: 'Setting',
+      path: '/dashboard/settings',
       icon: AiOutlineShopping
-    },
-    {
-      id: 3,
-      text: 'Order',
-      path: '/admin/orders',
-      icon: AiOutlineShoppingCart
-    },
-    {
-      id: 4,
-      text: 'Kategori',
-      path: '/admin/categories',
-      icon: AiOutlineTags
-    },
-    {
-      id: 5,
-      text: 'Jadwal',
-      path: '/admin/schedules',
-      icon: AiOutlineCalendar
     },
     {
       id: 6,

@@ -48,7 +48,7 @@ export async function GET(request: Request) {
           ...customerParams,
         },
       })
-      return NextResponse.redirect(`${origin}/dashboard`)
+      return NextResponse.redirect(`${origin}/admin`)
     }catch(err){
         console.log({ err })
         return NextResponse.json([err, error], {status: 500})

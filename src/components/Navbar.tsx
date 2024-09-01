@@ -4,7 +4,7 @@ import { Box, Flex, Button, useColorModeValue, Stack } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-import { DASHBOARD_LOGIN_PATH } from '@/constants/auth'
+import { ADMIN_LOGIN_PATH } from '@/constants/auth'
 import { createClient } from '@/utils/supabase/client'
 
 export default function Navbar() {
@@ -19,7 +19,7 @@ export default function Navbar() {
       if (error) {
         console.error('Error logging out:', error)
       }
-      router.push(DASHBOARD_LOGIN_PATH)
+      router.push(ADMIN_LOGIN_PATH)
     } catch (error) {
       console.log(error, 'error')
     }

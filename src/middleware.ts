@@ -1,7 +1,7 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-import { DASHBOARD_LOGIN_PATH } from '@/constants/auth'
+import { ADMIN_LOGIN_PATH } from '@/constants/auth'
 
 const initSupabase = (request: NextRequest, response: NextResponse) => {
   return createServerClient(
@@ -66,11 +66,11 @@ export async function middleware(request: NextRequest) {
   const { data } = await supabase.auth.getSession()
 
   // protected route
-  if (!data.session && path !== DASHBOARD_LOGIN_PATH) {
-    response = NextResponse.redirect(new URL(DASHBOARD_LOGIN_PATH, request.url))
+  if (!data.session && path !== ADMIN_LOGIN_PATH) {
+    response = NextResponse.redirect(new URL(ADMIN_LOGIN_PATH, request.url))
   }
 
-  if (data.session && path === DASHBOARD_LOGIN_PATH) {
+  if (data.session && path === ADMIN_LOGIN_PATH) {
     response = NextResponse.redirect(new URL('/admin', request.url))
   }
 

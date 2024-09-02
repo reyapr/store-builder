@@ -16,7 +16,7 @@ import {
 
 import { createClient } from '@/utils/supabase/client'
 
-export default function SimpleCard() {
+export default function AdminLoginPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const getURL = () => {
@@ -32,7 +32,7 @@ export default function SimpleCard() {
       url.charAt(url.length - 1) === '/'
         ? url + 'api/auth/callback'
         : `${url}/api/auth/callback`
-    console.log('url')
+    console.log('redirectUrl', url)
     return url
   }
 

@@ -73,6 +73,18 @@ export default function SimpleCard() {
     }
   }
 
+  const handleGoogleLogin = async () => {
+    try {
+      const provider = new GoogleAuthProvider()
+      const result = await signInWithPopup(auth, provider)
+      console.log('User signed in with Google:', result.user)
+      // Here you can redirect the user or update your app state
+    } catch (error) {
+      console.error('Error signing in with Google', error)
+      setError((error as Error).message)
+    }
+  }
+
   return (
     <Flex
       minH={'100vh'}
@@ -110,6 +122,8 @@ export default function SimpleCard() {
               {isSignUp ? 'Sign Up' : 'Login'}
             </Button>
             {error && <Text color="red.500">{error}</Text>}
+            <Button onClick={handleGoogleLogin}>Login with Google</Button>
+
             <Text align="center">
               {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
               <Link color="blue.500" onClick={() => setIsSignUp(!isSignUp)}>

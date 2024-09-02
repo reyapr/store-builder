@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const url = new URL(request.url)
   const { searchParams, origin } = url
   const code = searchParams.get('code')
-
+  console.log("---------------------------0", code)
   if (code) {
     const cookieStore = cookies()
     const supabase = createServerClient(
@@ -32,26 +32,29 @@ export async function GET(request: Request) {
     const { data } = await supabase.auth.getSession()
     const customerParams = {
       name: data.session?.user?.user_metadata?.full_name,
-      email: data.session?.user?.email || "",
-      phoneNumber: data.session?.user?.user_metadata?.phone_number || "",
+      email: data.session?.user?.email || '',
+      phoneNumber: data.session?.user?.user_metadata?.phone_number || ''
     }
 
+    console.log("---------------------------1", code)
     try {
       await prisma.customer.upsert({
         where: {
-          email: customerParams.email, // Assuming email is unique
+          email: customerParams.email // Assuming email is unique
         },
         update: {
-          ...customerParams,
+          ...customerParams
         },
         create: {
-          ...customerParams,
-        },
+          ...customerParams
+        }
       })
+      console.log("---------------------------2")
       return NextResponse.redirect(`${origin}/admin`)
-    }catch(err){
-        console.log({ err })
-        return NextResponse.json([err, error], {status: 500})
+    } catch (err) {
+      console.log("---------------------------3")
+      console.log({ err })
+      return NextResponse.json([err, error], { status: 500 })
     }
   }
 

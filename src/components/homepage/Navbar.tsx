@@ -13,13 +13,15 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
-  Tag
+  Tag,
+  Text
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { FaCartShopping } from 'react-icons/fa6'
 
 import { useStore } from '@/app/s/[storeName]/useStore'
 import { cartStore } from '@/stores/useCart'
+import { useAuth } from '@/app/UserProvider'
 
 interface navLinkProps {
   children: React.ReactNode
@@ -30,7 +32,6 @@ const NavLink = (props: navLinkProps) => {
   const { children } = props
   return (
     <Box
-      as="a"
       px={2}
       py={1}
       rounded={'md'}
@@ -38,7 +39,6 @@ const NavLink = (props: navLinkProps) => {
         textDecoration: 'none',
         bg: useColorModeValue('gray.200', 'gray.700')
       }}
-      href={'#'}
     >
       {children}
     </Box>
@@ -48,6 +48,7 @@ const NavLink = (props: navLinkProps) => {
 export default function Navbar({ storeName }: Props) {
   const cart = useStore(cartStore, (state) => state, 'app')
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { user } = useAuth()
 
   return (
     <Box
@@ -63,7 +64,7 @@ export default function Navbar({ storeName }: Props) {
     >
       <Flex
         h={16}
-        w={['100%', 1180]}
+        w={['100%', '100%', '100%', '100%', 1180]}
         mx="auto"
         alignItems={'center'}
         justifyContent={'space-between'}
@@ -87,6 +88,17 @@ export default function Navbar({ storeName }: Props) {
           )}
         </HStack>
         <Flex alignItems={'center'}>
+          <Flex display={{ sm: 'none', md: 'flex' }} mr={2}>
+            {user ? (
+              <Text ml={3}>{user.displayName}</Text>
+            ) : (
+              <Link href="/login">
+                <Button colorScheme="green" variant="outline" size="sm" ml={4}>
+                  Login
+                </Button>
+              </Link>
+            )}
+          </Flex>
           <Flex position="relative">
             <Link href="/cart">
               <Tag
@@ -102,17 +114,21 @@ export default function Navbar({ storeName }: Props) {
               <FaCartShopping color="green" size={24} />
             </Link>
           </Flex>
-          <Link href="/login">
-            <Button colorScheme="green" variant="outline" size="sm" ml={4}>
-              Login
-            </Button>
-          </Link>
         </Flex>
       </Flex>
 
       {isOpen ? (
         <Box pb={4} display={{ md: 'none' }}>
           <Stack as={'nav'} spacing={4}></Stack>
+          <NavLink>
+            {user ? (
+              <Text ml={3}>{user.displayName}</Text>
+            ) : (
+              <Link href="/login">
+                <Text w="full">Login</Text>
+              </Link>
+            )}
+          </NavLink>
         </Box>
       ) : null}
     </Box>

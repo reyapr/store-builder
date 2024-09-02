@@ -2,13 +2,18 @@
 
 import React, { useState } from 'react'
 
-import { Flex, Stack, useColorModeValue, Text } from '@chakra-ui/react'
+import { AiFillHome } from 'react-icons/ai'
+import { Center, Flex, Stack, useColorModeValue, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/navigation'
 
 import { handleGoogleLogin, saveUserToFirestore } from '@/utils/firebase'
 
+import { useAuth } from '@/app/UserProvider'
+import Link from 'next/link'
+
 export default function SimpleCard() {
   const router = useRouter()
+  const { user } = useAuth()
   const [error, setError] = useState<string | null>(null)
 
   const handleLogin = async () => {
@@ -38,6 +43,14 @@ export default function SimpleCard() {
     })
   }
 
+  if (user) {
+    return (
+      <Center bg="honeydew" h="100px" color="white">
+        Redirecting
+      </Center>
+    )
+  }
+
   return (
     <Flex
       minH={'100vh'}
@@ -46,6 +59,15 @@ export default function SimpleCard() {
       bg={useColorModeValue('gray.50', 'gray.800')}
     >
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+        <Stack>
+          <Link href="/">
+            <Flex align="center" gap={1}>
+              {`<`}
+              <Text>Kembali</Text>
+              <AiFillHome />
+            </Flex>
+          </Link>
+        </Stack>
         <Stack
           align={'center'}
           rounded={'lg'}

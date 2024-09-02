@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 
 import {
+  Center,
   Flex,
   Stack,
   Button,
@@ -18,8 +19,11 @@ import { useRouter } from 'next/navigation'
 
 import { handleGoogleLogin, saveUserToFirestore } from '@/utils/firebase'
 
+import { useAuth } from '@/app/UserProvider'
+
 export default function AdminLoginPage() {
   const router = useRouter()
+  const { user } = useAuth()
 
   const [error, setError] = useState<string | null>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -49,6 +53,14 @@ export default function AdminLoginPage() {
         )
       }
     })
+  }
+
+  if (user) {
+    return (
+      <Center bg="honeydew" h="100px" color="white">
+        Redirecting
+      </Center>
+    )
   }
 
   return (

@@ -42,10 +42,10 @@ export default function Layout({
       <VStack
         gap={6}
         mt="64px"
-        w={['100%', 1200]}
+        w={['100%', '100%', '100%', '100%', 1200]}
         minH={['auto', '100vh']}
         mx="auto"
-        p={[3, 0]}
+        p={[3, 3, 4, 5, 0]}
       >
         {onSearch && (
           <Stack spacing={4} w="full" mt={6}>

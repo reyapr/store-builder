@@ -10,7 +10,7 @@ import {
   GoogleAuthProvider,
   type User
 } from 'firebase/auth'
-import { getFirestore, doc, setDoc } from 'firebase/firestore'
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAmMxlkpxZWaKdMLJCfJejYRxoZuA4iETk',
@@ -103,6 +103,9 @@ export async function saveUserToFirestore(
   try {
     const userRef = doc(db, 'users', user.uid)
 
+    const docSnapshot = await getDoc(userRef);
+
+    
     // Prepare the user data object
     const userData = {
       uid: user.uid,
@@ -113,8 +116,14 @@ export async function saveUserToFirestore(
       role: role
     }
 
+    if (docSnapshot.exists()) {
+      options?.onSuccess?.(docSnapshot.data() as UserArgs)
+      console.log('User data existed')
+      return 
+    }
+
     // Save the user data to Firestore
-    await setDoc(userRef, userData, { merge: true })
+    await setDoc(userRef, userData, { merge: false })
     console.log('User data saved successfully to Firestore')
     options?.onSuccess?.(user)
   } catch (error) {

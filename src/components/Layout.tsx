@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from 'react'
+import React, { ReactNode } from 'react'
 
 import {
   Box,
@@ -9,7 +9,6 @@ import {
   HStack,
   useColorModeValue
 } from '@chakra-ui/react'
-import { useRouter } from 'next/navigation'
 
 import { useAuth } from '@/app/UserProvider'
 import { SidebarAdmin, SidebarCustomer } from '@/components'
@@ -23,19 +22,8 @@ export default function Layout({
   isFetching,
   rightHeaderComponent
 }: Props) {
-  const router = useRouter()
-  const { user, loading } = useAuth()
+  const { user } = useAuth()
   const bgColor = useColorModeValue('gray.50', 'gray.900')
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/admin/login')
-    }
-  }, [user, loading, router])
-
-  if (loading) {
-    return <Loading />
-  }
 
   if (user) {
     return (

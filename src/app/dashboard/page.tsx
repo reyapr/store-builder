@@ -1,16 +1,29 @@
+'use client'
+
 import React from 'react'
 
-import { Flex } from '@chakra-ui/react'
+import { Flex, Stack, Text } from '@chakra-ui/react'
 
-export default async function HomeDashboard() {
+import { Layout } from '@/components'
+
+export default function HomeDashboard() {
+  const breadcrumbs = [{ label: 'Dashboard', path: '/dashboard' }]
+
   return (
-    <Flex
-      style={{
-        display: 'flex',
-        flex: 11,
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-    ></Flex>
+    <Layout breadcrumbs={breadcrumbs} isAdmin={false}>
+      <Flex
+        style={{
+          display: 'flex',
+          flex: 11,
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <Stack>
+          <Text>Halaman customer sedang dalam development</Text>
+          <Text>berisikan informasi rekap order yang diterima</Text>
+        </Stack>
+      </Flex>
+    </Layout>
   )
 }

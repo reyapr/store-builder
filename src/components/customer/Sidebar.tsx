@@ -28,28 +28,14 @@ import {
 } from 'react-icons/ai'
 
 import { ADMIN_LOGIN_PATH } from '@/constants/auth'
-import { createClient } from '@/utils/supabase/client'
+import { handleLogout } from '@/utils/firebase'
 
 const Sidebar = ({ ...rest }: Props) => {
   const pathname = usePathname()
-  const supabase = createClient()
+
   const router = useRouter()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-
-  const handleLogout = async () => {
-    try {
-      const { error } = await supabase.auth.signOut({ scope: 'local' })
-      document.cookie =
-        'sb-qviqbtgkunhmasnzbmoh-auth-token-code-verifier=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
-      if (error) {
-        console.error('Error logging out:', error)
-      }
-      router.replace(ADMIN_LOGIN_PATH)
-    } catch (error) {
-      console.log(error, 'error')
-    }
-  }
 
   const listItems: SidebarMenuItem[] = [
     {
@@ -107,7 +93,7 @@ const Sidebar = ({ ...rest }: Props) => {
       <Link href="/admin">
         <HStack p="2.5" h="57px" justify="space-between">
           <Heading as="h1" size="md">
-            Admin Dashboard
+            Customer Dashboard
           </Heading>
         </HStack>
       </Link>
@@ -143,7 +129,17 @@ const Sidebar = ({ ...rest }: Props) => {
             <Button variant="ghost" onClick={onClose}>
               Batal
             </Button>
-            <Button colorScheme="red" mr={3} onClick={handleLogout}>
+            <Button
+              colorScheme="red"
+              mr={3}
+              onClick={() =>
+                handleLogout({
+                  onLogout() {
+                    router.replace(ADMIN_LOGIN_PATH)
+                  }
+                })
+              }
+            >
               Logout
             </Button>
           </ModalFooter>

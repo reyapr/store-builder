@@ -25,6 +25,7 @@ export default function Layout({
 }: Props) {
   const router = useRouter()
   const { user, loading } = useAuth()
+  const bgColor = useColorModeValue('gray.50', 'gray.900')
 
   useEffect(() => {
     if (!loading && !user) {
@@ -45,7 +46,7 @@ export default function Layout({
           ml={{ base: 0, lg: '60' }}
           w="full"
           minH="90vh"
-          bg={useColorModeValue('gray.50', 'gray.900')}
+          bg={bgColor}
         >
           {!!breadcrumbs?.length && (
             <Flex

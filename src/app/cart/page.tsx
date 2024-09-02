@@ -31,6 +31,7 @@ import { toFormikValidationSchema } from 'zod-formik-adapter'
 
 import OrdererInput from '@/app/s/[storeName]/cart/components/OrdererInput'
 import { useStore } from '@/app/s/[storeName]/useStore'
+import { useAuth } from '@/app/UserProvider'
 import { Layout } from '@/components/homepage'
 import NumberInput from '@/components/NumberInput'
 import { IProduct, IOrder } from '@/interfaces'
@@ -43,6 +44,7 @@ export default function CartPage({ params }: Props) {
   const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef(null)
+  const { user } = useAuth()
   const cart = useStore(cartStore, (state) => state, 'app')
   const items = (cart.getProducts && cart.getProducts()) || []
   const totalCartPrice = cart.getTotalPrice && cart.getTotalPrice()
@@ -85,9 +87,9 @@ export default function CartPage({ params }: Props) {
     isSubmitting
   } = useFormik<IOrder.IOrdererInputForm>({
     initialValues: {
-      name: '',
-      phoneNumber: '',
-      email: '',
+      name: user?.displayName || '',
+      phoneNumber: user?.phoneNumber || '',
+      email: user?.email || '',
       address: ''
     },
     validateOnChange: true,

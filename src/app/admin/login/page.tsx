@@ -15,11 +15,12 @@ import {
   useColorModeValue,
   useDisclosure
 } from '@chakra-ui/react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-
-import { handleGoogleLogin, saveUserToFirestore } from '@/utils/firebase'
+import { AiFillHome } from 'react-icons/ai'
 
 import { useAuth } from '@/app/UserProvider'
+import { handleGoogleLogin, saveUserToFirestore } from '@/utils/firebase'
 
 export default function AdminLoginPage() {
   const router = useRouter()
@@ -27,6 +28,8 @@ export default function AdminLoginPage() {
 
   const [error, setError] = useState<string | null>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const bgColor = useColorModeValue('gray.50', 'gray.800')
+  const bgColor2 = useColorModeValue('white', 'gray.700')
 
   const handleLogin = async () => {
     await handleGoogleLogin({
@@ -64,12 +67,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <Flex
-      minH={'100vh'}
-      align={'center'}
-      justify={'center'}
-      bg={useColorModeValue('gray.50', 'gray.800')}
-    >
+    <Flex minH={'100vh'} align={'center'} justify={'center'} bg={bgColor}>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -79,25 +77,36 @@ export default function AdminLoginPage() {
         </ModalContent>
       </Modal>
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
-        <Stack align={'center'}>
-          <Heading fontSize={'4xl'}>Admin Dashboard</Heading>
+        <Stack>
+          <Link href="/">
+            <Flex align="center" gap={1}>
+              {`<`}
+              <Text>Kembali</Text>
+              <AiFillHome />
+            </Flex>
+          </Link>
         </Stack>
-        <Stack
-          align={'center'}
-          rounded={'lg'}
-          bg={useColorModeValue('white', 'gray.700')}
-          boxShadow={'lg'}
-          p={8}
-        >
-          <Stack spacing={4}>
-            {error && <Text color="red.500">{error}</Text>}
-            <button className="google-sign-in-button" onClick={handleLogin}>
-              Login dengan google
-            </button>
+        <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+          <Stack align={'center'}>
+            <Heading fontSize={'4xl'}>Admin Dashboard</Heading>
           </Stack>
-          <Button my={4} size="xs" onClick={onOpen}>
-            Daftar menjadi vendor
-          </Button>
+          <Stack
+            align={'center'}
+            rounded={'lg'}
+            bg={bgColor2}
+            boxShadow={'lg'}
+            p={8}
+          >
+            <Stack spacing={4}>
+              {error && <Text color="red.500">{error}</Text>}
+              <button className="google-sign-in-button" onClick={handleLogin}>
+                Login dengan google
+              </button>
+            </Stack>
+            <Button my={4} size="xs" onClick={onOpen}>
+              Daftar menjadi vendor
+            </Button>
+          </Stack>
         </Stack>
       </Stack>
     </Flex>

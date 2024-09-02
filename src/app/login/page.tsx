@@ -2,19 +2,21 @@
 
 import React, { useState } from 'react'
 
-import { AiFillHome } from 'react-icons/ai'
 import { Center, Flex, Stack, useColorModeValue, Text } from '@chakra-ui/react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-
-import { handleGoogleLogin, saveUserToFirestore } from '@/utils/firebase'
+import { AiFillHome } from 'react-icons/ai'
 
 import { useAuth } from '@/app/UserProvider'
-import Link from 'next/link'
+import { handleGoogleLogin, saveUserToFirestore } from '@/utils/firebase'
 
 export default function SimpleCard() {
   const router = useRouter()
   const { user } = useAuth()
   const [error, setError] = useState<string | null>(null)
+
+  const bgColor = useColorModeValue('gray.50', 'gray.800')
+  const bgColor2 = useColorModeValue('white', 'gray.700')
 
   const handleLogin = async () => {
     await handleGoogleLogin({
@@ -52,12 +54,7 @@ export default function SimpleCard() {
   }
 
   return (
-    <Flex
-      minH={'100vh'}
-      align={'center'}
-      justify={'center'}
-      bg={useColorModeValue('gray.50', 'gray.800')}
-    >
+    <Flex minH={'100vh'} align={'center'} justify={'center'} bg={bgColor}>
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
         <Stack>
           <Link href="/">
@@ -71,7 +68,7 @@ export default function SimpleCard() {
         <Stack
           align={'center'}
           rounded={'lg'}
-          bg={useColorModeValue('white', 'gray.700')}
+          bg={bgColor2}
           boxShadow={'lg'}
           p={8}
         >

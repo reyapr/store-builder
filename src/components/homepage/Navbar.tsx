@@ -20,8 +20,8 @@ import Link from 'next/link'
 import { FaCartShopping } from 'react-icons/fa6'
 
 import { useStore } from '@/app/s/[storeName]/useStore'
-import { cartStore } from '@/stores/useCart'
 import { useAuth } from '@/app/UserProvider'
+import { cartStore } from '@/stores/useCart'
 
 interface navLinkProps {
   children: React.ReactNode
@@ -88,7 +88,7 @@ export default function Navbar({ storeName }: Props) {
           )}
         </HStack>
         <Flex alignItems={'center'}>
-          <Flex display={{ sm: 'none', md: 'flex' }} mr={2}>
+          <Flex display={{ base: 'none', md: 'flex' }} mr={2}>
             {user ? (
               <Text ml={3}>{user.displayName}</Text>
             ) : (

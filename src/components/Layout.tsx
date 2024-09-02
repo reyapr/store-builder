@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react'
 
+import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 import {
   Box,
   Breadcrumb,
@@ -7,7 +8,9 @@ import {
   BreadcrumbLink,
   Flex,
   HStack,
-  useColorModeValue
+  IconButton,
+  useColorModeValue,
+  useDisclosure
 } from '@chakra-ui/react'
 
 import { useAuth } from '@/app/UserProvider'
@@ -23,11 +26,19 @@ export default function Layout({
   rightHeaderComponent
 }: Props) {
   const { user } = useAuth()
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const bgColor = useColorModeValue('gray.50', 'gray.900')
 
   if (user) {
     return (
       <HStack align="start" spacing={0}>
+        <IconButton
+          size={'md'}
+          icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+          aria-label={'Open Menu'}
+          display={{ md: 'none' }}
+          onClick={isOpen ? onClose : onOpen}
+        />
         {isAdmin ? <SidebarAdmin /> : <SidebarCustomer />}
         <Box
           as="main"

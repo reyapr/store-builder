@@ -10,7 +10,7 @@ import React, {
 } from 'react'
 
 import { onAuthStateChanged, User } from 'firebase/auth'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 import { Loading } from '@/components/shared'
 import { auth } from '@/utils/firebase'
@@ -33,6 +33,7 @@ export const useAuth = () => useContext(UserContext)
 // Create a provider component
 export function UserProvider({ children }: { children: ReactNode }) {
   const router = useRouter()
+  const pathname = usePathname()
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -47,27 +48,30 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
-    if (!loading && !user) {
-      const loginPath = window.location.href.includes('admin')
-        ? '/admin/login'
-        : 'login'
-      router.replace(loginPath)
-    }
+    if (!loading) {
+      if (!user) {
+        if (pathname.includes('/dashboard')) {
+          router.replace('/login')
+        }
+        if (pathname.includes('/admin')) {
+          router.replace('/admin/login')
+        }
+      }
 
-    if (user) {
-      if (window.location.pathname === '/login') {
-        router.replace('/dashboard')
-      }
-      if (window.location.pathname === '/admin/login') {
-        router.replace('/admin')
+      if (user) {
+        if (pathname === '/login') {
+          router.replace('/dashboard')
+        }
+        if (pathname === '/admin/login') {
+          router.replace('/admin')
+        }
       }
     }
-  }, [user, loading, router])
+  }, [user, loading, pathname, router])
 
   return (
     <UserContext.Provider value={{ user, loading }}>
-      {loading && <Loading />}
-      {children}
+      {loading ? <Loading /> : children}
     </UserContext.Provider>
   )
 }

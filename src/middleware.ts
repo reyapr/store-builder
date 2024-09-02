@@ -52,29 +52,29 @@ const initSupabase = (request: NextRequest, response: NextResponse) => {
 }
 
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({
+  return NextResponse.next({
     request: {
       headers: request.headers
     }
   })
 
-  const supabase = initSupabase(request, response)
+  // const supabase = initSupabase(request, response)
 
-  const path = new URL(request.url).pathname
+  // const path = new URL(request.url).pathname
 
-  // refresh the session
-  const { data } = await supabase.auth.getSession()
+  // // refresh the session
+  // const { data } = await supabase.auth.getSession()
 
-  // protected route
-  if (!data.session && path !== ADMIN_LOGIN_PATH) {
-    response = NextResponse.redirect(new URL(ADMIN_LOGIN_PATH, request.url))
-  }
+  // // protected route
+  // if (!data.session && path !== ADMIN_LOGIN_PATH) {
+  //   response = NextResponse.redirect(new URL(ADMIN_LOGIN_PATH, request.url))
+  // }
 
-  if (data.session && path === ADMIN_LOGIN_PATH) {
-    response = NextResponse.redirect(new URL('/admin', request.url))
-  }
+  // if (data.session && path === ADMIN_LOGIN_PATH) {
+  //   response = NextResponse.redirect(new URL('/admin', request.url))
+  // }
 
-  return response
+  // return response
 }
 
 export const config = {

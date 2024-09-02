@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 
 import {
   Flex,
@@ -10,50 +10,45 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
+  Text,
   useColorModeValue,
   useDisclosure
 } from '@chakra-ui/react'
+import { useRouter } from 'next/navigation'
 
-import { createClient } from '@/utils/supabase/client'
+import { handleGoogleLogin, saveUserToFirestore } from '@/utils/firebase'
 
 export default function AdminLoginPage() {
+  const router = useRouter()
+
+  const [error, setError] = useState<string | null>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const getURL = () => {
-    let url =
-      process?.env?.NEXT_PUBLIC_SITE_URL ?? // Set this to your site URL in production env.
-      process?.env?.NEXT_PUBLIC_VERCEL_URL ?? // Automatically set by Vercel.
-      'http://localhost:3000/'
-
-    // Make sure to include `https://` when not localhost.
-    url = url.includes('http') ? url : `https://${url}`
-    // Make sure to include a trailing `/api/auth/callback`.
-    url =
-      url.charAt(url.length - 1) === '/'
-        ? url + 'api/auth/callback'
-        : `${url}/api/auth/callback`
-    console.log('redirectUrl', url)
-    return url
-  }
-
-  const supabase = createClient()
-
-  const handleGoogleLogin = async () => {
-    try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: getURL()
-        }
-      })
-      if (error) {
-        console.error('Error signing in with Google', error)
-      } else {
-        console.log('User:', data)
+  const handleLogin = async () => {
+    await handleGoogleLogin({
+      onError: setError,
+      onSuccess: (user) => {
+        const { uid, displayName, email, photoURL, phoneNumber } = user
+        saveUserToFirestore(
+          'admin',
+          {
+            uid,
+            displayName,
+            email,
+            photoURL,
+            phoneNumber
+          },
+          {
+            onError() {
+              setError('Error saving user to Firestore')
+            },
+            onSuccess() {
+              router.push('/admin/')
+            }
+          }
+        )
       }
-    } catch (error) {
-      console.log(error, 'error')
-    }
+    })
   }
 
   return (
@@ -83,10 +78,8 @@ export default function AdminLoginPage() {
           p={8}
         >
           <Stack spacing={4}>
-            <button
-              className="google-sign-in-button"
-              onClick={handleGoogleLogin}
-            >
+            {error && <Text color="red.500">{error}</Text>}
+            <button className="google-sign-in-button" onClick={handleLogin}>
               Login dengan google
             </button>
           </Stack>

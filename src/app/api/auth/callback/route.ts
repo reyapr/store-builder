@@ -8,7 +8,6 @@ export async function GET(request: Request) {
   const url = new URL(request.url)
   const { searchParams, origin } = url
   const code = searchParams.get('code')
-  console.log("---------------------------0", code)
   if (code) {
     const cookieStore = cookies()
     const supabase = createServerClient(
@@ -36,7 +35,6 @@ export async function GET(request: Request) {
       phoneNumber: data.session?.user?.user_metadata?.phone_number || ''
     }
 
-    console.log("---------------------------1", code)
     try {
       await prisma.customer.upsert({
         where: {

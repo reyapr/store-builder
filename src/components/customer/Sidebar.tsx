@@ -81,12 +81,10 @@ const Sidebar = ({ ...rest }: Props) => {
       as="aside"
       borderRight="2px"
       borderColor={useColorModeValue('gray.200', 'gray.900')}
-      w={{ base: '100%', lg: '60' }}
+      w="60"
       top="0"
-      pos="fixed"
       h="100%"
       minH="100vh"
-      bg="white"
       zIndex={99}
       {...rest}
     >

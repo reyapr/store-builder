@@ -104,7 +104,7 @@ export async function POST(request: Request) {
           }
         })
 
-        sendWithGmail({
+        await sendWithGmail({
           to: orderer.email,
           from: process.env.GMAIL_USER,
           subject: `Order #${order.number} berhasil dibuat`,

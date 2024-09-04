@@ -61,7 +61,8 @@ export default function CartPage({ params }: Props) {
       })
     },
     onError(error) {
-      let errorMessage = 'Gagal membuat pesanan. Silahkan coba lagi.'
+      let errorMessage =
+        error.message || 'Gagal membuat pesanan. Silahkan coba lagi.'
 
       if ((error as any).response.data.error.includes('out of stock')) {
         errorMessage = (error as any).response.data.error

@@ -22,7 +22,7 @@ export default function TabContent({
         <b>{date.formatDate(day)}</b>
       </Text>
       {date.getScheduleForDay(day, schedules).length > 0 ? (
-        <SimpleGrid columns={[1, 4]} gap={6}>
+        <SimpleGrid columns={[1, 2, 3, 4]} gap={6}>
           {date
             .getScheduleForDay(day, schedules)
             .flatMap((schedule) =>

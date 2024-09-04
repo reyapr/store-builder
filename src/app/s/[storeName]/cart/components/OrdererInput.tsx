@@ -19,44 +19,43 @@ export default function OrdererInput({
 }: IOrdererInputProps) {
   return (
     <>
-      <FormControl>
+      <FormControl isInvalid={!!errors?.name} mb={5}>
         <FormLabel>Nama:</FormLabel>
         <Input
           name="name"
           defaultValue={order.name}
           placeholder="Nama"
-          marginBottom={2}
           onChange={onChange}
           type="text"
         />
         <FormErrorMessage>{errors?.name}</FormErrorMessage>
       </FormControl>
 
-      <FormControl>
+      <FormControl isInvalid={!!errors?.phoneNumber} mb={5}>
         <FormLabel>Nomor Handphone:</FormLabel>
         <Input
           name="phoneNumber"
           defaultValue={order.phoneNumber}
           placeholder="No. Handphone"
-          marginBottom={2}
           onChange={onChange}
           type="number"
         />
         <FormErrorMessage>{errors?.phoneNumber}</FormErrorMessage>
       </FormControl>
 
-      <FormControl>
+      <FormControl isInvalid={!!errors?.email} mb={5}>
         <FormLabel>Email</FormLabel>
         <Input
           name="email"
           defaultValue={order.email}
           placeholder="Email"
-          marginBottom={2}
           onChange={onChange}
           type="email"
         />
         <FormErrorMessage>{errors?.email}</FormErrorMessage>
+      </FormControl>
 
+      <FormControl isInvalid={!!errors?.email} mb={5}>
         <FormLabel>Alamat Lengkap/Pengiriman:</FormLabel>
         <Textarea
           name="address"

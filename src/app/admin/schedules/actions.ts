@@ -19,11 +19,18 @@ import { ISchedule } from '@/interfaces'
 
 
 // Fungsi untuk mengambil data schedules menggunakan React Query
-export const getSchedules = ( start?: Date, end?: Date): UseQueryResult<ISchedule.ISchedule[], Error> =>
+export const getSchedules = (start?: Date, end?: Date): UseQueryResult<ISchedule.ISchedule[], Error> =>
   useQuery<ISchedule.ISchedule[], Error>({
-    queryKey: ['schedules'], // Ensure the query key is unique for different dates
+    queryKey: ['schedules', start, end], // Ensure the query key is unique for different dates
     queryFn: async () => {
-      const { data } = await axios.get('/api/schedules', { params: { start, end }});
+      const params = new URLSearchParams();
+      if (start) params.append('start', start.toISOString());
+      if (end) params.append('end', end.toISOString());
+      const response = await fetch(`/api/schedules?${params}`, { next: { revalidate: 3600}});
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
       return data.schedules;
     }
   });

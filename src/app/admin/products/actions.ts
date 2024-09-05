@@ -28,10 +28,10 @@ export const useGetProducts = (
   params?: IFetchProductRequest
 ): UseQueryResult<IProductResponse[], Error> =>
   useQuery<IProductResponse[], Error>({
-    queryKey: ['products'],
+    queryKey: ['products', params],
     queryFn: async () => {
       const queryString = params ? new URLSearchParams(params as any).toString() : ''
-      const response = await fetch(`/api/products?${queryString}`)
+      const response = await fetch(`/api/products?${queryString}`, { next: { revalidate: 3600}})
       if (!response.ok) throw new Error('Network response was not ok')
       const data = await response.json()
       return data.products

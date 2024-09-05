@@ -18,11 +18,12 @@ export const orderInputForm = z.object({
 
 export const adminProductForm = z.object({
   name: z.string({ required_error: 'Nama diperlukan' }),
-  price: z.string({ required_error: 'Harga diperlukan' }),
+  price: z.number({ required_error: 'Harga diperlukan' }),
   stock: z
     .number()
-    .min(0, 'Stok tidak bisa negatif')
-    .nonnegative('Stok diperlukan'),
+    .min(0, { message: 'Stok tidak bisa negatif' })
+    .nullable()
+    .optional(),
   storeId: z.string({ required_error: 'Toko diperlukan' }),
   categoryIds: z.array(z.string()).min(1, 'Setidaknya satu kategori diperlukan'),
   description: z.string().optional()

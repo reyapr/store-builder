@@ -1,12 +1,9 @@
 import { Prisma } from '@prisma/client'
-import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
 import { prisma } from '@/app/api/config'
 import { createProductSchema } from '@/app/api/validator'
-import { ISupabaseUploadResponse } from '@/interfaces/supabase'
-import { createClient } from '@/utils/supabase/server'
-
+import { uploadToFirebase } from '@/utils/firebase'
 
 export async function GET(request: NextRequest) {
   const storeName = request.nextUrl.searchParams.get('storeName')
@@ -64,36 +61,16 @@ export async function GET(request: NextRequest) {
   }
 }
 
-const generateUniqImageName = (name: string) => {
-  return `${name}_${crypto.randomUUID()}`
-}
-
-const updloadToSupabase = async (
-  image: File
-): Promise<ISupabaseUploadResponse> => {
-  if (process.env.BUCKET_NAME === undefined) {
-    throw new Error('BUCKET_NAME is not defined')
-  }
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
-
-  const uniqImageName = generateUniqImageName(image.name)
-
-  const response = await supabase.storage
-    .from(process.env.BUCKET_NAME)
-    .upload(uniqImageName, image, {
-      upsert: false
-    })
-
-  return response as ISupabaseUploadResponse
-}
 
 export async function POST(request: NextRequest) {
   const res = await request.formData()
   const requestJson = Object.fromEntries(res) as Record<string, any>
   requestJson.categoryIds = JSON.parse(requestJson.categoryIds as string)
   requestJson.price = Number(requestJson.price as string)
-  requestJson.stock = Number(requestJson.stock as string)
+
+  if(requestJson.stock){
+    requestJson.stock = Number(requestJson.stock as string)
+  }
 
   const createProductReq = createProductSchema.safeParse(requestJson)
   if (!createProductReq.success) {
@@ -103,45 +80,34 @@ export async function POST(request: NextRequest) {
 
   let imageUrl
   if (image.name) {
-    const { data, error } = await updloadToSupabase(image)
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+     try {
+      const data = await uploadToFirebase(image)
+      imageUrl = data.downloadURL
+    } catch (error) {
+      return NextResponse.json({ error: (error as Error).message }, { status: 500 })
     }
-
-    if (!data) {
-      return NextResponse.json(
-        { error: 'Image upload failed' },
-        { status: 500 }
-      )
-    }
-
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
-
     
-    const { data: storageData } = supabase.storage
-      .from(process.env.BUCKET_NAME as string)
-      .getPublicUrl(data.path)
-    imageUrl = storageData.publicUrl
   }
+
+  const productData: Prisma.ProductCreateInput = {
+    name: productRequest.name,
+    price: productRequest.price,
+    description: productRequest.description,
+    imageUrl: imageUrl,
+    store: {
+      connect: {
+        id: productRequest.storeId
+      }
+    },
+    categories: {
+      connect: productRequest.categoryIds.map((id: string) => ({ id }))
+    },
+    ...(productRequest.stock != null && { stock: productRequest.stock }) // Handle null and undefined
+  };
 
   try {
     const product = await prisma.product.create({
-      data: {
-        name: productRequest.name,
-        price: productRequest.price,
-        stock: productRequest.stock,
-        description: productRequest.description,
-        imageUrl: imageUrl,
-        store: {
-          connect: {
-            id: productRequest.storeId
-          }
-        },
-        categories: {
-          connect: productRequest.categoryIds.map((id: string) => ({ id }))
-        }
-      }
+      data: productData
     })
     return NextResponse.json(
       { product },

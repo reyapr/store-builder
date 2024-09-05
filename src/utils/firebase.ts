@@ -11,6 +11,7 @@ import {
   type User
 } from 'firebase/auth'
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
+import { deleteObject, getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAmMxlkpxZWaKdMLJCfJejYRxoZuA4iETk',
@@ -25,6 +26,7 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig)
 
 export const auth = getAuth(app)
+export const storage = getStorage(app)
 export const db = getFirestore(app, 'bafkitchen-db')
 
 export const handleGoogleLogin = async ({
@@ -103,9 +105,8 @@ export async function saveUserToFirestore(
   try {
     const userRef = doc(db, 'users', user.uid)
 
-    const docSnapshot = await getDoc(userRef);
+    const docSnapshot = await getDoc(userRef)
 
-    
     // Prepare the user data object
     const userData = {
       uid: user.uid,
@@ -119,7 +120,7 @@ export async function saveUserToFirestore(
     if (docSnapshot.exists()) {
       options?.onSuccess?.(docSnapshot.data() as UserArgs)
       console.log('User data existed')
-      return 
+      return
     }
 
     // Save the user data to Firestore
@@ -132,6 +133,48 @@ export async function saveUserToFirestore(
   }
 }
 
+interface IFirebaseUploadResponse {
+  downloadURL: string
+  fullPath: string
+}
+
+export const uploadToFirebase = async (
+  image: File
+): Promise<IFirebaseUploadResponse> => {
+  if (!process.env.FIREBASE_STORAGE_BUCKET) {
+    throw new Error('FIREBASE_STORAGE_BUCKET is not defined')
+  }
+
+  const uniqueImageName = `${image.name}_${crypto.randomUUID()}`
+  const imageRef = ref(storage, `images/${uniqueImageName}`)
+
+  // Upload the file
+  const uploadResult = await uploadBytes(imageRef, image)
+
+  // Get the download URL
+  const downloadURL = await getDownloadURL(uploadResult.ref)
+
+  return {
+    downloadURL,
+    fullPath: uploadResult.ref.fullPath
+  }
+}
+
+export const removeImageFromFirebase = async (imageUrl: string) => {
+  try {
+    // Extract the file path from the URL
+    const pathSegment = imageUrl.split('/o/')[1].split('?')[0];
+    const filePath = decodeURIComponent(pathSegment);
+
+    // Delete the file from Firebase Storage
+    const imageRef = ref(storage, filePath);
+    await deleteObject(imageRef);
+    console.log('File deleted successfully from Firebase Storage');
+
+  } catch (error) {
+    console.error('Error removing image from Firebase:', error);
+  }
+};
 type UserArgs = {
   uid: string
   displayName: string | null

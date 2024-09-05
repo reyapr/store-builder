@@ -10,19 +10,15 @@ import {
   FormLabel,
   Image,
   Input,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Select,
   Textarea,
   VStack,
-  FormErrorMessage
+  FormErrorMessage,
+  FormHelperText
 } from '@chakra-ui/react'
 import { Select as MultiSelect, MultiValue } from 'chakra-react-select'
-import { Formik, Form, Field, FieldProps } from 'formik'
-import { NumericFormat } from 'react-number-format'
+import { useFormik } from 'formik'
+import { NumericFormat, NumberFormatValues } from 'react-number-format'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
 
 import { getCategories } from '@/app/admin/categories/actions'
@@ -30,12 +26,15 @@ import { getStores } from '@/app/admin/stores/actions'
 import {
   IEditProductRequest,
   IProductResponse,
-  ICategoryInput
+  ICategoryInput,
+  ICreateProductRequest
 } from '@/interfaces/product'
 import { schema } from '@/utils'
+import { uploadToFirebase } from '@/utils/firebase'
 
 export default function ProductForm({
-  onSubmit,
+  onCreate,
+  onUpdate,
   product,
   isPending = false
 }: Props) {
@@ -47,172 +46,179 @@ export default function ProductForm({
   const { data: dataCategories } = getCategories()
   const { data: stores } = getStores()
 
+  const {
+    values,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    setFieldValue
+  } = useFormik({
+    initialValues: {
+      ...product,
+      stock: product.stock,
+      price: product.price,
+      categoryIds: product.categories.map(({ id }) => id)
+    },
+    validationSchema: toFormikValidationSchema(schema.adminProductForm),
+    onSubmit: (values) => {
+      if (onCreate) {
+        onCreate(values)
+      }
+      if (onUpdate) {
+        onUpdate(values)
+      }
+    }
+  })
+
   useEffect(() => {
-    if (dataCategories?.length && product.storeId) {
+    if (dataCategories?.length && values.storeId) {
       const options: ICategoryInput[] = dataCategories
-        .filter((category) => category.storeId === product.storeId)
+        .filter((category) => category.storeId === values.storeId)
         .map((category) => ({ label: category.name, value: category.id }))
       setCategoryOptions(options)
     }
-  }, [dataCategories, product.storeId])
-
-  const initialValues: IEditProductRequest = {
-    ...product,
-    price: String(product.price),
-    categoryIds: product.categories.map(({ id }) => id)
-  }
+  }, [dataCategories, values])
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={toFormikValidationSchema(schema.adminProductForm)}
-      onSubmit={onSubmit}
-    >
-      {({ setFieldValue, values, errors, touched }) => (
-        <Form>
-          <VStack gap={3}>
-            <Field name="name">
-              {({ field }: FieldProps) => (
-                <FormControl isInvalid={!!errors.name && touched.name}>
-                  <FormLabel>Name</FormLabel>
-                  <Input {...field} placeholder="Product Name" />
-                  <FormErrorMessage>{errors.name}</FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
+    <form onSubmit={handleSubmit}>
+      <VStack gap={3}>
+        <FormControl isInvalid={!!errors.name && touched.name}>
+          <FormLabel>Name</FormLabel>
+          <Input
+            name="name"
+            value={values.name}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder="Product Name"
+          />
+          <FormErrorMessage>{errors.name}</FormErrorMessage>
+        </FormControl>
 
-            <Field name="price">
-              {({ field }: FieldProps) => (
-                <FormControl isInvalid={!!errors.price && touched.price}>
-                  <FormLabel>Price</FormLabel>
-                  <Input
-                    as={NumericFormat}
-                    {...field}
-                    prefix="Rp."
-                    thousandSeparator="."
-                    decimalSeparator=","
-                    placeholder="Product Price"
-                  />
-                  <FormErrorMessage>{errors.price}</FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
+        <FormControl isInvalid={!!errors.price && touched.price}>
+          <FormLabel>Price</FormLabel>
+          <Input
+            name="price"
+            as={NumericFormat}
+            value={values.price}
+            onValueChange={(values: NumberFormatValues) => {
+              setFieldValue('price', parseFloat(values.value))
+            }}
+            onBlur={handleBlur}
+            prefix="Rp."
+            thousandSeparator="."
+            decimalSeparator=","
+            placeholder="Product Price"
+          />
+          <FormErrorMessage>{errors.price}</FormErrorMessage>
+        </FormControl>
 
-            <Field name="stock">
-              {({ field }: FieldProps) => (
-                <FormControl isInvalid={!!errors.stock && touched.stock}>
-                  <FormLabel>Stock</FormLabel>
-                  <NumberInput {...field} min={0}>
-                    <NumberInputField placeholder="Product Stock" />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                  <FormErrorMessage>{errors.stock}</FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
+        <FormControl isInvalid={!!errors.stock && touched.stock}>
+          <FormLabel>Stock</FormLabel>
+          <Input
+            name="stock"
+            type="number"
+            value={values.stock ?? ''}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder="Stock"
+          />
+          <FormHelperText>Kosongkan jika ingin tidak ada stok</FormHelperText>
+          <FormErrorMessage>{errors.stock}</FormErrorMessage>
+        </FormControl>
 
-            <Field name="storeId">
-              {({ field }: FieldProps) => (
-                <FormControl isInvalid={!!errors.storeId && touched.storeId}>
-                  <FormLabel>Store</FormLabel>
-                  <Select {...field} placeholder="Select Store">
-                    {!!stores?.length &&
-                      stores.map((store) => (
-                        <option key={store.id} value={store.id}>
-                          {store.name}
-                        </option>
-                      ))}
-                  </Select>
-                  <FormErrorMessage>{errors.storeId}</FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
+        <FormControl isInvalid={!!errors.storeId && touched.storeId}>
+          <FormLabel>Store</FormLabel>
+          <Select
+            name="storeId"
+            value={values.storeId}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder="Select Store"
+          >
+            {!!stores?.length &&
+              stores.map((store) => (
+                <option key={store.id} value={store.id}>
+                  {store.name}
+                </option>
+              ))}
+          </Select>
+          <FormErrorMessage>{errors.storeId}</FormErrorMessage>
+        </FormControl>
 
-            <Field name="categoryIds">
-              {({ field }: FieldProps) => (
-                <FormControl
-                  isInvalid={!!errors.categoryIds && touched.categoryIds}
-                >
-                  <FormLabel>Categories</FormLabel>
-                  <MultiSelect
-                    isMulti
-                    placeholder="Pilih Categories"
-                    value={selectedCategories}
-                    options={categoryOptions}
-                    onChange={(newValue: MultiValue<ICategoryInput>) => {
-                      setSelectedCategories(newValue as ICategoryInput[])
-                      setFieldValue(
-                        'categoryIds',
-                        newValue.map((item) => item.value)
-                      )
-                    }}
-                    isDisabled={!values.storeId}
-                  />
-                  <FormErrorMessage>{errors.categoryIds}</FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
+        <FormControl isInvalid={!!errors.categoryIds && touched.categoryIds}>
+          <FormLabel>Categories</FormLabel>
+          <MultiSelect
+            isMulti
+            placeholder="Pilih Categories"
+            value={selectedCategories}
+            options={categoryOptions}
+            onChange={(newValue: MultiValue<ICategoryInput>) => {
+              setSelectedCategories(newValue as ICategoryInput[])
+              setFieldValue(
+                'categoryIds',
+                newValue.map((item) => item.value)
+              )
+            }}
+            isDisabled={!values.storeId}
+          />
+          <FormErrorMessage>{errors.categoryIds}</FormErrorMessage>
+        </FormControl>
 
-            <Field name="description">
-              {({ field }: FieldProps) => (
-                <FormControl
-                  isInvalid={!!errors.description && touched.description}
-                >
-                  <FormLabel>Description</FormLabel>
-                  <Textarea {...field} placeholder="Product Description" />
-                  <FormErrorMessage>{errors.description}</FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
+        <FormControl isInvalid={!!errors.description && touched.description}>
+          <FormLabel>Description</FormLabel>
+          <Textarea
+            name="description"
+            value={values.description}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder="Product Description"
+          />
+          <FormErrorMessage>{errors.description}</FormErrorMessage>
+        </FormControl>
 
-            <FormControl>
-              <FormLabel>Image</FormLabel>
-              <Flex>
-                {product.imageUrl && (
-                  <Image
-                    src={product.imageUrl}
-                    alt="product image"
-                    width={150}
-                  />
-                )}
-                <Input
-                  id="input-file"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0]
-                    if (file) {
-                      setFieldValue('image', file)
-                    }
-                  }}
-                />
-              </Flex>
-            </FormControl>
+        <FormControl>
+          <FormLabel>Image</FormLabel>
+          <Flex>
+            {product.imageUrl && (
+              <Image src={product.imageUrl} alt="product image" width={150} />
+            )}
+            <Input
+              id="input-file"
+              name="image"
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0]
+                if (file) {
+                  setFieldValue('image', file)
+                }
+              }}
+            />
+          </Flex>
+        </FormControl>
 
-            <FormControl mt={6}>
-              <Button
-                w="full"
-                mr={3}
-                type="submit"
-                isLoading={isPending}
-                isDisabled={!values.storeId}
-                colorScheme="blue"
-              >
-                Save
-              </Button>
-            </FormControl>
-          </VStack>
-        </Form>
-      )}
-    </Formik>
+        <FormControl mt={6}>
+          <Button
+            w="full"
+            mr={3}
+            type="submit"
+            isLoading={isPending}
+            isDisabled={!values.storeId}
+            colorScheme="blue"
+          >
+            Save
+          </Button>
+        </FormControl>
+      </VStack>
+    </form>
   )
 }
 
 export interface Props {
-  onSubmit: (values: IEditProductRequest) => void
+  onCreate?: (values: ICreateProductRequest) => void
+  onUpdate?: (values: IEditProductRequest) => void
   product: IProductResponse
   title: string
   isPending: boolean

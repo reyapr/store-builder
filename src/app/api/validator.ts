@@ -27,7 +27,7 @@ export const updateStoreSchema = z.object({
 export const createProductSchema = z.object({
   name: z.string(),
   price: z.number(),
-  stock: z.number(),
+  stock: z.number().optional().nullable(),
   storeId: z.string(),
   categoryIds: z.array(z.string()),
   description: z.string(),
@@ -37,7 +37,7 @@ export const createProductSchema = z.object({
 export const updateProductSchema = z.object({
   name: z.string(),
   price: z.number(),
-  stock: z.number(),
+  stock: z.number().optional().nullable(),
   storeId: z.string(),
   categoryIds: z.array(z.string()),
   description: z.string(),

@@ -4,25 +4,25 @@ import React from 'react'
 
 import { useToast } from '@chakra-ui/react'
 
-import { useUpdateProducts } from '@/app/admin/products/actions'
+import { useCreateProducts } from '@/app/admin/products/actions'
 import { Layout, ProductForm } from '@/components'
 import { IStore } from '@/interfaces'
 
 export default function Edit() {
   const toast = useToast()
-  const { mutate, isPending } = useUpdateProducts({
+  const { mutate, isPending } = useCreateProducts({
     onSuccess() {
       toast({
         title: 'Berhasil',
-        description: 'produk berhasil diupdate',
+        description: 'produk berhasil dibuat',
         status: 'success',
         isClosable: true
       })
     },
-    onError() {
+    onError(error) {
       toast({
         title: 'Gagal',
-        description: 'produk gagal diupdate',
+        description: `produk gagal dibuat\n ${error.message}`,
         status: 'error',
         isClosable: true
       })
@@ -32,14 +32,14 @@ export default function Edit() {
   const breadcrumbs = [
     { label: 'dashboard', path: '/admin' },
     { label: 'produk', path: '/admin/products' },
-    { label: 'edit - ', path: '/admin/product' }
+    { label: 'Tambah', path: '/admin/product' }
   ]
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
       <ProductForm
         isPending={isPending}
-        onSubmit={mutate}
+        onCreate={mutate}
         product={{
           id: '',
           storeId: '',

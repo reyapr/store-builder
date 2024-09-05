@@ -1,40 +1,9 @@
-import { cookies } from 'next/headers'
+import { Prisma } from '@prisma/client'
 import { NextResponse } from 'next/server'
 
 import { prisma } from '@/app/api/config'
 import { updateProductSchema } from '@/app/api/validator'
-import { ISupabaseUploadResponse } from '@/interfaces/supabase'
-import { createClient } from '@/utils/supabase/server'
-
-const replaceImageInSupabase = async (
-  image: File,
-  currentUrl: string | null
-): Promise<ISupabaseUploadResponse> => {
-  if (process.env.BUCKET_NAME === undefined) {
-    throw new Error('BUCKET_NAME is not defined')
-  }
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
-
-  if (currentUrl) {
-    const splittedUrl = currentUrl.split('/')
-    const currentPath = splittedUrl[splittedUrl.length - 1]
-    const removeResponse = await supabase.storage
-      .from(process.env.BUCKET_NAME)
-      .remove([`${currentPath}`])
-    if (removeResponse.error) {
-      throw new Error(removeResponse.error.message)
-    }
-  }
-
-  const uniqImageName = generateUniqImageName(image.name)
-
-  const uploadResponse = await supabase.storage
-    .from(process.env.BUCKET_NAME)
-    .upload(uniqImageName, image)
-
-  return uploadResponse as ISupabaseUploadResponse
-}
+import { removeImageFromFirebase, uploadToFirebase } from '@/utils/firebase'
 
 export async function GET(_: Request, context: { params: any }) {
   const { id } = context.params as { id: string }
@@ -61,8 +30,9 @@ export async function PATCH(request: Request, context: { params: any }) {
   const requestJson = Object.fromEntries(res) as Record<string, any>
   requestJson.categoryIds = JSON.parse(requestJson.categoryIds as string)
   requestJson.price = Number(requestJson.price as string)
-  requestJson.stock = Number(requestJson.stock as string)
-
+  if (requestJson.stock) {
+    requestJson.stock = Number(requestJson.stock as string)
+  }
   const updateProductReq = updateProductSchema.safeParse(requestJson)
   if (!updateProductReq.success) {
     return NextResponse.json({ error: updateProductReq.error }, { status: 400 })
@@ -81,47 +51,44 @@ export async function PATCH(request: Request, context: { params: any }) {
     }
     let newImageUrl
     if (image?.name) {
-      const { data, error } = await replaceImageInSupabase(
-        image,
-        currentProduct.imageUrl
-      )
-      if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 })
-      }
-      if (!data) {
+      try {
+        const data = await uploadToFirebase(image)
+        newImageUrl = data.downloadURL
+      } catch (error) {
         return NextResponse.json(
-          { error: 'Image upload failed' },
+          { error: (error as Error).message },
           { status: 500 }
         )
       }
-      const cookieStore = cookies()
-      const supabase = createClient(cookieStore)
 
-      const { data: storageData } = supabase.storage
-        .from(process.env.BUCKET_NAME as string)
-        .getPublicUrl(data.path)
-      newImageUrl = storageData.publicUrl
+      //  remove existing image
+      if (currentProduct.imageUrl) {
+        await removeImageFromFirebase(currentProduct.imageUrl)
+      }
     }
 
+    const productData: Prisma.ProductCreateInput = {
+      name: productRequest.name,
+      price: productRequest.price,
+      description: productRequest.description,
+      imageUrl: newImageUrl,
+      store: {
+        connect: {
+          id: productRequest.storeId
+        }
+      },
+      categories: {
+        connect: productRequest.categoryIds.map((id: string) => ({ id }))
+      },
+      ...(productRequest.stock != null && { stock: productRequest.stock }) // Handle null and undefined
+    }
+
+    console.log({ productData})
     const store = await prisma.product.update({
       where: {
         id
       },
-      data: {
-        name: productRequest.name,
-        price: productRequest.price,
-        stock: productRequest.stock,
-        description: productRequest.description,
-        imageUrl: newImageUrl || currentProduct.imageUrl,
-        store: {
-          connect: {
-            id: productRequest.storeId
-          }
-        },
-        categories: {
-          set: productRequest.categoryIds.map((id: string) => ({ id }))
-        }
-      }
+      data: productData
     })
     return NextResponse.json({ store }, { status: 200 })
   } catch (error) {
@@ -164,8 +131,4 @@ export async function DELETE(_: Request, context: { params: any }) {
       { status: 400 }
     )
   }
-}
-
-const generateUniqImageName = (name: string) => {
-  return `${name}_${crypto.randomUUID()}`
 }

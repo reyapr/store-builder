@@ -39,7 +39,7 @@ export default function Edit({ params }: Props) {
   const breadcrumbs = [
     { label: 'dashboard', path: '/admin' },
     { label: 'produk', path: '/admin/products' },
-    { label: 'edit - ', path: '/admin/product' }
+    { label: 'edit', path: '/admin/product' }
   ]
 
   return (
@@ -52,7 +52,7 @@ export default function Edit({ params }: Props) {
         <ProductForm
           isPending={isPending}
           product={product}
-          onSubmit={updateProduct}
+          onUpdate={updateProduct}
           title="Tambah Produk"
         />
       )}

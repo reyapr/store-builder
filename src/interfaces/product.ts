@@ -4,11 +4,11 @@ import { IStore } from '@/interfaces/store'
 export interface ICreateProductRequest {
   name: string
   price: number
-  stock: number
+  stock: number | null
   storeId: string
   categoryIds: string[]
   description: string
-  image: File
+  image?: File 
 }
 
 export interface IProductsResponse {
@@ -22,6 +22,7 @@ export interface IProductResponse {
   stock: number
   description: string
   imageUrl: string
+  image?: File
   storeId: string
   createdAt: string
   updatedAt: string
@@ -36,7 +37,7 @@ export interface ICategoryInput {
 
 export interface ICreateProductInput {
   name: string
-  price: string
+  price: number
   stock: number
   storeId: string
   categories: ICategoryInput[]
@@ -72,8 +73,8 @@ export const IProduct = {
 export interface IEditProductRequest {
   id: string
   name: string
-  price: string
-  stock: number
+  price: number
+  stock: number | null
   storeId: string
   categoryIds: string[]
   description: string

@@ -36,7 +36,7 @@ import { Layout } from '@/components/homepage'
 import NumberInput from '@/components/NumberInput'
 import { IProduct, IOrder } from '@/interfaces'
 import { cartStore } from '@/stores/useCart'
-import { currency, schema } from '@/utils'
+import { currency, schema, order } from '@/utils'
 
 import { useCreateOrders } from './actions'
 
@@ -50,8 +50,20 @@ export default function CartPage({ params }: Props) {
   const totalCartPrice = cart.getTotalPrice && cart.getTotalPrice()
 
   const { mutate: createOrder, isPending } = useCreateOrders({
-    onSuccess() {
+    onSuccess(orderData) {
       cart.clearCart()
+
+      const encodedText = order.generateOrderText({
+        items,
+        customer: values,
+        totalPrice: totalCartPrice,
+        orderId: orderData.id
+      })
+
+      window.open(
+        `https://wa.me/${process.env.NEXT_PUBLIC_ADMIN_PHONE_NUMBER}?text=${encodeURIComponent(encodedText)}`,
+        '_blank'
+      )
       toast({
         title: 'Berhasil',
         description: 'Order berhasil dibuat',

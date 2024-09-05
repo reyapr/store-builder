@@ -31,7 +31,7 @@ export const generateOrderText = ({
     '\n\n*Alamat :*' +
     `\n${customer.address}` +
     '\n--------------------------------' +
-    `\nHalaman order: ${process.env.APP_DOMAIN}/orders/${orderId}`
+    `\nHalaman order: ${process.env.NEXT_PUBLIC_APP_DOMAIN}/orders/${orderId}`
 
   return text
 }

@@ -31,7 +31,7 @@ export const generateOrderText = ({
     '\n\n*Alamat :*' +
     `\n${customer.address}` +
     '\n--------------------------------' +
-    `\nHalaman order: https://bafkitchen.posku.online/orders/${orderId}`
+    `\nHalaman order: ${process.env.APP_DOMAIN}/orders/${orderId}`
 
   return text
 }

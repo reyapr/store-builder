@@ -14,11 +14,15 @@ export function useCreateProduct(
       const form = new FormData()
       form.append('name', request.name)
       form.append('price', request.price.toString())
-      form.append('stock', request.stock.toString())
+      if(request.stock){
+        form.append('stock', request.stock.toString())
+      }
       form.append('storeId', request.storeId)
       form.append('categoryIds', JSON.stringify(request.categoryIds))
       form.append('description', request.description)
-      form.append('image', request.image)
+      if(request.image){
+        form.append('image', request.image)
+      }
 
       await axios.post('/api/products', form)
       fetchProducts()

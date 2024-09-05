@@ -17,7 +17,8 @@ export function useUpdateProduct(
   const initForm = {
     id: '',
     name: '',
-    price: '',
+    price: 0,
+    priceBase: 0,
     stock: 0,
     storeId: '',
     categoryIds: [],
@@ -32,7 +33,9 @@ export function useUpdateProduct(
       const form = new FormData()
       form.append('name', request.name)
       form.append('price', request.price.toString())
-      form.append('stock', request.stock.toString())
+      if(request.stock){
+        form.append('stock', request.stock.toString())
+      }
       form.append('storeId', request.storeId)
       form.append('categoryIds', JSON.stringify(request.categoryIds))
       form.append('description', request.description)
@@ -67,7 +70,8 @@ export function useUpdateProduct(
       id: product.id,
       name: product.name,
       stock: product.stock,
-      price: product.price.toString(),
+      priceBase: product.priceBase,
+      price: product.price,
       storeId: product.store.id,
       categoryIds: product.categories.map((category) => category.id),
       description: product.description,

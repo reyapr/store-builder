@@ -43,6 +43,7 @@ model Store {
 model Product {
   id            String    @id @default(uuid())
   name          String
+  priceBase     Float?     @default(0)
   price         Float
   stock         Int?    
   createdAt     DateTime  @default(now())

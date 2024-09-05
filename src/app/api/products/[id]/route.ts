@@ -29,7 +29,8 @@ export async function PATCH(request: Request, context: { params: any }) {
   const res = await request.formData()
   const requestJson = Object.fromEntries(res) as Record<string, any>
   requestJson.categoryIds = JSON.parse(requestJson.categoryIds as string)
-  requestJson.price = Number(requestJson.price as string)
+  requestJson.priceBase = Number(requestJson.price as string)
+  requestJson.price = Number(requestJson.priceBase as string)
   if (requestJson.stock) {
     requestJson.stock = Number(requestJson.stock as string)
   }
@@ -69,6 +70,7 @@ export async function PATCH(request: Request, context: { params: any }) {
 
     const productData: Prisma.ProductCreateInput = {
       name: productRequest.name,
+      priceBase: productRequest.priceBase,
       price: productRequest.price,
       description: productRequest.description,
       imageUrl: newImageUrl,
@@ -83,7 +85,6 @@ export async function PATCH(request: Request, context: { params: any }) {
       ...(productRequest.stock != null && { stock: productRequest.stock }) // Handle null and undefined
     }
 
-    console.log({ productData})
     const store = await prisma.product.update({
       where: {
         id

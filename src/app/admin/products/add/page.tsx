@@ -49,6 +49,7 @@ export default function Edit() {
           description: '',
           imageUrl: '',
           price: 0,
+          priceBase: 0,
           stock: 0,
           store: {} as IStore.IStore,
           categories: []

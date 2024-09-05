@@ -57,8 +57,6 @@ export default function ProductForm({
   } = useFormik({
     initialValues: {
       ...product,
-      stock: product.stock,
-      price: product.price,
       categoryIds: product.categories.map(({ id }) => id)
     },
     validationSchema: toFormikValidationSchema(schema.adminProductForm),
@@ -67,6 +65,7 @@ export default function ProductForm({
         onCreate(values)
       }
       if (onUpdate) {
+        console.log({ values })
         onUpdate(values)
       }
     }
@@ -97,7 +96,25 @@ export default function ProductForm({
         </FormControl>
 
         <FormControl isInvalid={!!errors.price && touched.price}>
-          <FormLabel>Price</FormLabel>
+          <FormLabel>Harga dasar</FormLabel>
+          <Input
+            name="price"
+            as={NumericFormat}
+            value={values.priceBase}
+            onValueChange={(values: NumberFormatValues) => {
+              setFieldValue('priceBase', parseFloat(values.value))
+            }}
+            onBlur={handleBlur}
+            prefix="Rp."
+            thousandSeparator="."
+            decimalSeparator=","
+            placeholder="Harga dasar"
+          />
+          <FormErrorMessage>{errors.price}</FormErrorMessage>
+        </FormControl>
+
+        <FormControl isInvalid={!!errors.price && touched.price}>
+          <FormLabel>Harga jual</FormLabel>
           <Input
             name="price"
             as={NumericFormat}
@@ -109,7 +126,7 @@ export default function ProductForm({
             prefix="Rp."
             thousandSeparator="."
             decimalSeparator=","
-            placeholder="Product Price"
+            placeholder="Harga Jual"
           />
           <FormErrorMessage>{errors.price}</FormErrorMessage>
         </FormControl>

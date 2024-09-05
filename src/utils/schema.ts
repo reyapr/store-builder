@@ -18,6 +18,7 @@ export const orderInputForm = z.object({
 
 export const adminProductForm = z.object({
   name: z.string({ required_error: 'Nama diperlukan' }),
+  priceBase: z.number({ required_error: 'Harga diperlukan' }),
   price: z.number({ required_error: 'Harga diperlukan' }),
   stock: z
     .number()

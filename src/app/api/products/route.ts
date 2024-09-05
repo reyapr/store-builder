@@ -66,6 +66,7 @@ export async function POST(request: NextRequest) {
   const res = await request.formData()
   const requestJson = Object.fromEntries(res) as Record<string, any>
   requestJson.categoryIds = JSON.parse(requestJson.categoryIds as string)
+  requestJson.priceBase = Number(requestJson.priceBase as string)
   requestJson.price = Number(requestJson.price as string)
 
   if(requestJson.stock){
@@ -91,6 +92,7 @@ export async function POST(request: NextRequest) {
 
   const productData: Prisma.ProductCreateInput = {
     name: productRequest.name,
+    priceBase: productRequest.priceBase,
     price: productRequest.price,
     description: productRequest.description,
     imageUrl: imageUrl,

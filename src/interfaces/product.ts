@@ -3,6 +3,7 @@ import { IStore } from '@/interfaces/store'
 
 export interface ICreateProductRequest {
   name: string
+  priceBase: number
   price: number
   stock: number | null
   storeId: string
@@ -18,6 +19,7 @@ export interface IProductsResponse {
 export interface IProductResponse {
   id: string
   name: string
+  priceBase: number
   price: number
   stock: number
   description: string
@@ -37,6 +39,7 @@ export interface ICategoryInput {
 
 export interface ICreateProductInput {
   name: string
+  priceBase: number
   price: number
   stock: number
   storeId: string
@@ -49,6 +52,7 @@ export interface ICreateProductInput {
 export type IProduct = {
   id: string
   name: string
+  priceBase: number
   price: number
   stock: number
   store: IStore
@@ -61,6 +65,7 @@ export const IProduct = {
   fromData: (product: IProductResponse) => ({
     id: product.id,
     name: product.name,
+    priceBase: product.priceBase,
     price: product.price,
     stock: product.stock,
     store: product.store,
@@ -73,6 +78,7 @@ export const IProduct = {
 export interface IEditProductRequest {
   id: string
   name: string
+  priceBase: number
   price: number
   stock: number | null
   storeId: string

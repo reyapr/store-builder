@@ -106,6 +106,7 @@ const createFormData = (
 ) => {
   const form = new FormData()
   form.append('name', product.name)
+  form.append('priceBase', product.priceBase.toString())
   form.append('price', product.price.toString())
   if (product.stock) {
     form.append('stock', product.stock.toString())

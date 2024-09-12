@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
   const { image, ...productRequest } = createProductReq.data
 
   let imageUrl
-  if (image.name) {
+  if (image?.name) {
      try {
       const data = await uploadToFirebase(image)
       imageUrl = data.downloadURL
@@ -111,6 +111,7 @@ export async function POST(request: NextRequest) {
     const product = await prisma.product.create({
       data: productData
     })
+
     return NextResponse.json(
       { product },
       {

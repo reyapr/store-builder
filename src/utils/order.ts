@@ -123,3 +123,42 @@ export const generateOrderHtmlEmail = ({
 
   return html
 }
+
+
+export const generateReports = (orders: IOrder.IOrder[]) => {
+    let totalOrderValue = 0;
+    let totalProfit = 0;
+    let totalProductQuantity = 0;
+    const uniqueProducts = new Set();
+    const uniqueBuyers = new Set();
+
+    orders.forEach(order => {
+        // Loop through each product in the order
+        order.productOrders.forEach(productOrder => {
+            const price = productOrder.product.price;
+            const basePrice = productOrder.product.priceBase;
+            const quantity = productOrder.quantity;
+
+            // 1. Calculate order total
+            totalOrderValue += price * quantity;
+
+            // 2. Calculate profit
+            totalProfit += (price - basePrice) * quantity;
+
+            // 3. Track total product quantity and unique products
+            totalProductQuantity += quantity;
+            uniqueProducts.add(productOrder.productId);
+        });
+
+        // 4. Track unique buyers
+        uniqueBuyers.add(order.customerId);
+    });
+
+    return {
+        totalOrderValue,
+        totalProfit,
+        totalProductQuantity,
+        uniqueProductsCount: uniqueProducts.size,
+        uniqueBuyersCount: uniqueBuyers.size
+    };
+}

@@ -31,8 +31,8 @@ export default function Form({
       <FormControl marginBottom={2}>
         <FormLabel>Name</FormLabel>
         <Input
-          placeholder="Store Name"
-          value={store.name}
+          placeholder="Vendor Name"
+          value={store?.name || ''}
           onChange={onChange}
           name="name"
         />
@@ -41,7 +41,7 @@ export default function Form({
         <FormLabel>User</FormLabel>
         <Select
           placeholder="Pilih User"
-          value={store.userId}
+          value={store && 'userId' in store ? store.userId : ''}
           onChange={onChange}
           name="userId"
         >
@@ -59,7 +59,7 @@ export default function Form({
           isLoading={isLoading}
           colorScheme="blue"
           onClick={onSubmit}
-          isDisabled={!store.name || !store.userId}
+          isDisabled={!store?.name || ('userId' in store && !store?.userId)}
         >
           Save
         </Button>
@@ -69,7 +69,7 @@ export default function Form({
 }
 
 type Props = {
-  store: IStore.IUpdateStoreRequest
+  store?: IStore.IUpdateStoreRequest | IStore.ICreateStoreRequest
   onChange: (
     // eslint-disable-next-line no-unused-vars
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

@@ -11,10 +11,12 @@ export interface IOrderRequest {
 export interface IProductOrder {
   id: number
   quantity: number
+  productId: string
   product: {
     id: string
     name: string
     imageUrl: string
+    priceBase: number
     price: number
   }
 }
@@ -24,6 +26,7 @@ export interface IOrder {
   total: number
   createdAt: string
   updatedAt: string
+  customerId: string
   customer: IOrdererInputForm
   productOrders: IProductOrder[]
   store: {

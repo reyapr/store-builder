@@ -59,7 +59,7 @@ export const createOrderSchema = z.object({
     z.object({
       id: z.string(),
       name: z.string(),
-      priceBase: z.number(),
+      priceBase: z.number().optional(),
       price: z.number(),
       stock: z.number(),
       store: z.object({

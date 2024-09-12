@@ -141,19 +141,25 @@ interface IFirebaseUploadResponse {
 export const uploadToFirebase = async (
   image: File
 ): Promise<IFirebaseUploadResponse> => {
+  console.log("-------------------bucket", process.env.FIREBASE_STORAGE_BUCKET)
   if (!process.env.FIREBASE_STORAGE_BUCKET) {
     throw new Error('FIREBASE_STORAGE_BUCKET is not defined')
   }
 
+  console.log("-------------------0")
+
   const uniqueImageName = `${image.name}_${crypto.randomUUID()}`
   const imageRef = ref(storage, `images/${uniqueImageName}`)
 
+  console.log("-------------------1")
   // Upload the file
   const uploadResult = await uploadBytes(imageRef, image)
 
+  console.log("-------------------2")
+
   // Get the download URL
   const downloadURL = await getDownloadURL(uploadResult.ref)
-
+  console.log("-------------------3")
   return {
     downloadURL,
     fullPath: uploadResult.ref.fullPath

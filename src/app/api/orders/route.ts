@@ -104,22 +104,20 @@ export async function POST(request: Request) {
           }
         })
 
-        await sendWithGmail({
-          to: orderer.email,
-          from: process.env.GMAIL_USER,
-          subject: `Order #${order.number} berhasil dibuat`,
-          html: generateOrderHtmlEmail({
-            totalPrice,
-            items,
-            customer: orderer,
-            orderId: order.id
-          })
-        })
-
         return order
-      },
-      { timeout: 20000, maxWait: 18000 }
-    )
+      })
+
+    await sendWithGmail({
+      to: orderer.email,
+      from: process.env.GMAIL_USER,
+      subject: `Order #${order.number} berhasil dibuat`,
+      html: generateOrderHtmlEmail({
+        totalPrice,
+        items,
+        customer: orderer,
+        orderId: order.id
+      })
+    })
 
     return NextResponse.json(
       { order, message: 'Success to order' },

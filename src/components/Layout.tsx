@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useRef } from 'react'
+import React, { ReactNode, useRef } from 'react'
 
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 import {
@@ -13,11 +13,11 @@ import {
   useColorModeValue,
   useDisclosure
 } from '@chakra-ui/react'
-import { motion, useAnimation } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 import { useAuth } from '@/app/UserProvider'
 import { SidebarAdmin, SidebarCustomer } from '@/components'
-import { Error, Loading } from '@/components/shared'
+import { Error as ErrorComponent, Loading } from '@/components/shared'
 
 export default function Layout({
   children,
@@ -31,32 +31,7 @@ export default function Layout({
   const { isOpen, onOpen, onClose } = useDisclosure()
   const bgColor = useColorModeValue('gray.50', 'gray.900')
 
-  const controls = useAnimation()
-  const sidebarRef = useRef(null)
-
-  useEffect(() => {
-    const sidebar = sidebarRef.current
-    if (!sidebar) return
-
-    const observer = new ResizeObserver(() => {
-      // Check if the element is displayed (not hidden or collapsed)
-      const isDisplayed = window.getComputedStyle(sidebar).display !== 'none'
-
-      // Trigger the animation based on the sidebar's display status
-      if (isDisplayed) {
-        controls.start({ x: 0 }) // Animate to visible
-      } else {
-        controls.start({ x: '-100%' }) // Animate to hidden
-      }
-    })
-
-    observer.observe(sidebar)
-
-    // Cleanup observer on component unmount
-    return () => {
-      observer.disconnect()
-    }
-  }, [controls]) // Ensure controls are ready to be used
+  const sidebarRef = useRef<HTMLDivElement | null>(null)
 
   if (user) {
     return (
@@ -79,7 +54,7 @@ export default function Layout({
           >
             <motion.div
               initial={{ x: '-100%' }} // Start hidden to the left
-              animate={controls} // Slide to the right when isOpen is true
+              animate={{ x: 0 }} // Slide to the right when isOpen is true
               exit={{ x: '-100%' }} // Slide back to the left when isOpen becomes false
               transition={{ type: 'spring', stiffness: 300, damping: 30 }} // Customize the animation
             >
@@ -110,7 +85,7 @@ export default function Layout({
             </Flex>
           )}
 
-          {error && <Error error={error} />}
+          {error && <ErrorComponent error={error} />}
           {!error && (
             <Flex
               flex={1}

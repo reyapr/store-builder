@@ -58,6 +58,9 @@ export async function GET() {
     const stores = await prisma.store.findMany({
       where: {
         isDeleted: false
+      },
+      include: {
+        user: true
       }
     })
     return NextResponse.json({ stores }, { status: 200 })

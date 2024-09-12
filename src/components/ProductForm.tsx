@@ -30,7 +30,6 @@ import {
   ICreateProductRequest
 } from '@/interfaces/product'
 import { schema } from '@/utils'
-import { uploadToFirebase } from '@/utils/firebase'
 
 export default function ProductForm({
   onCreate,
@@ -146,7 +145,7 @@ export default function ProductForm({
         </FormControl>
 
         <FormControl isInvalid={!!errors.storeId && touched.storeId}>
-          <FormLabel>Store</FormLabel>
+          <FormLabel>Vendor</FormLabel>
           <Select
             name="storeId"
             value={values.storeId}

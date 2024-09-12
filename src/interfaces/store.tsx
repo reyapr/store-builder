@@ -21,9 +21,21 @@ export interface IStore {
   isDeleted: boolean
   createdAt: string
   updatedAt: string
+  user: User
 }
 
 export interface IProductScheduleRequest {
   productId: string
   date: string
+}
+
+export interface User {
+  id: string
+  name: string
+  email: string
+  role: 'admin' | 'user' | 'customer' // Assuming role can be one of these options
+  createdAt: string
+  updatedAt: string
+  phoneNumber: string | null
+  lastSignInAt: string
 }

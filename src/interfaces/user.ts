@@ -24,3 +24,14 @@ export interface IUpdateUserRequest {
   phoneNumber?: string
   lastSignInAt?: Date
 }
+
+export interface IUserResponse {
+  id: string
+  name: string
+  email: string
+  role: string
+  phoneNumber?: string
+  createdAt: Date
+  updatedAt: Date
+  lastSignInAt?: Date
+}

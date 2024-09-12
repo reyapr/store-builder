@@ -2,7 +2,10 @@ import { z } from 'zod'
 
 // Category
 export const orderInputForm = z.object({
-  name: z.string({ required_error: 'Harus diisi' }).min(4, 'Terlalu pendek').max(50, 'Terlalu panjang'),
+  name: z
+    .string({ required_error: 'Harus diisi' })
+    .min(4, 'Terlalu pendek')
+    .max(50, 'Terlalu panjang'),
   phoneNumber: z
     .string({ required_error: 'Harus diisi' })
     .min(8, { message: 'Nomor telepon harus terdiri dari minimal 8 karakter' })
@@ -26,6 +29,19 @@ export const adminProductForm = z.object({
     .nullable()
     .optional(),
   storeId: z.string({ required_error: 'Toko diperlukan' }),
-  categoryIds: z.array(z.string()).min(1, 'Setidaknya satu kategori diperlukan'),
+  categoryIds: z
+    .array(z.string())
+    .min(1, 'Setidaknya satu kategori diperlukan'),
   description: z.string().optional()
-});
+})
+
+export const adminUserForm = z.object({
+  name: z.string({ required_error: 'Nama wajib diisi' }),
+  email: z
+    .string({ required_error: 'Email wajib diisi' })
+    .email('Alamat email tidak valid'),
+  password: z
+    .string({ required_error: 'Kata sandi wajib diisi' })
+    .min(6, 'Kata sandi harus terdiri dari minimal 6 karakter'),
+  role: z.string({ required_error: 'Peran wajib diisi' })
+})

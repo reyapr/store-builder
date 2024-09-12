@@ -1,9 +1,8 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useMemo, useEffect, useState } from 'react'
 
-import { Button, Flex, Select, HStack } from '@chakra-ui/react'
-import axios from 'axios'
+import { Flex, HStack, SimpleGrid, Text } from '@chakra-ui/react'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,18 +14,16 @@ import {
   Legend,
   TimeScale
 } from 'chart.js'
-import {
-  format,
-  startOfWeek,
-  getWeek,
-  getMonth,
-  setWeek,
-  setMonth
-} from 'date-fns'
+import { format, startOfDay, endOfDay } from 'date-fns'
 import { Line } from 'react-chartjs-2'
 
 import { Layout } from '@/components'
-import { ETimeFrame } from '@/constants/order'
+import CardStats from '@/components/admin/CardStats'
+import { IOrder } from '@/interfaces'
+import { toIDRFormat } from '@/utils/currency'
+import { generateReports } from '@/utils/order'
+
+import { useOrders } from './actions'
 
 ChartJS.register(
   TimeScale,
@@ -67,116 +64,93 @@ const options = {
 }
 
 export default function HomeDashboard() {
-  const years = Array.from(
-    { length: 5 },
-    (_, i) => new Date().getFullYear() - i
+  const [dateStart, setDateStart] = useState(
+    startOfDay(new Date()).toISOString()
   )
-  const [data, setData] = useState([])
-  const [timeFrame, setTimeFrame] = useState(ETimeFrame.DAILY)
-  const [year, setYear] = useState(years[0])
+  const [dateEnd, setDateEnd] = useState(endOfDay(new Date()).toISOString())
 
-  const fetchData = async (timeFrame: ETimeFrame, year: number) => {
-    const response = await axios.get(`/api/orders/total-order`, {
-      params: { timeFrame, year }
-    })
-    const dataChartFormat = response.data.result.map((item: any) => {
-      let x
-      switch (item.time_frame) {
-        case ETimeFrame.DAILY:
-          x = format(new Date(item.time), 'dd MMMM yyyy')
-          break
-        case ETimeFrame.WEEKLY: {
-          const currentDate = new Date()
-          const firstDayOfMonth = new Date(
-            currentDate.getFullYear(),
-            getMonth(currentDate),
-            1
-          )
-          const startOfWeekDate = startOfWeek(firstDayOfMonth)
-          const startOfWeekNumber = getWeek(startOfWeekDate)
-          const weekInMonth = Number(item.time) - startOfWeekNumber + 1
-          const targetDate = setWeek(currentDate, Number(item.time))
-          x = format(targetDate, 'MMMM') + ' week ' + weekInMonth
-          break
-        }
-        case ETimeFrame.MONTHLY:
-          x = format(setMonth(new Date(), Number(item.time) - 1), 'MMMM')
-          break
-        default:
-          break
-      }
+  const {
+    data: orders,
+    isFetching,
+    error,
+    refetch
+  } = useOrders(dateStart, dateEnd)
 
-      return {
-        x,
-        y: item.total_amount
-      }
-    })
-    setData(dataChartFormat)
+  const formatDataForChart = (orders: IOrder.IOrder[]) => {
+    return orders.map((order: any) => ({
+      x: format(new Date(order.createdAt), 'dd MMMM yyyy HH:mm'),
+      y: order.productOrders.reduce(
+        (total: number, po: any) => total + po.quantity * po.product.price,
+        0
+      )
+    }))
   }
 
   useEffect(() => {
-    fetchData(timeFrame, year)
-  }, [timeFrame, year])
+    refetch()
+  }, [dateStart, dateEnd, refetch])
 
-  const dataChart = {
-    datasets: [
-      {
-        label: 'Total Order',
-        data,
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)'
-      }
-    ]
-  }
+  const dataChart = useMemo(
+    () => ({
+      datasets: [
+        {
+          label: 'Total Order',
+          data: formatDataForChart(orders || []),
+          borderColor: 'rgb(255, 99, 132)',
+          backgroundColor: 'rgba(255, 99, 132, 0.5)'
+        }
+      ]
+    }),
+    [orders]
+  )
+  const {
+    totalOrderValue: omset,
+    totalProfit: profit,
+    totalProductQuantity,
+    uniqueProductsCount,
+    uniqueBuyersCount
+  } = useMemo(() => generateReports(orders || []), [orders])
 
   return (
-    <Layout>
-      <Flex>
+    <Layout isFetching={isFetching} error={error as Error}>
+      <HStack gap={3}>
         <HStack gap={3}>
-          <Button
-            px={6}
-            colorScheme="blue"
-            onClick={() => setTimeFrame(ETimeFrame.DAILY)}
-          >
-            Daily
-          </Button>
-          <Button
-            colorScheme="blue"
-            px={6}
-            onClick={() => setTimeFrame(ETimeFrame.WEEKLY)}
-          >
-            Weekly
-          </Button>
-          <Button
-            colorScheme="blue"
-            px={6}
-            onClick={() => setTimeFrame(ETimeFrame.MONTHLY)}
-          >
-            Monthly
-          </Button>
-          <Select
-            placeholder="Select option"
-            value={year}
-            onChange={(e) => setYear(Number(e.target.value))}
-          >
-            {years.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </Select>
+          <input
+            type="date"
+            value={format(new Date(dateStart), 'yyyy-MM-dd')}
+            onChange={(e) =>
+              setDateStart(startOfDay(new Date(e.target.value)).toISOString())
+            }
+          />
+          <input
+            type="date"
+            value={format(new Date(dateEnd), 'yyyy-MM-dd')}
+            onChange={(e) =>
+              setDateEnd(endOfDay(new Date(e.target.value)).toISOString())
+            }
+          />
         </HStack>
+      </HStack>
+
+      <Flex mt={6} direction="column" gap={6}>
+        <Text>
+          Laporan tanggal <b>{format(new Date(dateStart), 'dd MMM yy')}</b> -{' '}
+          <b>{format(new Date(dateEnd), 'dd MMM yy')}</b>
+        </Text>
+        <SimpleGrid columns={[1, 2, 3, 4]} gap={6}>
+          <CardStats label={'Omset'} value={toIDRFormat(omset)} />
+          <CardStats label={'Profit'} value={toIDRFormat(profit)} />
+          <CardStats
+            label={'Jumlah produk terjual'}
+            value={`${totalProductQuantity} dari ${uniqueProductsCount} produk`}
+          />
+          <CardStats label={'Jumlah pembeli'} value={uniqueBuyersCount} />
+        </SimpleGrid>
+
+        <Flex justifyContent="center" alignItems="center">
+          <Line options={options} data={dataChart} />
+        </Flex>
       </Flex>
-      <div
-        style={{
-          display: 'flex',
-          flex: 11,
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
-        <Line options={options} data={dataChart} />
-      </div>
     </Layout>
   )
 }

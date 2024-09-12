@@ -10,24 +10,25 @@ import {
   Table,
   TableContainer,
   Tbody,
+  Td,
   Th,
   Thead,
   Tr
 } from '@chakra-ui/react'
 import Link from 'next/link'
 
-import { getStores } from '@/app/admin/stores/actions'
+import { useGetUsers } from '@/app/admin/users/actions'
 import { Layout } from '@/components'
 
-export default function Store() {
-  const { data: stores, isFetching, error } = getStores()
+export default function User() {
+  const { data: users, isFetching, error } = useGetUsers()
 
   const sortByCreatedAt = (a: any, b: any) =>
     new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1
 
   const breadcrumbs = [
     { label: 'Dashboard', path: '/admin' },
-    { label: 'Vendor', path: '/admin/stores' }
+    { label: 'Users', path: '/admin/users' }
   ]
 
   return (
@@ -36,9 +37,9 @@ export default function Store() {
       isFetching={isFetching}
       error={error as Error}
       rightHeaderComponent={
-        <Link href="/admin/stores/add">
+        <Link href="/admin/users/add">
           <Button colorScheme="blue" size="sm">
-            Tambah vendor
+            Add User
           </Button>
         </Link>
       }
@@ -57,19 +58,23 @@ export default function Store() {
             <Tr>
               <Th>Name</Th>
               <Th>Email</Th>
+              <Th>Role</Th>
+              <Th>Phone Number</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {!!stores?.length &&
-              stores.sort(sortByCreatedAt).map((store) => {
+            {!!users?.length &&
+              users.sort(sortByCreatedAt).map((user) => {
                 return (
-                  <Tr key={store.id}>
-                    <Th>{store.name}</Th>
-                    <Th>{store.user.email}</Th>
-                    <Th>
+                  <Tr key={user.id}>
+                    <Td>{user.name}</Td>
+                    <Td>{user.email}</Td>
+                    <Td>{user.role}</Td>
+                    <Td>{user.phoneNumber || 'N/A'}</Td>
+                    <Td>
                       <ButtonGroup gap={2}>
-                        <Link href={`/admin/stores/${store.id}/edit`}>
+                        <Link href={`/admin/users/${user.id}/edit`}>
                           <Button
                             colorScheme="blue"
                             size="sm"
@@ -82,7 +87,7 @@ export default function Store() {
                           Delete
                         </Button>
                       </ButtonGroup>
-                    </Th>
+                    </Td>
                   </Tr>
                 )
               })}

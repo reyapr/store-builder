@@ -1,3 +1,5 @@
+import React, { useRef } from 'react'
+
 import {
   Button,
   AlertDialog,
@@ -5,21 +7,21 @@ import {
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogBody,
-  AlertDialogFooter,
-} from "@chakra-ui/react";
-import { useRef } from "react";
+  AlertDialogFooter
+} from '@chakra-ui/react'
 
 export interface DeleteAlertProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (id: string) => () => void;
-  title: string;
-  id: string;
+  isOpen: boolean
+  onClose: () => void
+  // eslint-disable-next-line no-unused-vars
+  onSubmit: (id: string) => void
+  title: string
+  id: string
 }
 
-export function DeleteAlert(props: DeleteAlertProps) {
-  const { isOpen, onClose } = props;
-  const cancelRef = useRef(null);
+export default function DeleteAlert(props: DeleteAlertProps) {
+  const { isOpen, onClose } = props
+  const cancelRef = useRef(null)
 
   return (
     <>
@@ -39,10 +41,12 @@ export function DeleteAlert(props: DeleteAlertProps) {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button onClick={onClose}>
-                Cancel
-              </Button>
-              <Button colorScheme="red" onClick={props.onSubmit(props.id)} ml={3}>
+              <Button onClick={onClose}>Cancel</Button>
+              <Button
+                colorScheme="red"
+                onClick={() => props.onSubmit(props.id)}
+                ml={3}
+              >
                 Delete
               </Button>
             </AlertDialogFooter>
@@ -50,5 +54,5 @@ export function DeleteAlert(props: DeleteAlertProps) {
         </AlertDialogOverlay>
       </AlertDialog>
     </>
-  );
+  )
 }

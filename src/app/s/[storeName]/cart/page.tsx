@@ -1,11 +1,6 @@
-"use client";
-import OrdererInput from "@/app/s/[storeName]/cart/components/OrdererInput";
-import { Layout } from "@/app/s/[storeName]/components/Layout";
-import { useStore } from "@/app/s/[storeName]/useStore";
-import NumberInput from "@/components/NumberInput";
-import { IOrderRequest } from "@/interfaces/order";
-import { cartStore } from "@/stores/useCart";
-import { toIDRFormat } from "@/utils/idr-format";
+'use client'
+import React, { useCallback, useRef } from 'react'
+
 import {
   Box,
   Button,
@@ -16,130 +11,195 @@ import {
   Flex,
   Heading,
   Image,
-  Spacer,
   Stack,
   StackDivider,
   Text,
   SimpleGrid,
   useToast,
-} from "@chakra-ui/react";
-import axios from "axios";
-import { useState } from "react";
+  VStack,
+  useDisclosure,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay
+} from '@chakra-ui/react'
+import { useFormik } from 'formik'
+import { FaTrash } from 'react-icons/fa6'
+import { toFormikValidationSchema } from 'zod-formik-adapter'
 
-export default function CartPage({
-  params,
-}: {
-  params: { storeName: string };
-}) {
-  const toast = useToast();
-  const cart = useStore(cartStore, (state) => state, params.storeName);
-  const items = (cart.getProducts && cart.getProducts()) || [];
-  const totalCartPrice = cart.getTotalPrice && cart.getTotalPrice();
+import { useCreateOrders } from '@/app/cart/actions'
+import OrdererInput from '@/app/s/[storeName]/cart/components/OrdererInput'
+import { useStore } from '@/app/s/[storeName]/useStore'
+import { Layout } from '@/components/homepage'
+import NumberInput from '@/components/NumberInput'
+import { IProduct, IOrder } from '@/interfaces'
+import { cartStore } from '@/stores/useCart'
+import { currency, schema } from '@/utils'
 
-  const [input, setInput] = useState({
-    name: '',
-    phoneNumber: '',
-    address: '',
-  });
+export default function CartPage({ params }: Props) {
+  const toast = useToast()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const cancelRef = useRef(null)
+  const cart = useStore(cartStore, (state) => state, 'app')
+  const items = (cart.getProducts && cart.getProducts()) || []
+  const totalCartPrice = cart.getTotalPrice && cart.getTotalPrice()
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setInput({
-      ...input,
-      [e.target.name]: e.target.value,
-    });
-  };
-  
-  const isSubmitDisabled = !input.name || !input.phoneNumber || !input.address || !items.length;
-  
-  const redirectToWA = () => {
-    const text = `Assalamualaikum, saya mau order.
-    ${items.map((product, i) => {
-      return `\n${i+1}. *${product.name}*
-      Quantity: ${product.quantity}
-      Harga (@): ${toIDRFormat(product.price)}
-      Total Harga: ${toIDRFormat(product.price * product.quantity)}`;
-    }).join(' ')}` +
-    `\n\nTotal : *${toIDRFormat(totalCartPrice)}*`+
-    `\n\n*Pengiriman* : ${input.address}\n` +
-    '--------------------------------' +
-    '\n*Nama :*' +
-    `\n${input.name} ( ${input.phoneNumber} )` +
-    '\n\n*Alamat :*' + 
-    `\n${input.address}` + 
-    `\nVia ${location.origin}`
-    
-    
-    const waUrl = `https://wa.me/+6285723087803?text=${encodeURI(text)}`
-    window.location.replace(waUrl);
-  }
-  
-  const createOrder = async () => {
-    const request: IOrderRequest = {
-      storeName: params.storeName,
-      items: items,
-      totalPrice: totalCartPrice,
-      orderer: input,
-    }
-    
-    await axios.post(`/api/order`, request)
-  }
-  
-  const handleOrder = async () => {
-    try {
-      await createOrder()
+  const { mutate: createOrder } = useCreateOrders({
+    onSuccess() {
       cart.clearCart()
-      redirectToWA()
-    } catch (error) {
+      toast({
+        title: 'Berhasil',
+        description: 'Order berhasil dibuat',
+        status: 'success',
+        duration: 9000,
+        isClosable: true
+      })
+    },
+    onError(error) {
       let errorMessage = 'Gagal membuat pesanan. Silahkan coba lagi.'
-      
-      if((error as any).response.data.error.includes('out of stock')) {
+
+      if ((error as any).response.data.error.includes('out of stock')) {
         errorMessage = (error as any).response.data.error
       }
-      
+
       toast({
         title: 'Error',
         description: errorMessage,
         status: 'error',
         duration: 9000,
-        isClosable: true,
+        isClosable: true
       })
     }
-    
-  }
-  
+  })
+
+  const {
+    dirty,
+    errors,
+    isValid,
+    handleSubmit,
+    values,
+    setFieldValue,
+    isSubmitting
+  } = useFormik<IOrder.IOrdererInputForm>({
+    initialValues: {
+      name: '',
+      phoneNumber: '',
+      email: '',
+      address: ''
+    },
+    validateOnChange: true,
+    validationSchema: toFormikValidationSchema(schema.orderInputForm),
+    onSubmit: async () => {
+      await createOrder({
+        storeName: params.storeName,
+        items: items,
+        totalPrice: totalCartPrice,
+        orderer: values
+      })
+    }
+  })
+
+  const handleAddQty = useCallback(
+    (product: IProduct.IProductCart) => {
+      cart.addProduct(product)
+    },
+    [cart]
+  )
+
+  const handleRemoveQty = useCallback(
+    (productId: string) => {
+      cart.reduceQuantity(productId)
+    },
+    [cart]
+  )
+
+  const clearCart = useCallback(() => {
+    cart.clearCart()
+    toast({
+      title: 'Berhasil mengosongkan keranjang',
+      status: 'success',
+      duration: 3000,
+      isClosable: true
+    })
+    onClose()
+  }, [cart, onClose, toast])
 
   return (
     <Layout storeName={params.storeName}>
-      <SimpleGrid margin={3} spacing={2}>
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Bersihkan keranjang
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Apakah anda yakin ingin menghapus semua item di keranjang?
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Batal
+              </Button>
+              <Button colorScheme="red" onClick={clearCart} ml={3}>
+                Hapus
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
+      <SimpleGrid margin={3} spacing={4}>
         <Card>
           <CardHeader>
-            <Heading>Cart</Heading>
+            <Flex justify="space-between" align="center">
+              <Heading>Keranjang</Heading>
+              {!!items.length && (
+                <Button colorScheme="red" onClick={onOpen}>
+                  <FaTrash />
+                </Button>
+              )}
+            </Flex>
           </CardHeader>
           <Divider color="gray.300" />
           <CardBody>
             <Stack divider={<StackDivider />} spacing="4">
-              {items.filter(p => p.quantity > 0).map((product) => (
-                <Flex key={product.id}>
-                  <Box boxSize={20} marginRight={5}>
-                    <Image
-                      src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="
-                      alt="Green double couch with wooden legs"
-                      sizes="sm"
-                    />
-                  </Box>
-                  <Box>
-                    <Heading size="md">{product.name}</Heading>
-                    <Text>Price: {toIDRFormat(product.price)}</Text>
-                    <Text>Quantity: {product.quantity}</Text>
-                  </Box>
-                  <Spacer />
-                  <Box alignSelf="center">
+              {items.map((product) => (
+                <Flex
+                  key={product.id}
+                  flex={1}
+                  w="full"
+                  justifyContent="space-between"
+                  direction={['column', 'row']}
+                  align="center"
+                >
+                  <Flex alignSelf={['start']}>
+                    <Box boxSize={20} marginRight={5}>
+                      <Image
+                        src={product.imageUrl}
+                        alt={product.description}
+                        sizes="sm"
+                      />
+                    </Box>
+                    <Box>
+                      <Heading size="md">{product.name}</Heading>
+                      <Text>Price: {currency.toIDRFormat(product.price)}</Text>
+                      <Text>Quantity: {product.quantity}</Text>
+                    </Box>
+                  </Flex>
+
+                  <Box alignSelf={['end', 'center']}>
                     <NumberInput
                       quantity={product.quantity}
                       productId={product.id}
-                      updateProductQuantity={cart.updateProductQuantity}
+                      onAddQty={() => handleAddQty(product)}
+                      onRemoveQty={() => handleRemoveQty(product.id)}
                     />
                   </Box>
                 </Flex>
@@ -147,33 +207,48 @@ export default function CartPage({
             </Stack>
           </CardBody>
         </Card>
-        <Card>
-          <CardHeader>
-            <Heading>Data Pemesan</Heading>
-          </CardHeader>
-          <Divider color="gray.300" />
-          <CardBody>
-            <OrdererInput input={input} handleChange={handleChange} />
-          </CardBody>
-        </Card>
-        <Card>
-          <CardHeader>
-            <Heading>Order Summary</Heading>
-          </CardHeader>
-          <Divider color="gray.300" />
-          <CardBody>
-            <Flex>
+
+        <form onSubmit={handleSubmit}>
+          <Card>
+            <CardHeader>
+              <Heading>Data Pemesan</Heading>
+            </CardHeader>
+
+            <Divider color="gray.300" />
+            <CardBody>
+              <OrdererInput
+                order={values}
+                errors={errors}
+                onChange={(e) => setFieldValue(e.target.name, e.target.value)}
+              />
+            </CardBody>
+          </Card>
+          <Card>
+            <Divider color="gray.300" />
+            <VStack p={3}>
               <Box alignSelf="center">
-                <Text>Total: {toIDRFormat(totalCartPrice)}</Text>
+                <Text fontSize="xx-large">
+                  Total: <b>{currency.toIDRFormat(totalCartPrice)}</b>
+                </Text>
               </Box>
-              <Spacer />
-              <Box alignSelf="center">
-                <Button isDisabled={isSubmitDisabled} bgColor="blue.200" onClick={handleOrder}>Pesan</Button>
-              </Box>
-            </Flex>
-          </CardBody>
-        </Card>
+              <Button
+                w="full"
+                py={6}
+                isDisabled={!dirty || !isValid || items.length < 1}
+                bgColor="blue.200"
+                type="submit"
+                isLoading={isSubmitting}
+              >
+                <Text fontSize="xx-large">Pesan</Text>
+              </Button>
+            </VStack>
+          </Card>
+        </form>
       </SimpleGrid>
     </Layout>
-  );
+  )
+}
+
+type Props = {
+  params: { storeName: string }
 }

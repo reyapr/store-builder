@@ -1,8 +1,11 @@
+import React from 'react'
+
 import { Box, Flex, Button, useColorModeValue, Stack } from '@chakra-ui/react'
-import { createClient } from '@/utils/supabase/client'
-import { useRouter } from 'next/navigation'
-import { DASHBOARD_LOGIN_PATH } from '@/constants/auth'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+
+import { ADMIN_LOGIN_PATH } from '@/constants/auth'
+import { createClient } from '@/utils/supabase/client'
 
 export default function Navbar() {
   const supabase = createClient()
@@ -16,7 +19,7 @@ export default function Navbar() {
       if (error) {
         console.error('Error logging out:', error)
       }
-      router.push(DASHBOARD_LOGIN_PATH)
+      router.push(ADMIN_LOGIN_PATH)
     } catch (error) {
       console.log(error, 'error')
     }
@@ -30,7 +33,7 @@ export default function Navbar() {
     >
       <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
         <Box>
-          <Link href="/dashboard">Admin Dashboard</Link>
+          <Link href="/admin">Admin Dashboard</Link>
         </Box>
 
         <Flex alignItems={'center'}>

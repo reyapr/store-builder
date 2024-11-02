@@ -1,7 +1,5 @@
-import React from 'react'
-import { useStore } from '@/app/s/[storeName]/useStore'
-import { cartStore } from '@/stores/useCart'
-import { createQueryString } from '@/utils/url-params'
+import React, { useState } from 'react'
+
 import {
   Badge,
   Box,
@@ -17,8 +15,11 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useState } from 'react'
 import { MdOutlineShoppingCart } from 'react-icons/md'
+
+import { useStore } from '@/app/s/[storeName]/useStore'
+import { cartStore } from '@/stores/useCart'
+import { params } from '@/utils'
 
 interface NavbarProps {
   storeName: string
@@ -28,12 +29,14 @@ interface NavbarProps {
 export function Navbar(props: NavbarProps) {
   const cart = useStore(cartStore, (state) => state, props.storeName)
   const router = useRouter()
-  const params = useSearchParams()
+  const searchParams = useSearchParams()
   const pathname = usePathname()
   const quantity = cart.getTotalQuantity && cart.getTotalQuantity()
-  const [searchInput, setSearchInput] = useState(params.get('search') || '')
+  const [searchInput, setSearchInput] = useState(
+    searchParams.get('search') || ''
+  )
   const handleSearch = () => {
-    const query = createQueryString(params, {
+    const query = params.createQueryString(searchParams, {
       key: 'search',
       value: searchInput
     })

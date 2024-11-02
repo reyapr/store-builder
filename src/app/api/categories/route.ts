@@ -1,7 +1,8 @@
-import { prisma } from '@/app/api/config'
-import { createCategorySchema } from '@/app/api/validator'
 import { Prisma } from '@prisma/client'
 import { NextRequest, NextResponse } from 'next/server'
+
+import { prisma } from '@/app/api/config'
+import { createCategorySchema } from '@/app/api/validator'
 
 export async function GET(request: NextRequest) {
   const storeName = request.nextUrl.searchParams.get('storeName')
@@ -36,12 +37,10 @@ export async function GET(request: NextRequest) {
 export async function POST(request: Request) {
   const requestJson = await request.json()
   const createCategoryReq = createCategorySchema.safeParse(requestJson)
-
+// 
+  console.log({ requestJson})
   if (!createCategoryReq.success) {
-    return NextResponse.json(
-      { error: createCategoryReq.error },
-      { status: 400 }
-    )
+    return responseError(createCategoryReq.error)
   }
   const { storeId, ...newCategory } = createCategoryReq.data
   try {
@@ -62,10 +61,17 @@ export async function POST(request: Request) {
       }
     )
   } catch (error) {
-    let status = 500
-    if ((error as Error).message.includes('Unique constraint')) {
-      status = 400
-    }
-    return NextResponse.json({ error: (error as Error).message }, { status })
+    const errMessage = (error as Error).message
+    const status = errMessage.includes('Unique constraint') ? 400: 500
+    
+    return responseError(errMessage, status)
   }
+}
+
+
+function responseError(error: Error | string, status?: number){
+  NextResponse.json(
+    { error },
+    { status: status || 400 }
+  )
 }

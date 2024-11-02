@@ -1,5 +1,13 @@
 'use client'
 
+import React from 'react'
+
+import {
+  HamburgerIcon,
+  CloseIcon,
+  ChevronDownIcon,
+  ChevronRightIcon
+} from '@chakra-ui/icons'
 import {
   Box,
   Flex,
@@ -16,12 +24,6 @@ import {
   useBreakpointValue,
   useDisclosure
 } from '@chakra-ui/react'
-import {
-  HamburgerIcon,
-  CloseIcon,
-  ChevronDownIcon,
-  ChevronRightIcon
-} from '@chakra-ui/icons'
 
 export default function WithSubnavigation() {
   const { isOpen, onToggle } = useDisclosure()

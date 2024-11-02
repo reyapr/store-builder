@@ -3,12 +3,33 @@ import { IStore } from '@/interfaces/store'
 
 export interface ICreateProductRequest {
   name: string
+  priceBase: number
   price: number
-  stock: number
+  stock: number | null
   storeId: string
   categoryIds: string[]
   description: string
-  image: File
+  image?: File 
+}
+
+export interface IProductsResponse {
+  products: IProductResponse[]
+}
+
+export interface IProductResponse {
+  id: string
+  name: string
+  priceBase: number
+  price: number
+  stock: number
+  description: string
+  imageUrl: string
+  image?: File
+  storeId: string
+  createdAt: string
+  updatedAt: string
+  store: IStore
+  categories: ICategory[]
 }
 
 export interface ICategoryInput {
@@ -18,7 +39,8 @@ export interface ICategoryInput {
 
 export interface ICreateProductInput {
   name: string
-  price: string
+  priceBase: number
+  price: number
   stock: number
   storeId: string
   categories: ICategoryInput[]
@@ -27,9 +49,10 @@ export interface ICreateProductInput {
   imageUrl?: string
 }
 
-export interface IProduct {
+export type IProduct = {
   id: string
   name: string
+  priceBase: number
   price: number
   stock: number
   store: IStore
@@ -38,13 +61,28 @@ export interface IProduct {
   imageUrl: string
 }
 
+export const IProduct = {
+  fromData: (product: IProductResponse) => ({
+    id: product.id,
+    name: product.name,
+    priceBase: product.priceBase,
+    price: product.price,
+    stock: product.stock,
+    store: product.store,
+    categories: [],
+    description: product.description,
+    imageUrl: product.imageUrl
+  })
+}
+
 export interface IEditProductRequest {
   id: string
   name: string
-  price: string
-  stock: number
+  priceBase: number
+  price: number
+  stock: number | null
   storeId: string
-  categories: ICategoryInput[]
+  categoryIds: string[]
   description: string
   image?: File
   imageUrl?: string

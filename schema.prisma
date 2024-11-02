@@ -15,12 +15,14 @@ model User {
   id            String    @id @default(uuid())
   name          String
   email         String    @unique
-  role          String
+  role          String     @default("user")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   phoneNumber   String?
   lastSignInAt  DateTime?
   stores        Store[]
+
+  @@unique([email, role])
 }
 
 model Store {
@@ -41,8 +43,9 @@ model Store {
 model Product {
   id            String    @id @default(uuid())
   name          String
+  priceBase     Float?     @default(0)
   price         Float
-  stock         Int       @default(0)
+  stock         Int?    
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   store         Store     @relation(fields: [storeId], references: [id])
@@ -51,27 +54,29 @@ model Product {
   categories    Category[]
   imageUrl      String?
   description   String?
+  schedules     ProductSchedule[]
 }
 
 model Customer {
   id            String    @id @default(uuid())
   name          String
-  email         String?   @unique
+  email         String   @unique
   phoneNumber   String    @unique
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  address       String
+  address       String?
   orders        Order[]
 }
 
 model Order {
   id            String    @id @default(uuid())
+  number        Int       @default(autoincrement())
   total         Float
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   customer      Customer  @relation(fields: [customerId], references: [id])
   customerId    String
-  products      ProductOrder[]
+  productOrders      ProductOrder[]
   status        String
   store         Store     @relation(fields: [storeId], references: [id])
   storeId       String
@@ -98,4 +103,22 @@ model Category {
   storeId       String
   
   @@unique([name, storeId])
+}
+
+model Schedule {
+  id            String    @id @default(uuid())
+  date          DateTime    
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  productSchedules      ProductSchedule[] // Relation to the join table
+}
+
+model ProductSchedule {
+  id          String    @id @default(uuid())
+  product     Product   @relation(fields: [productId], references: [id])
+  productId   String
+  schedule    Schedule  @relation(fields: [scheduleId], references: [id])
+  scheduleId  String
+
+  @@unique([productId, scheduleId]) // Ensure each product-schedule pair is unique
 }

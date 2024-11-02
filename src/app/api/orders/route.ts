@@ -6,7 +6,6 @@ import { prisma } from '@/app/api/config'
 import { createOrderSchema } from '@/app/api/validator'
 import { EOrderStatus } from '@/constants/order'
 import { IOrderRequest } from '@/interfaces/order'
-import { IProductCart } from '@/interfaces/product'
 import { generateOrderHtmlEmail } from '@/utils/order'
 
 const promiseUpdateStock = (trx: PrismaClient, items: IProductCart[]) =>

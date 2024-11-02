@@ -23,6 +23,19 @@ export const updateStoreSchema = z.object({
   userId: z.string(),
 })
 
+
+
+export const UserSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string().email(), // Validates that the string is a valid email address
+  role: z.enum(['admin', 'user', 'customer']),
+  createdAt: z.string(), // Consider using z.date() if dealing with Date objects
+  updatedAt: z.string(), // Consider using z.date() if dealing with Date objects
+  phoneNumber: z.string().nullable(), // Validates that the string can be null
+  lastSignInAt: z.string() // Consider using z.date() if dealing with Date objects
+});
+
 // Product
 export const createProductSchema = z.object({
   name: z.string(),
@@ -59,7 +72,7 @@ export const createOrderSchema = z.object({
     z.object({
       id: z.string(),
       name: z.string(),
-      priceBase: z.number().optional(),
+      priceBase: z.number(),
       price: z.number(),
       stock: z.number(),
       store: z.object({
@@ -67,7 +80,8 @@ export const createOrderSchema = z.object({
         name: z.string(),
         isDeleted: z.boolean(),
         createdAt: z.string(),
-        updatedAt: z.string()
+        updatedAt: z.string(),
+        user: UserSchema
       }),
       description: z.string(),
       imageUrl: z.string(),
